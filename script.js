@@ -54,3 +54,11 @@ alert("บันทึกเรียบร้อย")
 window.location.href="dashboard.html"
 
 }
+
+function logout(){
+
+localStorage.removeItem("adminLogin")
+
+window.location.href="index.html"
+
+}
