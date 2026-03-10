@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+</head>
+
+<body>
+
+<h2>Administrator Login</h2>
+
+<input id="user" placeholder="username">
+<br>
+<input id="pass" type="password" placeholder="password">
+
+<br><br>
+
+<button onclick="loginAdmin()">Login</button>
+
+<script>
+
+function loginAdmin(){
+
+const u=document.getElementById("user").value
+const p=document.getElementById("pass").value
+
+if(u==="adminburapa" && p==="burapaubon55555"){
+
+location.href="admin.html"
+
+}else{
+
+alert("Username หรือ Password ไม่ถูกต้อง")
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
