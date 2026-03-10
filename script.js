@@ -62,3 +62,58 @@ localStorage.removeItem("adminLogin")
 window.location.href="index.html"
 
 }
+
+const classrooms = [
+
+"ม1/1",
+"ม1/2",
+"ม2/1",
+"ม2/2",
+"ม3/1",
+"ม3/2"
+
+]
+
+function loadRooms(){
+
+const list=document.getElementById("roomList")
+
+list.innerHTML=""
+
+classrooms.forEach(room=>{
+
+const status=Math.random()>0.5 ? "done":"pending"
+
+const div=document.createElement("div")
+
+div.className="room"
+
+div.innerHTML=`
+
+<span>${room}</span>
+
+<span class="${status}">
+${status==="done"?"🟢 บันทึกแล้ว":"🔴 ยังไม่บันทึก"}
+</span>
+
+<button onclick="openForm('${room}')">
+กรอกข้อมูล
+</button>
+
+`
+
+list.appendChild(div)
+
+})
+
+}
+
+function openForm(room){
+
+localStorage.setItem("room",room)
+
+window.location.href="form.html"
+
+}
+
+window.onload=loadRooms
