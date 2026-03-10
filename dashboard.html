@@ -1,32 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>Teacher Dashboard</title>
+
 <script src="script.js"></script>
+
+<style>
+
+body{
+font-family:sans-serif;
+padding:30px;
+}
+
+.card{
+background:#f5f5f5;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.room{
+padding:12px;
+border:1px solid #ddd;
+margin:8px 0;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.done{
+color:green;
+font-weight:bold;
+}
+
+.pending{
+color:red;
+font-weight:bold;
+}
+
+button{
+padding:6px 12px;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <h1>Teacher Dashboard</h1>
 
-<h2>Today's Statistics</h2>
+<div class="card">
+
+<h2>📊 Today's Statistics</h2>
 
 <div id="stats">
-นักเรียนทั้งหมด: -
-<br>
-มาเรียน: -
-<br>
-ขาด: -
-<br>
-ลา: -
-<br>
-ป่วย: -
+Loading...
 </div>
 
-<h2>Classrooms</h2>
+</div>
+
+<div class="card">
+
+<h2>🏫 Classrooms</h2>
 
 <div id="roomList"></div>
+
+</div>
 
 </body>
 </html>
