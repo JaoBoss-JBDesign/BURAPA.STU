@@ -415,32 +415,33 @@ to{transform:rotate(360deg)}
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
-async function load(){
 
-const start = Date.now()
+async function load(){
 
 try{
 
-const res = await fetch(API+"?mode=getdashboard&t="+Date.now())
+const res = await fetch(API+"?mode=getdashboard")
 const dash = await res.json()
 
 renderDash(dash)
 renderRooms(dash.rooms)
 
 }catch(e){
+
 console.error(e)
+
+document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลได้"
+document.getElementById("classList").innerHTML="<div class='loadingList'>โหลดข้อมูลไม่สำเร็จ</div>"
+
 }
 
-const minLoad = 600
-const diff = Date.now() - start
-
-if(diff < minLoad){
-await new Promise(r=>setTimeout(r,minLoad-diff))
-}
-
+setTimeout(()=>{
 document.getElementById("loading").style.display="none"
+},300)
 
 }
+
+
 
 function renderDash(d){
 
@@ -452,7 +453,9 @@ document.getElementById("sick").innerText=d.sick
 document.getElementById("leave").innerText=d.leave
 document.getElementById("absent").innerText=d.absent
 
+
 let ctx=document.getElementById("chart").getContext("2d")
+
 
 if(total==0){
 
@@ -466,14 +469,16 @@ backgroundColor:["#e0e0e0"]
 }]
 },
 options:{
-plugins:{tooltip:{enabled:false}}
+plugins:{tooltip:{enabled:false}},
+maintainAspectRatio:false
 }
 })
 
 document.getElementById("chartText").innerText="ยังไม่มีข้อมูลวันนี้"
-return
 
+return
 }
+
 
 new Chart(ctx,{
 type:"pie",
@@ -507,6 +512,7 @@ return c.label+" "+value+" คน ("+percent+"%)"
 document.getElementById("chartText").style.display="none"
 
 }
+
 
 
 function renderRooms(rooms){
@@ -544,7 +550,9 @@ document.getElementById("classList").innerHTML=html
 }
 
 
+
 load()
+
 
 
 function updateClock(){
@@ -572,6 +580,7 @@ setInterval(updateClock,1000)
 updateClock()
 
 
+
 let term=localStorage.getItem("term")||"2"
 let year=localStorage.getItem("year")||"2568"
 
@@ -580,7 +589,7 @@ document.getElementById("termDisplay").innerText=
 
 document.getElementById("termFooter").innerText=
 term+"/"+year
-
+  
 </script>
 
 </body>
