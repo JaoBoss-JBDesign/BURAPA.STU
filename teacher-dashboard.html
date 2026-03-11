@@ -21,152 +21,64 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
-html,body{
-max-width:100%;
-overflow-x:hidden;
-}
-
 body{
-
 min-height:100vh;
 display:flex;
 flex-direction:column;
-
-background:
-linear-gradient(180deg,#f6f7fb,#eef1f8),
-radial-gradient(circle at 15% 20%, rgba(230,57,70,.08), transparent 40%),
-radial-gradient(circle at 85% 80%, rgba(230,57,70,.06), transparent 40%);
-
+background:#f6f7fb;
 }
 
 header{
 
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
-background-size:200% 200%;
-
-animation:gradientMove 6s ease infinite;
-
-border-bottom:4px solid rgba(255,255,255,0.25);
-
 color:white;
 text-align:center;
-
-padding:22px 10px;
-
-box-shadow:0 10px 25px rgba(0,0,0,.15);
-
-position:relative;
-overflow:hidden;
+padding:20px;
 
 }
 
-@keyframes gradientMove{
-
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
-
-}
-
-header::before{
-
-content:"";
-
-position:absolute;
-top:0;
-left:-50%;
-
-width:200%;
-height:100%;
-
-background:
-linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent),
-radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
-
-background-size:
-200% 100%,
-40px 40px;
-
-animation:shine 10s linear infinite;
-
-opacity:.35;
-
-z-index:0;
-
-}
-
-header img,
-header div{
-position:relative;
-z-index:1;
-}
-
-@keyframes shine{
-0%{left:-50%}
-100%{left:100%}
-}
-  
 .logo{
+width:90px;
+margin-bottom:6px;
+}
 
-width:clamp(80px,16vw,110px);
-margin-bottom:4px;
-
+.school-name{
+font-size:24px;
+font-weight:700;
 }
 
 .system-name{
 font-size:13px;
 }
 
-.school-name{
-font-size:26px;
-font-weight:700;
-}
-
-.term{
+.term,.time{
 font-size:12px;
-margin-top:3px;
-}
-
-.time{
-font-size:12px;
-margin-top:2px;
 }
 
 main{
-
 flex:1;
 padding:24px;
-
 max-width:1200px;
 margin:auto;
 width:100%;
-
 }
 
 .welcome{
 
 background:white;
-
-border-radius:18px;
-
+border-radius:16px;
 padding:18px;
-
 margin-bottom:18px;
-
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-
+box-shadow:0 8px 20px rgba(0,0,0,.08);
 text-align:center;
-
-font-weight:500;
 
 }
 
 .stats{
 
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 gap:16px;
-
 margin-bottom:20px;
 
 }
@@ -174,37 +86,28 @@ margin-bottom:20px;
 .stat{
 
 background:white;
-
 border-radius:16px;
-
 padding:16px;
-
 text-align:center;
-
-box-shadow:0 10px 25px rgba(0,0,0,.08);
+box-shadow:0 8px 20px rgba(0,0,0,.08);
 
 }
 
 .stat h3{
-
 font-size:13px;
 color:#777;
-margin-bottom:6px;
-
 }
 
-.stat .num{
-
+.num{
 font-size:26px;
 font-weight:700;
-
+margin-top:6px;
 }
 
 .present{color:#6BCB77;}
 .sick{color:#ff8fab;}
 .leave{color:#f4a261;}
 .absent{color:#e76f51;}
-.none{color:#bbb;}
 
 .grid{
 
@@ -215,28 +118,23 @@ gap:18px;
 }
 
 @media(max-width:900px){
-
 .grid{
 grid-template-columns:1fr;
 }
-
 }
 
 .card{
 
 background:white;
-
 border-radius:18px;
-
 padding:18px;
-
-box-shadow:0 15px 35px rgba(0,0,0,.08);
+box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
 .card h2{
 font-size:16px;
-margin-bottom:10px;
+margin-bottom:12px;
 }
 
 .class{
@@ -244,9 +142,7 @@ margin-bottom:10px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-
 padding:10px 0;
-
 border-bottom:1px solid #eee;
 
 }
@@ -259,30 +155,20 @@ border:none;
 
 background:#e63946;
 color:white;
-
 border:none;
-
 padding:6px 12px;
-
 border-radius:8px;
-
 cursor:pointer;
 
 }
 
 footer{
 
-background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
-
+background:#e63946;
 color:white;
-
 text-align:center;
-
-font-size:10px;
-
-padding:8px 10px;
-
-line-height:1.5;
+font-size:11px;
+padding:10px;
 
 }
 
@@ -290,7 +176,6 @@ line-height:1.5;
 
 position:fixed;
 inset:0;
-
 background:white;
 
 display:flex;
@@ -304,8 +189,8 @@ z-index:999;
 
 .loader{
 
-width:45px;
-height:45px;
+width:40px;
+height:40px;
 
 border:4px solid #eee;
 border-top:4px solid #e63946;
@@ -328,9 +213,7 @@ to{transform:rotate(360deg)}
 <div id="loading">
 
 <div class="loader"></div>
-<div style="margin-top:12px;font-size:14px;color:#555">
-กำลังโหลดข้อมูล Dashboard โปรดรอสักครู่...
-</div>
+<div style="margin-top:10px">กำลังโหลด Dashboard...</div>
 
 </div>
 
@@ -339,7 +222,7 @@ to{transform:rotate(360deg)}
 <img src="burapa-logo.png" class="logo">
 
 <div class="system-name">
-ระบบบริหารจัดการสถิตินักเรียน
+BURAPA STUDENT SYSTEM
 </div>
 
 <div class="school-name">
@@ -354,10 +237,7 @@ to{transform:rotate(360deg)}
 <main>
 
 <div class="welcome">
-
-ยินดีต้อนรับเข้าสู่  
-<strong>BURAPA STUDENT SYSTEM</strong>
-
+ยินดีต้อนรับเข้าสู่ระบบ Dashboard ครู
 </div>
 
 <div class="stats">
@@ -393,7 +273,7 @@ to{transform:rotate(360deg)}
 
 <div class="card">
 
-<h2>กราฟสถิติ</h2>
+<h2>กราฟสถิติวันนี้</h2>
 
 <canvas id="chart"></canvas>
 
@@ -403,7 +283,7 @@ to{transform:rotate(360deg)}
 
 <h2>ห้องเรียนของคุณ</h2>
 
-<div id="classList"></div>
+<div id="classList">กำลังโหลด...</div>
 
 </div>
 
@@ -413,19 +293,8 @@ to{transform:rotate(360deg)}
 
 <footer>
 
-ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
-
-<br>
-
-ภาคเรียนที่ <span id="termFooter"></span>
-
-<br>
-
+BURAPA STUDENT SYSTEM  
 โรงเรียนเทศบาลบูรพาอุบล
-
-<br>
-
-สำนักการศึกษา เทศบาลนครอุบลราชธานี
 
 </footer>
 
@@ -453,9 +322,6 @@ let year=localStorage.getItem("year")||"2568"
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
 
-document.getElementById("termFooter").innerHTML=
-term+"/"+year
-
 let today=new Date().toISOString().slice(0,10)
 
 let data=JSON.parse(localStorage.getItem("attendance_"+today))||{
@@ -470,18 +336,19 @@ document.getElementById("sick").innerText=data.sick
 document.getElementById("leave").innerText=data.leave
 document.getElementById("absent").innerText=data.absent
 
-document.getElementById("totalStudent").innerText=
-data.present+data.sick+data.leave+data.absent
-
 let total =
 data.present +
 data.sick +
 data.leave +
 data.absent
 
+document.getElementById("totalStudent").innerText=total
+
+let ctx=document.getElementById("chart").getContext("2d")
+
 if(total==0){
 
-new Chart(chart,{
+new Chart(ctx,{
 type:"pie",
 data:{
 labels:["ยังไม่มีข้อมูล"],
@@ -494,7 +361,7 @@ backgroundColor:["#e5e5e5"]
 
 }else{
 
-new Chart(chart,{
+new Chart(ctx,{
 type:"pie",
 data:{
 labels:["มาเรียน","ป่วย","ลา","ขาด"],
@@ -507,7 +374,7 @@ data.absent
 ],
 backgroundColor:[
 "#6BCB77",
-"#ff9ec7",
+"#ff8fab",
 "#ffb86b",
 "#ff6b6b"
 ]
@@ -517,28 +384,46 @@ backgroundColor:[
 
 }
 
-fetch("API_URL")
-.then(res=>res.json())
-.then(data=>{
+/* โหลดห้องเรียน */
+
+async function loadClassrooms(){
+
+try{
+
+let res=await fetch("https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec?mode=getclassrooms")
+let data=await res.json()
 
 let html=""
 
 data.forEach(room=>{
 
 html+=`
-
 <div class="class">
 <span>${room.name}</span>
 <button class="btn">เปิด</button>
 </div>
-
 `
 
 })
 
 document.getElementById("classList").innerHTML=html
 
-})
+}catch(e){
+
+document.getElementById("classList").innerHTML=
+"ไม่สามารถโหลดข้อมูลห้องเรียนได้"
+
+}
+
+}
+
+loadClassrooms()
+
+window.onload=()=>{
+
+document.getElementById("loading").style.display="none"
+
+}
 
 </script>
 
