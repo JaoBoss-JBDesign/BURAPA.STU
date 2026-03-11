@@ -271,7 +271,12 @@ padding:16px;
 
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 
-height:100%;
+display:flex;
+
+flex-direction:column;
+
+height:420px;
+
 }
 
 #classList{
@@ -295,7 +300,11 @@ padding:14px;
 }
 
 .card{
-margin:auto;
+
+width:100%;
+
+height:380px;
+
 }
 
 }
@@ -428,7 +437,7 @@ to{transform:rotate(360deg)}
 
 .loadingList{
 
-height:100%;
+flex:1;
 
 display:flex;
 
@@ -442,11 +451,15 @@ color:#888;
 
 }
 
-@media(max-width:600px){
-
 #classList{
-height:300px;
-}
+
+flex:1;
+
+overflow-y:auto;
+
+margin-top:8px;
+
+padding-right:4px;
 
 }
   
