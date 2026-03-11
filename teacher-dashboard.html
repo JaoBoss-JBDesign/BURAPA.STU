@@ -304,18 +304,75 @@ padding:10px;
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec";
+
+let chartInstance=null;
 
 async function loadDashboard(){
 
-const res = await fetch(API_URL + "?mode=getDashboard");
-const data = await res.json();
+try{
 
-console.log(data);
+const res=await fetch(API_URL+"?mode=getDashboard");
+const data=await res.json();
+
+let male=data.totalMale || 0
+let female=data.totalFemale || 0
+
+// update card
+document.getElementById("all_boys").innerHTML=male+" คน"
+document.getElementById("all_girls").innerHTML=female+" คน"
+
+// create chart
+createChart(male,female)
+
+}catch(e){
+
+console.log("โหลดข้อมูลไม่สำเร็จ",e)
 
 }
 
-loadDashboard();
+}
+
+function createChart(male,female){
+
+if(chartInstance){
+chartInstance.destroy()
+}
+
+chartInstance=new Chart(document.getElementById("studentChart"),{
+
+type:"pie",
+
+data:{
+labels:["นักเรียนชาย","นักเรียนหญิง"],
+datasets:[{
+
+data:[male,female],
+
+backgroundColor:[
+"#3a86ff",
+"#ff006e"
+]
+
+}]
+
+},
+
+options:{
+plugins:{
+legend:{
+position:"bottom"
+}
+}
+
+}
+
+})
+
+}
+
+loadDashboard()
+
 
 </script>
   
@@ -346,12 +403,12 @@ loadDashboard();
 
 <div class="card">
 <h3>จำนวนนักเรียนชาย (ล่าสุด)</h3>
-<div class="number">152 คน</div>
+<div class="number" id="all_boys">0 คน</div>
 </div>
 
 <div class="card">
 <h3>จำนวนนักเรียนหญิง (ล่าสุด)</h3>
-<div class="number">148 คน</div>
+<div class="number" id="all_girls">0 คน</div>
 </div>
 
 <div class="card">
@@ -545,26 +602,6 @@ h+":"+m+":"+s+" น."
 
 setInterval(updateClock,1000)
 updateClock()
-
-new Chart(document.getElementById("studentChart"),{
-
-type:"pie",
-
-data:{
-labels:["นักเรียนชาย","นักเรียนหญิง"],
-datasets:[{
-
-data:[152,148],
-
-backgroundColor:[
-"#3a86ff",
-"#ff006e"
-]
-
-}]
-}
-
-})
 
 setTimeout(function(){
 
