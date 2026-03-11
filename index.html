@@ -8,38 +8,56 @@
 
 <title>BURAPA.STU SYSTEM</title>
 
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
-font-family: "Segoe UI", sans-serif;
-background:linear-gradient(135deg,#8b0000,#ffcc00);
+font-family:'Prompt',sans-serif;
+
+background:linear-gradient(
+135deg,
+#ffd6e7,
+#ffeaa7
+);
+
 min-height:100vh;
+
 display:flex;
 flex-direction:column;
 }
 
 header{
 text-align:center;
-color:white;
-padding:40px 20px;
+padding:50px 20px 30px;
 }
 
 .logo{
-width:120px;
+width:110px;
 margin-bottom:15px;
+}
+
+.system-name{
+font-size:18px;
+color:#555;
 }
 
 .school-name{
 font-size:32px;
-font-weight:bold;
+font-weight:600;
+color:#333;
+margin-top:5px;
 }
 
-.system-name{
-font-size:20px;
-opacity:0.9;
+.term{
+margin-top:8px;
+font-size:14px;
+color:#777;
 }
 
 .main{
@@ -52,17 +70,22 @@ align-items:center;
 .card{
 
 background:white;
+
 padding:40px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
+
+border-radius:20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+
 text-align:center;
-width:320px;
+
+width:340px;
 
 }
 
 .card h2{
 margin-top:0;
-color:#8b0000;
+color:#444;
 }
 
 .btn{
@@ -73,45 +96,41 @@ padding:14px;
 margin-top:15px;
 
 border:none;
-border-radius:8px;
+border-radius:10px;
 
-font-size:16px;
-font-weight:bold;
+font-size:15px;
+font-weight:500;
 
 cursor:pointer;
 
-transition:0.3s;
+transition:0.25s;
 
 }
 
 .btn-teacher{
-background:#8b0000;
+background:#ff6b81;
 color:white;
 }
 
 .btn-admin{
-background:#ffcc00;
-color:black;
+background:#ffd93d;
+color:#333;
 }
 
 .btn:hover{
-transform:scale(1.05);
-box-shadow:0 5px 10px rgba(0,0,0,0.2);
-}
-
-.term{
-margin-top:10px;
-font-size:14px;
-color:#666;
+transform:translateY(-3px);
+box-shadow:0 6px 15px rgba(0,0,0,0.15);
 }
 
 footer{
 
 text-align:center;
-background:#222;
-color:#ddd;
-padding:15px;
+
+padding:18px;
+
 font-size:13px;
+
+color:#555;
 
 }
 
@@ -125,7 +144,7 @@ font-size:13px;
 
 <img src="burapa-logo.png" class="logo">
 
-  <div class="system-name">
+<div class="system-name">
 ระบบบริหารจัดการสถิตินักเรียน
 </div>
   
@@ -137,6 +156,7 @@ font-size:13px;
 
 </header>
 
+
 <div class="main">
 
 <div class="card">
@@ -145,12 +165,12 @@ font-size:13px;
 
 <button class="btn btn-teacher"
 onclick="location.href='teacher-dashboard.html'">
-👨‍🏫 สำหรับคุณครูประจำชั้น
+👩‍🏫 สำหรับคุณครูประจำชั้น
 </button>
 
 <button class="btn btn-admin"
 onclick="location.href='admin-login.html'">
-👨‍💼 สำหรับผู้บริหาร
+👨‍💼 สำหรับผู้บริหารและผู้ดูแลระบบ
 </button>
 
 </div>
@@ -159,14 +179,19 @@ onclick="location.href='admin-login.html'">
 
 <footer>
 
-ระบบบริหารจัดการสถิตินักเรียน
+ระบบบริหารจัดการสถิตินักเรียน  
 ภาคเรียนที่ <span id="termFooter"></span>  
 
-โรงเรียนเทศบาลบูรพาอุบล
 <br>
+
+โรงเรียนเทศบาลบูรพาอุบล  
+
+<br>
+
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
 
 </footer>
+
 
 <script>
 
