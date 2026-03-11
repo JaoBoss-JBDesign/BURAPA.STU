@@ -279,7 +279,7 @@ height:45px;
 border:4px solid #eee;
 border-top:4px solid #e63946;
 border-radius:50%;
-animation:spin 7s linear infinite;
+animation:spin 1s linear infinite;
 }
 
 @keyframes spin{
@@ -417,19 +417,22 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 
 async function load(){
 
-document.getElementById("loading").style.display="none"
+try{
 
-const res = await fetch(API+"?mode=getdashboard&t="+Date.now());
-const dash = await res.json();
+const res = await fetch(API+"?mode=getdashboard&t="+Date.now())
+
+const dash = await res.json()
 
 renderDash(dash)
 renderRooms(dash.rooms)
 
+}catch(err){
+
+console.error(err)
+
 }
 
-}catch(err){
-console.error(err)
-}
+document.getElementById("loading").style.display="none"
 
 }
 
@@ -482,9 +485,12 @@ legend:{position:"bottom"},
 tooltip:{
 callbacks:{
 label:function(c){
+
 let value=c.raw
 let percent=Math.round(value/total*100)
+
 return c.label+" "+value+" คน ("+percent+"%)"
+
 }
 }
 }
@@ -496,19 +502,24 @@ document.getElementById("chartText").style.display="none"
 
 }
 
+
 function renderRooms(rooms){
 
 let html=""
 
 rooms.forEach(r=>{
 
+let status=r.submitted
+?'<span class="status green">บันทึกแล้ว</span>'
+:'<span class="status red">ยังไม่บันทึก</span>'
+
 html+=`
 
 <div class="class">
 
 <div class="class-top">
-<span>${r}</span>
-<span class="status red">ยังไม่บันทึก</span>
+<span>${r.room}</span>
+${status}
 </div>
 
 <div class="buttons">
@@ -526,7 +537,9 @@ document.getElementById("classList").innerHTML=html
 
 }
 
+
 load()
+
 
 function updateClock(){
 
@@ -551,6 +564,7 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 
 setInterval(updateClock,1000)
 updateClock()
+
 
 let term=localStorage.getItem("term")||"2"
 let year=localStorage.getItem("year")||"2568"
