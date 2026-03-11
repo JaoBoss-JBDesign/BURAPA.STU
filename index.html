@@ -1,23 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
+
 <head>
+
 <meta charset="UTF-8">
-<title>BURAPA STU SYSTEM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BURAPA.STU SYSTEM</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+font-family: "Segoe UI", sans-serif;
+background:linear-gradient(135deg,#8b0000,#ffcc00);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+header{
+text-align:center;
+color:white;
+padding:40px 20px;
+}
+
+.logo{
+width:120px;
+margin-bottom:15px;
+}
+
+.school-name{
+font-size:32px;
+font-weight:bold;
+}
+
+.system-name{
+font-size:20px;
+opacity:0.9;
+}
+
+.main{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.card{
+
+background:white;
+padding:40px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+width:320px;
+
+}
+
+.card h2{
+margin-top:0;
+color:#8b0000;
+}
+
+.btn{
+
+display:block;
+width:100%;
+padding:14px;
+margin-top:15px;
+
+border:none;
+border-radius:8px;
+
+font-size:16px;
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+.btn-teacher{
+background:#8b0000;
+color:white;
+}
+
+.btn-admin{
+background:#ffcc00;
+color:black;
+}
+
+.btn:hover{
+transform:scale(1.05);
+box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+.term{
+margin-top:10px;
+font-size:14px;
+color:#666;
+}
+
+footer{
+
+text-align:center;
+background:#222;
+color:#ddd;
+padding:15px;
+font-size:13px;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h1>BURAPA STUDENT ATTENDANCE SYSTEM</h1>
-<h2>Select User Role</h2>
+<header>
 
-<button onclick="location.href='teacher-dashboard.html'">
-Teacher
+<img src="burapa-logo.png" class="logo">
+
+  <div class="system-name">
+ระบบบริหารจัดการสถิตินักเรียน
+</div>
+  
+<div class="school-name">
+โรงเรียนเทศบาลบูรพาอุบล
+</div>
+
+<div class="term" id="termDisplay"></div>
+
+</header>
+
+<div class="main">
+
+<div class="card">
+
+<h2>เริ่มต้นใช้งานระบบ</h2>
+
+<button class="btn btn-teacher"
+onclick="location.href='teacher-dashboard.html'">
+👨‍🏫 สำหรับคุณครูประจำชั้น
 </button>
 
-<button onclick="location.href='admin-login.html'">
-Administrator
+<button class="btn btn-admin"
+onclick="location.href='admin-login.html'">
+👨‍💼 สำหรับผู้บริหาร
 </button>
+
+</div>
+
+</div>
+
+<footer>
+
+ระบบบริหารจัดการสถิตินักเรียน  
+โรงเรียนเทศบาลบูรพาอุบล  
+ภาคเรียนที่ <span id="termFooter"></span>  
+
+<br>
+
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
+
+</footer>
+
+<script>
+
+function loadTerm(){
+
+let term = localStorage.getItem("term")
+let year = localStorage.getItem("year")
+
+if(!term){
+term="2"
+year="2568"
+}
+
+document.getElementById("termDisplay").innerHTML=
+"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+
+document.getElementById("termFooter").innerHTML=
+term+"/"+year
+
+}
+
+loadTerm()
+
+</script>
 
 </body>
 </html>
