@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -10,9 +9,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <style>
-
-/* RESET */
-
 *{
 box-sizing:border-box;
 margin:0;
@@ -20,14 +16,10 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
-/* ป้องกันเลื่อนซ้ายขวา */
-
 html,body{
 max-width:100%;
 overflow-x:hidden;
 }
-
-/* BODY */
 
 body{
 
@@ -44,8 +36,6 @@ position:relative;
 overflow-x:hidden;
 
 }
-
-/* BACKGROUND GLOW */
 
 body::before{
 content:"";
@@ -70,8 +60,6 @@ background:radial-gradient(circle,#ffd6d6,transparent);
 opacity:.35;
 z-index:-1;
 }
-
-/* PARTICLES */
 
 .particle{
 position:fixed;
@@ -98,8 +86,6 @@ transform:translateY(110vh);
 
 }
 
-/* LOADING */
-
 #loading{
 position:fixed;
 inset:0;
@@ -123,8 +109,6 @@ animation:spin 1s linear infinite;
 @keyframes spin{
 to{transform:rotate(360deg)}
 }
-
-/* HEADER */
 
 header{
 
@@ -150,8 +134,6 @@ flex-shrink:0;
 
 }
 
-/* LOGO */
-
 .logo{
 
 width:clamp(80px,12vw,110px);
@@ -175,8 +157,6 @@ transition:.4s;
 100%{transform:translateY(0)}
 
 }
-
-/* TEXT */
 
 .system-name{
 font-size:13px;
@@ -204,8 +184,6 @@ font-size:12px;
 margin-top:2px;
 }
 
-/* MAIN */
-
 main{
 
 flex:1;
@@ -217,8 +195,6 @@ justify-content:center;
 padding:16px;
 
 }
-
-/* CARD */
 
 .card{
 
@@ -260,8 +236,6 @@ transform:translateY(0) scale(1);
 font-size:18px;
 margin-bottom:16px;
 }
-
-/* BUTTON */
 
 .btn{
 
@@ -330,8 +304,6 @@ box-shadow:0 0 18px rgba(255,100,100,.45);
 transform:scale(.96);
 }
 
-/* COLORS */
-
 .btn-teacher{
 background:linear-gradient(135deg,#d62828,#ff6b6b);
 color:white;
@@ -346,8 +318,6 @@ color:#333;
 background:#eef1f6;
 border:1px solid #dde2ea;
 }
-
-/* FOOTER */
 
 footer{
 
@@ -376,7 +346,7 @@ line-height:1.6;
 <div class="loader"></div>
 
 <div style="margin-top:12px;font-size:14px;color:#555">
-กำลังโหลดระบบ...
+กำลังเริ่มระบบ โปรดรอสักครู่...
 </div>
 
 </div>
@@ -451,8 +421,6 @@ onclick="location.href='admin-login.html'">
 
 <script>
 
-/* TERM */
-
 function loadTerm(){
 
 let term=localStorage.getItem("term")
@@ -472,8 +440,6 @@ term+"/"+year
 }
 
 loadTerm()
-
-/* CLOCK */
 
 function updateClock(){
 
@@ -499,8 +465,6 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 setInterval(updateClock,1000)
 updateClock()
 
-/* LOADING */
-
 window.onload=function(){
 
 setTimeout(()=>{
@@ -510,8 +474,6 @@ document.getElementById("loading").style.display="none"
 },600)
 
 }
-
-/* PARTICLES */
 
 for(let i=0;i<20;i++){
 
@@ -531,4 +493,3 @@ document.body.appendChild(p)
 
 </body>
 </html>
-```
