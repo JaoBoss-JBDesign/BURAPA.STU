@@ -419,7 +419,9 @@ async function load(){
 
 try{
 
-const res = await fetch(API+"?mode=getdashboard&t="+Date.now())
+const res = Promise.all([
+fetch(API+"?mode=getdashboard&t="+Date.now())
+])
 
 const dash = await res.json()
 
