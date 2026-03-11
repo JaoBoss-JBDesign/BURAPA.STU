@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Attendance Form</title>
-<script src="script.js">
-alert("บันทึกเรียบร้อย")
-window.location.href="dashboard.html"
-</script>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="script.js"></script>
+
 </head>
 
 <body>
 
-<h2>บันทึกสถิติการมาเรียน</h2>
+<header>Attendance Form</header>
+
+<div class="container">
+
+<div class="card">
 
 <div id="roomName"></div>
 
-ชายทั้งหมด <input type="number" id="all_boys"><br>
-หญิงทั้งหมด <input type="number" id="all_girls"><br>
+ชายทั้งหมด
+<input type="number" id="all_boys">
 
-ชายมาวันนี้ <input type="number" id="boys_today"><br>
-หญิงมาวันนี้ <input type="number" id="girls_today"><br>
+หญิงทั้งหมด
+<input type="number" id="all_girls">
 
-ป่วย <input type="number" id="sick"><br>
-ลา <input type="number" id="leave"><br>
-ขาด <input type="number" id="absent"><br>
+ชายมาวันนี้
+<input type="number" id="boys_today">
 
-<button onclick="submitData()">บันทึก</button>
+หญิงมาวันนี้
+<input type="number" id="girls_today">
+
+ป่วย
+<input type="number" id="sick">
+
+ลา
+<input type="number" id="leave">
+
+ขาด
+<input type="number" id="absent">
+
+<br><br>
+
+<button onclick="submitData()">บันทึกข้อมูล</button>
+
+</div>
+
+</div>
 
 </body>
 </html>
