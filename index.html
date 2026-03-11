@@ -319,40 +319,29 @@ background:#eef1f6;
 border:1px solid #dde2ea;
 }
 
-background:
-linear-gradient(180deg,#f6f7fb,#eef1f8),
-repeating-linear-gradient(
-0deg,
-rgba(0,0,0,0.02),
-rgba(0,0,0,0.02) 1px,
-transparent 1px,
-transparent 40px
-),
-repeating-linear-gradient(
-90deg,
-rgba(0,0,0,0.02),
-rgba(0,0,0,0.02) 1px,
-transparent 1px,
-transparent 40px
-);
-
+.watermark-text{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:90px;
+font-weight:700;
+color:#000;
+opacity:.03;
+white-space:nowrap;
+pointer-events:none;
+z-index:-1;
+}
+  
 footer{
-
 background:#e63946;
 color:white;
-
 text-align:center;
-
 font-size:12px;
-
 padding:10px;
-
 flex-shrink:0;
-
 line-height:1.6;
-
 }
-
 </style>
 </head>
 
@@ -380,6 +369,10 @@ line-height:1.6;
 โรงเรียนเทศบาลบูรพาอุบล
 </div>
 
+<div class="watermark-text">
+BURAPA STUDENT SYSTEM
+</div>
+  
 <div class="term" id="termDisplay"></div>
 <div class="time" id="clock"></div>
 
