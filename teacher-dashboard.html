@@ -8,6 +8,7 @@
 <title>Teacher Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -96,41 +97,70 @@ opacity:.35;
 100%{left:100%}
 }
 
-/* BACK BUTTON */
-
-.back{
-position:absolute;
-left:12px;
-top:12px;
-color:white;
-text-decoration:none;
-font-size:13px;
-background:rgba(255,255,255,.15);
-padding:6px 10px;
-border-radius:8px;
+.logo{
+width:90px;
+margin-bottom:4px;
+animation:float 4s ease-in-out infinite;
 }
 
-/* HEADER TEXT */
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
 
 .system-name{
 font-size:13px;
-opacity:.95;
 }
 
 .school-name{
-font-size:24px;
+font-size:26px;
 font-weight:700;
-text-shadow:0 3px 10px rgba(0,0,0,.3);
+}
+
+.term{
+font-size:12px;
+margin-top:3px;
+}
+
+.time{
+font-size:12px;
+}
+
+/* BACK */
+
+.back{
+
+position:absolute;
+left:12px;
+top:12px;
+
+color:white;
+text-decoration:none;
+
+font-size:13px;
+
+background:rgba(255,255,255,.2);
+
+padding:6px 10px;
+
+border-radius:8px;
+
 }
 
 /* MAIN */
 
 main{
+
 flex:1;
-max-width:1100px;
-margin:auto;
-padding:18px;
+
 width:100%;
+max-width:1100px;
+
+margin:auto;
+
+padding:16px;
+
 }
 
 /* WELCOME */
@@ -139,15 +169,15 @@ width:100%;
 
 background:white;
 
-border-radius:16px;
-
 padding:12px;
+
+border-radius:16px;
 
 text-align:center;
 
-margin-bottom:16px;
-
 font-size:13px;
+
+margin-bottom:16px;
 
 box-shadow:0 8px 20px rgba(0,0,0,.08);
 
@@ -171,9 +201,9 @@ margin-bottom:16px;
 
 background:white;
 
-border-radius:16px;
-
 padding:14px;
+
+border-radius:16px;
 
 text-align:center;
 
@@ -196,8 +226,6 @@ margin-top:4px;
 .sick{color:#ff8fab}
 .leave{color:#ffd166}
 .absent{color:#f28482}
-
-/* MOBILE STATS */
 
 @media(max-width:700px){
 
@@ -224,9 +252,11 @@ gap:16px;
 }
 
 @media(max-width:900px){
+
 .grid{
 grid-template-columns:1fr;
 }
+
 }
 
 /* CARD */
@@ -240,6 +270,20 @@ border-radius:18px;
 padding:16px;
 
 box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+/* CENTER FIX MOBILE */
+
+@media(max-width:600px){
+
+main{
+padding:14px;
+}
+
+.card{
+margin:auto;
+}
 
 }
 
@@ -266,10 +310,8 @@ font-size:14px;
 }
 
 .status{
-
 font-size:12px;
 font-weight:600;
-
 }
 
 .green{
@@ -280,18 +322,13 @@ color:#6BCB77;
 color:#e63946;
 }
 
-/* BUTTONS */
+/* BUTTON */
 
 .buttons{
-
 margin-top:6px;
-
 display:flex;
-
 gap:6px;
-
 flex-wrap:wrap;
-
 }
 
 button{
@@ -315,7 +352,6 @@ color:white;
 
 .btn-edit{
 background:#ffd166;
-color:#333;
 }
 
 .btn-sub{
@@ -396,6 +432,8 @@ to{transform:rotate(360deg)}
 
 <a href="index.html" class="back">← หน้าแรก</a>
 
+<img src="burapa-logo.png" class="logo">
+
 <div class="system-name">
 ระบบบริหารจัดการสถิตินักเรียน
 </div>
@@ -403,6 +441,9 @@ to{transform:rotate(360deg)}
 <div class="school-name">
 โรงเรียนเทศบาลบูรพาอุบล
 </div>
+
+<div class="term" id="termDisplay"></div>
+<div class="time" id="clock"></div>
 
 </header>
 
@@ -445,22 +486,22 @@ to{transform:rotate(360deg)}
 
 <div class="card">
 
-<h3 style="margin-bottom:10px">กราฟสถิติวันนี้</h3>
+<h3>แผนภูมิสถิติวันนี้</h3>
+
+<div id="chartText" style="text-align:center;color:#888;font-size:12px;margin:6px 0">
+กำลังซิงค์แผนภูมิ...
+</div>
 
 <canvas id="chart"></canvas>
-
-<div id="chartText"
-style="text-align:center;color:#888;margin-top:8px;font-size:12px">
-</div>
 
 </div>
 
 <div class="card">
 
-<h3 style="margin-bottom:10px">ห้องเรียนทั้งหมด</h3>
+<h3>ห้องเรียนทั้งหมด</h3>
 
-<div id="classList">
-กำลังโหลด...
+<div id="classList" style="font-size:13px;color:#888">
+โปรดรอสักครู่...
 </div>
 
 </div>
@@ -472,6 +513,10 @@ style="text-align:center;color:#888;margin-top:8px;font-size:12px">
 <footer>
 
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
+
+<br>
+
+ภาคเรียนที่ <span id="termFooter"></span>
 
 <br>
 
@@ -501,33 +546,23 @@ renderRooms(rooms)
 
 function renderDash(d){
 
+let total=d.present+d.sick+d.leave+d.absent
+
+document.getElementById("total").innerText=total
 document.getElementById("present").innerText=d.present
 document.getElementById("sick").innerText=d.sick
 document.getElementById("leave").innerText=d.leave
 document.getElementById("absent").innerText=d.absent
 
-let total=d.present+d.sick+d.leave+d.absent
-
-document.getElementById("total").innerText=total
-
 let ctx=document.getElementById("chart")
 
 if(total==0){
 
-new Chart(ctx,{
-type:"pie",
-data:{
-labels:["ไม่มีข้อมูล"],
-datasets:[{
-data:[1],
-backgroundColor:["#ddd"]
-}]
+document.getElementById("chartText").innerText="ยังไม่มีข้อมูล"
+
+return
+
 }
-})
-
-document.getElementById("chartText").innerText="ยังไม่มีการบันทึกข้อมูล"
-
-}else{
 
 let p=Math.round(d.present/total*100)
 let s=Math.round(d.sick/total*100)
@@ -537,20 +572,31 @@ let a=Math.round(d.absent/total*100)
 new Chart(ctx,{
 type:"pie",
 data:{
-labels:[
-"มาเรียน "+p+"%",
-"ป่วย "+s+"%",
-"ลา "+l+"%",
-"ขาด "+a+"%"
-],
+labels:["มาเรียน","ป่วย","ลา","ขาด"],
 datasets:[{
 data:[d.present,d.sick,d.leave,d.absent],
 backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
 }]
+},
+options:{
+plugins:{
+tooltip:{
+callbacks:{
+label:function(c){
+
+let value=c.raw
+let percent=Math.round(value/total*100)
+
+return c.label+" "+value+" คน ("+percent+"%)"
+
+}
+}
+}
+}
 }
 })
 
-}
+document.getElementById("chartText").innerText=""
 
 }
 
@@ -593,6 +639,35 @@ document.getElementById("classList").innerHTML=html
 }
 
 load()
+
+/* CLOCK */
+
+function updateClock(){
+
+let now=new Date()
+
+let h=String(now.getHours()).padStart(2,"0")
+let m=String(now.getMinutes()).padStart(2,"0")
+let s=String(now.getSeconds()).padStart(2,"0")
+
+document.getElementById("clock").innerText=
+"เวลา "+h+":"+m+":"+s+" น."
+
+}
+
+setInterval(updateClock,1000)
+updateClock()
+
+/* TERM */
+
+let term=localStorage.getItem("term")||"2"
+let year=localStorage.getItem("year")||"2568"
+
+document.getElementById("termDisplay").innerText=
+"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+
+document.getElementById("termFooter").innerText=
+term+"/"+year
 
 window.onload=function(){
 
