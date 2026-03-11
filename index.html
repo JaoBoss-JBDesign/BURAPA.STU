@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BURAPA STUDENT SYSTEM</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 *{
 box-sizing:border-box;
 margin:0;
@@ -16,27 +18,38 @@ font-family:'Prompt',sans-serif;
 
 body{
 min-height:100vh;
-background:#f8f9fc;
+background:#f7f8fc;
 display:flex;
 flex-direction:column;
 }
 
+/* HEADER */
+
 header{
+
 background:linear-gradient(
 135deg,
-#d62828,
+#c1121f,
 #e63946,
 #ff6b6b
 );
+
 color:white;
 text-align:center;
-padding:20px 16px 16px;
+
+padding:24px 16px 20px;
+
 }
 
+/* LOGO */
+
 .logo{
-width:120px;
-margin-bottom:6px;
+width:135px;
+margin-bottom:8px;
+filter:drop-shadow(0 6px 12px rgba(0,0,0,.25));
 }
+
+/* TEXT */
 
 .system-name{
 font-size:14px;
@@ -44,10 +57,14 @@ opacity:.95;
 }
 
 .school-name{
-font-size:28px;
+
+font-size:30px;
 font-weight:700;
+
 margin-top:4px;
+
 text-shadow:0 3px 8px rgba(0,0,0,.25);
+
 }
 
 .term{
@@ -56,86 +73,182 @@ margin-top:6px;
 opacity:.95;
 }
 
+/* MAIN */
+
 .main{
+
 flex:1;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
-padding:26px 16px;
+
+padding:28px 16px;
+
 }
 
+/* CARD */
+
 .card{
+
 width:100%;
 max-width:520px;
+
 background:white;
+
 border-radius:20px;
+
 padding:36px 28px;
-box-shadow:0 18px 45px rgba(0,0,0,.08);
+
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+
 text-align:center;
+
+border-top:5px solid #e63946;
+
+animation:fadeIn .6s ease;
+
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 .card h2{
-font-size:20px;
-margin-bottom:22px;
+
+font-size:21px;
+
+margin-bottom:24px;
+
 color:#333;
+
 }
+
+/* BUTTON */
 
 .btn{
+
 display:block;
+
 width:100%;
+
 padding:18px;
+
 margin-top:14px;
+
 border:none;
+
 border-radius:14px;
+
 font-size:16px;
+
 font-weight:500;
+
 cursor:pointer;
+
 transition:.25s;
+
 }
 
+/* teacher */
+
 .btn-teacher{
+
 background:linear-gradient(
 135deg,
 #d62828,
 #ff6b6b
 );
+
 color:white;
+
+box-shadow:0 6px 18px rgba(214,40,40,.35);
+
 }
+
+/* admin */
 
 .btn-admin{
-background:linear-gradient(135deg,#f4c430,#ffd166);
+
+background:linear-gradient(
+135deg,
+#f4c430,
+#ffd166
+);
+
 color:#333;
+
+box-shadow:0 6px 18px rgba(244,196,48,.35);
+
 }
+
+/* manual */
 
 .btn-manual{
+
 background:#eef1f6;
-border:1px solid #dfe3ea;
+
+border:1px solid #dde2ea;
+
 color:#333;
+
 }
+
+/* HOVER */
 
 .btn:hover{
+
 transform:translateY(-4px);
+
 box-shadow:0 10px 25px rgba(0,0,0,.15);
+
 }
+
+/* FOOTER */
 
 footer{
-background:linear-gradient(135deg,#d62828,#e63946,#ff6b6b);
+
+background:linear-gradient(
+135deg,
+#c1121f,
+#e63946,
+#ff6b6b
+);
+
 color:white;
+
 text-align:center;
-padding:18px 14px;
+
+padding:20px 14px;
+
 font-size:13px;
+
 line-height:1.7;
+
 }
 
+/* DESKTOP */
+
 @media(min-width:768px){
-.logo{width:140px;
+
+.logo{
+width:150px;
 }
 
 .school-name{
-  font-size:32px;
+font-size:34px;
 }
 
-  .card{
+.card{
 padding:42px;
 }
 
@@ -145,7 +258,9 @@ padding:42px;
 </head>
 
 <body>
+
 <header>
+
 <img src="burapa-logo.png" class="logo">
 
 <div class="system-name">
@@ -157,13 +272,14 @@ padding:42px;
 </div>
 
 <div class="term" id="termDisplay"></div>
+
 </header>
 
 <div class="main">
 
 <div class="card">
 
-<h2>เลือกการเข้าใช้งานระบบ</h2>
+<h2>เริ่มต้นใช้งานระบบ</h2>
 
 <button class="btn btn-teacher"
 onclick="location.href='teacher-dashboard.html'">
@@ -185,7 +301,9 @@ onclick="openManual()">
 📖 คู่มือการใช้งานระบบ
 
 </button>
+
 </div>
+
 </div>
 
 <footer>
