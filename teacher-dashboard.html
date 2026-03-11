@@ -159,7 +159,7 @@ max-width:1100px;
 
 margin:auto;
 
-padding:16px;
+padding:16px 14px;
 
 }
 
@@ -271,8 +271,21 @@ padding:16px;
 
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 
+height:100%;
 }
 
+#classList{
+
+min-height:260px;
+
+max-height:420px;
+
+overflow-y:auto;
+
+padding-right:4px;
+
+}
+  
 /* CENTER FIX MOBILE */
 
 @media(max-width:600px){
@@ -430,7 +443,7 @@ to{transform:rotate(360deg)}
 
 <header>
 
-<a href="index.html" class="back">← หน้าแรก</a>
+<a class="back" onclick="location.href='index.html'">← กลับหน้าแรก</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -558,10 +571,25 @@ let ctx=document.getElementById("chart")
 
 if(total==0){
 
-document.getElementById("chartText").innerText="ยังไม่มีข้อมูล"
+new Chart(ctx,{
+type:"pie",
+data:{
+labels:["ยังไม่มีข้อมูล"],
+datasets:[{
+data:[1],
+backgroundColor:["#e0e0e0"]
+}]
+},
+options:{
+plugins:{
+tooltip:{enabled:false}
+}
+}
+})
+
+document.getElementById("chartText").innerText="ยังไม่มีการบันทึกข้อมูล"
 
 return
-
 }
 
 let p=Math.round(d.present/total*100)
