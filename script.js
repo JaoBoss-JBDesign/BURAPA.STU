@@ -1,103 +1,27 @@
 const api="https://script.google.com/macros/s/AKfycbxDfNIpPlZpremzXO3j_kxBijxxWn46KZdim27gZLuCKzgjOonYVRNLB7PfKaoYlj2LMg/exec"
 
-async function submitData(){
+async function loadClassrooms(){
 
-const allboys =
-Number(document.getElementById("all_boys").value)
-
-const allgirls =
-Number(document.getElementById("all_girls").value)
-
-const boystoday =
-Number(document.getElementById("boys_today").value)
-
-const girlstoday =
-Number(document.getElementById("girls_today").value)
-
-const sick =
-Number(document.getElementById("sick").value)
-
-const leave =
-Number(document.getElementById("leave").value)
-
-const absent =
-Number(document.getElementById("absent").value)
-
-const data = {
-
-date:new Date().toLocaleDateString("th-TH"),
-
-classroom:localStorage.getItem("room"),
-
-all_boys:allboys,
-all_girls:allgirls,
-
-boys_today:boystoday,
-girls_today:girlstoday,
-
-sick:sick,
-leave:leave,
-absent:absent,
-
-timestamp:new Date(),
-source:"web"
-
-}
-
-await fetch(api,{
-method:"POST",
-body:JSON.stringify(data)
-})
-
-alert("บันทึกเรียบร้อย")
-
-window.location.href="dashboard.html"
-
-}
-
-function logout(){
-
-localStorage.removeItem("adminLogin")
-
-window.location.href="index.html"
-
-}
-
-const classrooms = [
-
-"ม1/1",
-"ม1/2",
-"ม2/1",
-"ม2/2",
-"ม3/1",
-"ม3/2"
-
-]
-
-function loadRooms(){
+const res = await fetch(api+"?mode=getClassrooms")
+const rooms = await res.json()
 
 const list=document.getElementById("roomList")
 
+if(!list) return
+
 list.innerHTML=""
 
-classrooms.forEach(room=>{
-
-const status=Math.random()>0.5 ? "done":"pending"
+rooms.forEach(room=>{
 
 const div=document.createElement("div")
-
 div.className="room"
 
 div.innerHTML=`
 
 <span>${room}</span>
 
-<span class="${status}">
-${status==="done"?"🟢 บันทึกแล้ว":"🔴 ยังไม่บันทึก"}
-</span>
-
 <button onclick="openForm('${room}')">
-กรอกข้อมูล
+บันทึกสถิติ
 </button>
 
 `
@@ -112,8 +36,70 @@ function openForm(room){
 
 localStorage.setItem("room",room)
 
-window.location.href="form.html"
+window.location.href="statistic.html"
 
 }
 
-window.onload=loadRooms
+function showRoom(){
+
+const room=localStorage.getItem("room")
+
+const el=document.getElementById("roomName")
+
+if(el) el.innerHTML="<h3>ห้อง "+room+"</h3>"
+
+}
+
+async function submitData(){
+
+const data={
+
+date:new Date().toLocaleDateString("th-TH"),
+
+classroom:localStorage.getItem("room"),
+
+all_boys:Number(document.getElementById("all_boys").value),
+
+all_girls:Number(document.getElementById("all_girls").value),
+
+boys_today:Number(document.getElementById("boys_today").value),
+
+girls_today:Number(document.getElementById("girls_today").value),
+
+sick:Number(document.getElementById("sick").value),
+
+leave:Number(document.getElementById("leave").value),
+
+absent:Number(document.getElementById("absent").value),
+
+timestamp:new Date(),
+
+source:"บันทึกข้อมูลโดยคุณครู"
+
+}
+
+await fetch(api,{
+method:"POST",
+body:JSON.stringify(data)
+})
+
+alert("บันทึกเรียบร้อย")
+
+window.location.href="teacher-dashboard.html"
+
+}
+
+function logout(){
+
+localStorage.removeItem("adminLogin")
+
+window.location.href="index.html"
+
+}
+
+window.onload=()=>{
+
+loadClassrooms()
+showRoom()
+
+}
