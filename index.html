@@ -17,48 +17,27 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
-/* BODY */
-
 body{
-min-height:100vh;
-background:linear-gradient(180deg,#f6f7fb,#eef1f8);
+
+height:100dvh;
 display:flex;
 flex-direction:column;
-position:relative;
+
+background:linear-gradient(180deg,#f6f7fb,#eef1f8);
+
+overflow:hidden;
+
 }
 
-/* PARTICLES */
-
-.particle{
-position:absolute;
-width:7px;
-height:7px;
-background:#ffb3b3;
-border-radius:50%;
-opacity:.4;
-animation:fall linear infinite;
-}
-
-@keyframes fall{
-from{
-transform:translateY(-10vh);
-opacity:.6;
-}
-to{
-transform:translateY(110vh);
-opacity:0;
-}
-}
-
-/* BACKGROUND */
+/* BACKGROUND GLOW */
 
 body::before{
 content:"";
 position:absolute;
 top:-200px;
 right:-200px;
-width:450px;
-height:450px;
+width:420px;
+height:420px;
 background:radial-gradient(circle,#ffb3b3,transparent);
 opacity:.35;
 z-index:-1;
@@ -69,34 +48,73 @@ content:"";
 position:absolute;
 bottom:-200px;
 left:-200px;
-width:450px;
-height:450px;
+width:420px;
+height:420px;
 background:radial-gradient(circle,#ffd6d6,transparent);
 opacity:.35;
 z-index:-1;
 }
 
+/* PARTICLES */
+
+.particle{
+
+position:absolute;
+width:6px;
+height:6px;
+
+background:#ff9a9a;
+
+border-radius:50%;
+
+opacity:.35;
+
+animation:fall linear infinite;
+
+}
+
+@keyframes fall{
+
+from{
+transform:translateY(-10vh);
+}
+
+to{
+transform:translateY(110vh);
+}
+
+}
+
 /* LOADING */
 
 #loading{
+
 position:fixed;
 inset:0;
+
 background:white;
+
 display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
+
 z-index:999;
-transition:.5s;
+
 }
 
 .loader{
+
 width:45px;
 height:45px;
+
 border:4px solid #eee;
 border-top:4px solid #e63946;
+
 border-radius:50%;
+
 animation:spin 1s linear infinite;
+
 }
 
 @keyframes spin{
@@ -107,40 +125,48 @@ to{transform:rotate(360deg)}
 
 header{
 
-background:linear-gradient(
-135deg,
-#c1121f,
-#e63946,
-#ff6b6b
-);
-
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 background-size:200% 200%;
+
 animation:gradientMove 6s ease infinite;
 
 color:white;
 text-align:center;
 
-padding:calc(14px + env(safe-area-inset-top)) 12px 14px;
+padding:14px 10px;
+
+flex-shrink:0;
 
 }
 
 @keyframes gradientMove{
+
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
+
 }
 
-/* LOGO */
+/* LOGO FLOAT */
 
 .logo{
-width:clamp(90px,14vw,120px);
+
+width:clamp(80px,12vw,110px);
+
 margin-bottom:4px;
-filter:drop-shadow(0 5px 10px rgba(0,0,0,.25));
-transition:.5s;
+
+animation:float 4s ease-in-out infinite;
+
+filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));
+
 }
 
-.logo:hover{
-transform:rotate(8deg) scale(1.05);
+@keyframes float{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+
 }
 
 /* TEXT */
@@ -151,70 +177,82 @@ opacity:.95;
 }
 
 .school-name{
-font-size:clamp(18px,3.5vw,28px);
+
+font-size:clamp(18px,3.2vw,26px);
 font-weight:700;
-margin-top:3px;
+
 white-space:nowrap;
+
 text-shadow:0 3px 8px rgba(0,0,0,.25);
+
 }
 
 .term{
 font-size:12px;
 margin-top:4px;
-opacity:.95;
 }
 
 .time{
 font-size:12px;
 margin-top:2px;
-opacity:.9;
 }
 
 /* MAIN */
 
-.main{
+main{
+
 flex:1;
+
 display:flex;
 align-items:center;
 justify-content:center;
-padding:12px 16px;
+
+padding:14px;
+
 }
 
-/* CARD */
+/* GLASS CARD */
 
 .card{
 
 width:100%;
-max-width:500px;
+max-width:480px;
 
-background:rgba(255,255,255,.85);
+background:rgba(255,255,255,.75);
+
 backdrop-filter:blur(12px);
 
 border-radius:20px;
 
 padding:26px 22px;
 
-box-shadow:
-0 20px 50px rgba(0,0,0,.08),
-0 5px 15px rgba(0,0,0,.05);
-
-text-align:center;
+box-shadow:0 25px 60px rgba(0,0,0,.12);
 
 border-top:5px solid #e63946;
+
+text-align:center;
 
 animation:fadeIn .5s ease;
 
 }
 
 @keyframes fadeIn{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:translateY(0)}
+
+from{
+opacity:0;
+transform:translateY(12px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
 }
 
 .card h2{
-font-size:19px;
-margin-bottom:18px;
-color:#333;
+font-size:18px;
+margin-bottom:16px;
 }
 
 /* BUTTON */
@@ -224,12 +262,14 @@ color:#333;
 display:flex;
 align-items:center;
 justify-content:center;
+
 gap:10px;
 
 width:100%;
-padding:15px;
 
-margin-top:11px;
+padding:14px;
+
+margin-top:10px;
 
 border:none;
 border-radius:12px;
@@ -253,14 +293,21 @@ font-size:18px;
 /* LIGHT SWEEP */
 
 .btn::after{
+
 content:"";
+
 position:absolute;
+
 top:0;
 left:-100%;
+
 width:100%;
 height:100%;
+
 background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
-transition:.5s;
+
+transition:.6s;
+
 }
 
 .btn:hover::after{
@@ -268,15 +315,18 @@ left:100%;
 }
 
 .btn:hover{
+
 transform:translateY(-3px);
-box-shadow:0 0 15px rgba(255,100,100,.5);
+
+box-shadow:0 0 18px rgba(255,100,100,.45);
+
 }
 
 .btn:active{
 transform:scale(.96);
 }
 
-/* BUTTON COLORS */
+/* COLORS */
 
 .btn-teacher{
 background:linear-gradient(135deg,#d62828,#ff6b6b);
@@ -284,33 +334,29 @@ color:white;
 }
 
 .btn-admin{
-background:linear-gradient(135deg,#f4c430,#ffd166);
+background:linear-gradient(135deg,#ffd166,#ffe29a);
 color:#333;
 }
 
 .btn-manual{
 background:#eef1f6;
 border:1px solid #dde2ea;
-color:#333;
 }
 
 /* FOOTER */
 
 footer{
 
-background:linear-gradient(
-135deg,
-#c1121f,
-#e63946,
-#ff6b6b
-);
-
+background:#e63946;
 color:white;
+
 text-align:center;
 
-padding:12px 10px;
-
 font-size:12px;
+
+padding:10px;
+
+flex-shrink:0;
 
 line-height:1.6;
 
@@ -322,10 +368,13 @@ line-height:1.6;
 <body>
 
 <div id="loading">
+
 <div class="loader"></div>
+
 <div style="margin-top:12px;font-size:14px;color:#555">
 กำลังโหลดระบบ...
 </div>
+
 </div>
 
 <header>
@@ -345,7 +394,7 @@ line-height:1.6;
 
 </header>
 
-<div class="main">
+<main>
 
 <div class="card">
 
@@ -353,25 +402,31 @@ line-height:1.6;
 
 <button class="btn btn-teacher"
 onclick="location.href='teacher-dashboard.html'">
+
 <i class="bi bi-person-workspace"></i>
 สำหรับคุณครูประจำชั้น
+
 </button>
 
 <button class="btn btn-admin"
 onclick="location.href='admin-login.html'">
+
 <i class="bi bi-person-gear"></i>
 สำหรับผู้บริหาร / ผู้ดูแลระบบ
+
 </button>
 
 <button class="btn btn-manual"
 onclick="openManual()">
+
 <i class="bi bi-book"></i>
 คู่มือการใช้งานระบบ
+
 </button>
 
 </div>
 
-</div>
+</main>
 
 <footer>
 
@@ -387,12 +442,13 @@ onclick="openManual()">
 
 <br>
 
-สำนักการศึกษา  
-เทศบาลนครอุบลราชธานี
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
 
 </footer>
 
 <script>
+
+/* TERM */
 
 function loadTerm(){
 
@@ -414,7 +470,7 @@ term+"/"+year
 
 loadTerm()
 
-/* CLOCK THAI FORMAT */
+/* CLOCK */
 
 function updateClock(){
 
@@ -430,9 +486,10 @@ let year=now.getFullYear()+543
 
 let h=String(now.getHours()).padStart(2,"0")
 let m=String(now.getMinutes()).padStart(2,"0")
+let s=String(now.getSeconds()).padStart(2,"0")
 
 document.getElementById("clock").innerHTML=
-day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+"."+m+" น."
+day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+" น."
 
 }
 
@@ -443,28 +500,24 @@ updateClock()
 
 window.onload=function(){
 
-setTimeout(function(){
+setTimeout(()=>{
 
-document.getElementById("loading").style.opacity="0"
-
-setTimeout(function(){
 document.getElementById("loading").style.display="none"
-},400)
 
-},500)
+},600)
 
 }
 
 /* PARTICLES */
 
-for(let i=0;i<18;i++){
+for(let i=0;i<20;i++){
 
 let p=document.createElement("div")
 
 p.className="particle"
 
 p.style.left=Math.random()*100+"%"
-p.style.animationDuration=(6+Math.random()*10)+"s"
+p.style.animationDuration=(8+Math.random()*8)+"s"
 p.style.opacity=Math.random()
 
 document.body.appendChild(p)
