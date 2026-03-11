@@ -279,7 +279,7 @@ height:45px;
 border:4px solid #eee;
 border-top:4px solid #e63946;
 border-radius:50%;
-animation:spin 5s linear infinite;
+animation:spin 7s linear infinite;
 }
 
 @keyframes spin{
@@ -417,22 +417,19 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 
 async function load(){
 
-let dash=await fetch(API+"?mode=getdashboard&t="+Date.now())
-.then(r=>r.json())
-
 document.getElementById("loading").style.display="none"
 
-setTimeout(()=>{
+const res = await fetch(API+"?mode=getdashboard&t="+Date.now());
+const dash = await res.json();
+
 renderDash(dash)
 renderRooms(dash.rooms)
-},10)
 
 }
 
-document.getElementById("loading").style.display="none"
-
-renderDash(dash)
-renderRooms(rooms)
+}catch(err){
+console.error(err)
+}
 
 }
 
