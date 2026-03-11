@@ -319,20 +319,22 @@ background:#eef1f6;
 border:1px solid #dde2ea;
 }
 
-.watermark{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-opacity:0.05;
-z-index:-1;
-pointer-events:none;
-}
-
-.watermark img{
-width:420px;
-max-width:70vw;
-}
+background:
+linear-gradient(180deg,#f6f7fb,#eef1f8),
+repeating-linear-gradient(
+0deg,
+rgba(0,0,0,0.02),
+rgba(0,0,0,0.02) 1px,
+transparent 1px,
+transparent 40px
+),
+repeating-linear-gradient(
+90deg,
+rgba(0,0,0,0.02),
+rgba(0,0,0,0.02) 1px,
+transparent 1px,
+transparent 40px
+);
 
 footer{
 
@@ -376,10 +378,6 @@ line-height:1.6;
 
 <div class="school-name">
 โรงเรียนเทศบาลบูรพาอุบล
-</div>
-
-<div class="watermark">
-<img src="burapa-logo.png">
 </div>
 
 <div class="term" id="termDisplay"></div>
