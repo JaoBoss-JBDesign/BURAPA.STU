@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BURAPA STUDENT SYSTEM</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
 box-sizing:border-box;
 margin:0;
@@ -18,36 +16,27 @@ font-family:'Prompt',sans-serif;
 
 body{
 min-height:100vh;
-background:#f4f6fb;
+background:#f8f9fc;
 display:flex;
 flex-direction:column;
 }
 
-/* HEADER */
-
 header{
-
 background:linear-gradient(
 135deg,
 #d62828,
-#e63946
+#e63946,
+#ff6b6b
 );
-
 color:white;
 text-align:center;
-
-padding:22px 16px 18px;
-
+padding:20px 16px 16px;
 }
-
-/* LOGO */
 
 .logo{
 width:120px;
 margin-bottom:6px;
 }
-
-/* TEXT */
 
 .system-name{
 font-size:14px;
@@ -55,14 +44,10 @@ opacity:.95;
 }
 
 .school-name{
-
-font-size:26px;
+font-size:28px;
 font-weight:700;
-
 margin-top:4px;
-
-text-shadow:0 2px 4px rgba(0,0,0,.25);
-
+text-shadow:0 3px 8px rgba(0,0,0,.25);
 }
 
 .term{
@@ -71,159 +56,87 @@ margin-top:6px;
 opacity:.95;
 }
 
-/* MAIN */
-
 .main{
-
 flex:1;
-
 display:flex;
-
 align-items:center;
-
 justify-content:center;
-
 padding:26px 16px;
-
 }
 
-/* CARD */
-
 .card{
-
 width:100%;
 max-width:520px;
-
 background:white;
-
-border-radius:18px;
-
-padding:34px 26px;
-
-box-shadow:0 14px 35px rgba(0,0,0,.08);
-
+border-radius:20px;
+padding:36px 28px;
+box-shadow:0 18px 45px rgba(0,0,0,.08);
 text-align:center;
-
 }
 
 .card h2{
-
 font-size:20px;
-
-margin-bottom:20px;
-
+margin-bottom:22px;
 color:#333;
-
 }
-
-/* BUTTON */
 
 .btn{
-
 display:block;
-
 width:100%;
-
 padding:18px;
-
 margin-top:14px;
-
 border:none;
-
 border-radius:14px;
-
 font-size:16px;
-
 font-weight:500;
-
 cursor:pointer;
-
-transition:.2s;
-
+transition:.25s;
 }
-
-/* teacher */
 
 .btn-teacher{
-
-background:linear-gradient(
-135deg,
-#e63946,
-#ff6b6b
-);
-
-color:white;
-
-}
-
-/* admin */
-
-.btn-admin{
-
-background:linear-gradient(
-135deg,
-#f4c430,
-#ffd166
-);
-
-color:#333;
-
-}
-
-/* manual */
-
-.btn-manual{
-
-background:#eef1f6;
-border:1px solid #dfe3ea;
-color:#333;
-
-}
-
-.btn:hover{
-
-transform:translateY(-3px);
-
-box-shadow:0 8px 20px rgba(0,0,0,.12);
-
-}
-
-/* FOOTER */
-
-footer{
-
 background:linear-gradient(
 135deg,
 #d62828,
-#e63946
+#ff6b6b
 );
-
 color:white;
-
-text-align:center;
-
-padding:18px 14px;
-
-font-size:13px;
-
-line-height:1.7;
-
 }
 
-/* DESKTOP */
+.btn-admin{
+background:linear-gradient(135deg,#f4c430,#ffd166);
+color:#333;
+}
+
+.btn-manual{
+background:#eef1f6;
+border:1px solid #dfe3ea;
+color:#333;
+}
+
+.btn:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+footer{
+background:linear-gradient(135deg,#d62828,#e63946,#ff6b6b);
+color:white;
+text-align:center;
+padding:18px 14px;
+font-size:13px;
+line-height:1.7;
+}
 
 @media(min-width:768px){
-
-.logo{
-width:140px;
+.logo{width:140px;
 }
 
 .school-name{
-font-size:30px;
+  font-size:32px;
 }
 
-.card{
-padding:40px;
+  .card{
+padding:42px;
 }
 
 }
@@ -232,9 +145,7 @@ padding:40px;
 </head>
 
 <body>
-
 <header>
-
 <img src="burapa-logo.png" class="logo">
 
 <div class="system-name">
@@ -246,7 +157,6 @@ padding:40px;
 </div>
 
 <div class="term" id="termDisplay"></div>
-
 </header>
 
 <div class="main">
@@ -275,9 +185,7 @@ onclick="openManual()">
 📖 คู่มือการใช้งานระบบ
 
 </button>
-
 </div>
-
 </div>
 
 <footer>
