@@ -35,7 +35,6 @@ list.appendChild(div)
 function openForm(room){
 
 localStorage.setItem("room",room)
-
 window.location.href="statistic.html"
 
 }
@@ -50,7 +49,78 @@ if(el) el.innerHTML="<h3>ห้อง "+room+"</h3>"
 
 }
 
+function checkTotal(){
+
+let all_boys = Number(document.getElementById("all_boys")?.value) || 0
+let all_girls = Number(document.getElementById("all_girls")?.value) || 0
+
+let boys_today = Number(document.getElementById("boys_today")?.value) || 0
+let girls_today = Number(document.getElementById("girls_today")?.value) || 0
+
+let sick = Number(document.getElementById("sick")?.value) || 0
+let leave = Number(document.getElementById("leave")?.value) || 0
+let absent = Number(document.getElementById("absent")?.value) || 0
+
+
+let totalAll = all_boys + all_girls
+let totalToday = boys_today + girls_today + sick + leave + absent
+
+
+const totalAllEl=document.getElementById("total_all")
+const totalTodayEl=document.getElementById("total_today")
+const warning=document.getElementById("warning")
+
+if(totalAllEl) totalAllEl.innerText=totalAll
+if(totalTodayEl) totalTodayEl.innerText=totalToday
+
+
+if(totalToday !== totalAll){
+
+if(warning){
+warning.innerText="⚠ จำนวนข้อมูลไม่ตรงกับจำนวนนักเรียนทั้งหมด"
+}
+
+document.querySelectorAll("input").forEach(i=>{
+i.classList.add("error")
+})
+
+}else{
+
+if(warning){
+warning.innerText=""
+}
+
+document.querySelectorAll("input").forEach(i=>{
+i.classList.remove("error")
+})
+
+}
+
+}
+
 async function submitData(){
+
+let all_boys = Number(document.getElementById("all_boys").value) || 0
+let all_girls = Number(document.getElementById("all_girls").value) || 0
+
+let boys_today = Number(document.getElementById("boys_today").value) || 0
+let girls_today = Number(document.getElementById("girls_today").value) || 0
+
+let sick = Number(document.getElementById("sick").value) || 0
+let leave = Number(document.getElementById("leave").value) || 0
+let absent = Number(document.getElementById("absent").value) || 0
+
+
+let totalAll = all_boys + all_girls
+let totalToday = boys_today + girls_today + sick + leave + absent
+
+
+if(totalToday !== totalAll){
+
+alert("จำนวนข้อมูลไม่ตรงกับจำนวนนักเรียนทั้งหมด")
+return
+
+}
 
 const data={
 
@@ -58,19 +128,15 @@ date:new Date().toLocaleDateString("th-TH"),
 
 classroom:localStorage.getItem("room"),
 
-all_boys:Number(document.getElementById("all_boys").value),
+all_boys:all_boys,
+all_girls:all_girls,
 
-all_girls:Number(document.getElementById("all_girls").value),
+boys_today:boys_today,
+girls_today:girls_today,
 
-boys_today:Number(document.getElementById("boys_today").value),
-
-girls_today:Number(document.getElementById("girls_today").value),
-
-sick:Number(document.getElementById("sick").value),
-
-leave:Number(document.getElementById("leave").value),
-
-absent:Number(document.getElementById("absent").value),
+sick:sick,
+leave:leave,
+absent:absent,
 
 timestamp:new Date(),
 
@@ -92,7 +158,6 @@ window.location.href="teacher-dashboard.html"
 function logout(){
 
 localStorage.removeItem("adminLogin")
-
 window.location.href="index.html"
 
 }
