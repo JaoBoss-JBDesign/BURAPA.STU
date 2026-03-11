@@ -198,43 +198,50 @@ font-size:12px;
 margin-top:2px;
 }
 
-/* MAIN */
-
 main{
 
-flex:1;
+flex:1 1 auto;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-padding:14px;
+padding:16px;
 
 }
 
 /* GLASS CARD */
 
 .card{
-
 width:100%;
 max-width:480px;
-
 background:rgba(255,255,255,.75);
-
 backdrop-filter:blur(12px);
-
 border-radius:20px;
-
 padding:26px 22px;
-
 box-shadow:0 25px 60px rgba(0,0,0,.12);
-
 border-top:5px solid #e63946;
-
 text-align:center;
-
 animation:fadeIn .5s ease;
+.card{
 
+animation:cardEnter .6s ease;
+
+}
+
+@keyframes cardEnter{
+
+from{
+opacity:0;
+transform:translateY(20px) scale(.96);
+}
+
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+
+}
 }
 
 @keyframes fadeIn{
