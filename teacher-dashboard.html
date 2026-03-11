@@ -280,15 +280,10 @@ height:420px;
 }
 
 #classList{
-
-height:320px;
-
+flex:1;
 overflow-y:auto;
-
 margin-top:8px;
-
 padding-right:6px;
-
 }
   
 /* CENTER FIX MOBILE */
@@ -450,19 +445,40 @@ to{transform:rotate(360deg)}
 }
 
 .loadingList{
-
+  
 flex:1;
-
+  
 display:flex;
-
+  
 align-items:center;
-
+  
 justify-content:center;
-
+  
 font-size:13px;
-
+  
 color:#888;
+  
+min-height:200px;
+  
+}
 
+.chartStatus{
+font-size:12px;
+color:#888;
+margin-bottom:6px;
+}
+
+.chartBox canvas{
+max-width:240px;
+max-height:240px;
+}
+
+.chartBox{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+height:100%;
 }
   
 </style>
@@ -542,11 +558,12 @@ color:#888;
 
 <div class="chartBox">
 
+<div id="chartText" class="chartStatus">
+กำลังซิงค์แผนภูมิ...
+</div>
+
 <canvas id="chart"></canvas>
 
-<div id="chartText"
-style="font-size:12px;color:#888;margin-top:6px">
-กำลังซิงค์แผนภูมิ...
 </div>
 
 </div>
@@ -657,7 +674,7 @@ backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
 }]
 },
 options:{
-maintainAspectRatio:true,
+maintainAspectRatio:false
 plugins:{
 legend:{position:"bottom"},
 tooltip:{
@@ -673,7 +690,7 @@ return c.label+" "+value+" คน ("+percent+"%)"
 }
 })
 
-document.getElementById("chartText").innerText=""
+document.getElementById("chartText").style.display="none"
 
 }
 
