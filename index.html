@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BURAPA STUDENT SYSTEM</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 *{
 box-sizing:border-box;
 margin:0;
@@ -15,164 +16,233 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
+/* BODY */
+
 body{
 min-height:100vh;
-background:#f4f6fb;
+background:#f6f8fc;
 display:flex;
 flex-direction:column;
-position:relative;
-overflow-x:hidden;
 }
 
-body::before{
-content:"";
-position:absolute;
-top:-120px;
-left:-120px;
-width:300px;
-height:300px;
-background:#ffd2d6;
-border-radius:50%;
-filter:blur(120px);
-opacity:.6;
-}
-
-body::after{
-content:"";
-position:absolute;
-bottom:-120px;
-right:-120px;
-width:320px;
-height:320px;
-background:#ffe7a3;
-border-radius:50%;
-filter:blur(130px);
-opacity:.6;
-}
+/* HEADER */
 
 header{
-background:linear-gradient(135deg,#c1121f,#e63946);
+
+background:linear-gradient(
+135deg,
+#ff6b6b,
+#ff9a8b
+);
+
 color:white;
+
 text-align:center;
-padding:34px 18px 30px;
-box-shadow:0 6px 18px rgba(0,0,0,.12);
-position:relative;
-z-index:2;
+
+padding:40px 16px 32px;
+
 }
+
+/* LOGO */
 
 .logo{
-width:120px;
+width:130px;
 margin-bottom:10px;
-filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));
 }
 
+/* TEXT */
+
 .system-name{
-font-size:14px;
+font-size:15px;
 opacity:.95;
 }
 
 .school-name{
-font-size:24px;
-font-weight:600;
-margin-top:4px;
+
+font-size:28px;
+font-weight:700;
+
+margin-top:6px;
+
+letter-spacing:.3px;
+
 }
 
 .term{
-font-size:13px;
-margin-top:6px;
-opacity:.9;
+font-size:14px;
+margin-top:8px;
+opacity:.95;
 }
+
+/* MAIN */
 
 .main{
+
 flex:1;
-padding:22px;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
-position:relative;
-z-index:2;
+
+padding:20px;
+
 }
 
+/* CARD */
+
 .card{
-background:white;
+
 width:100%;
-max-width:420px;
-padding:28px;
-border-radius:18px;
-box-shadow:0 10px 28px rgba(0,0,0,.08);
+
+max-width:480px;
+
+background:white;
+
+border-radius:20px;
+
+padding:30px 24px;
+
+box-shadow:0 12px 35px rgba(0,0,0,.08);
+
 text-align:center;
+
 }
 
 .card h2{
-font-size:18px;
-margin-bottom:18px;
+
+font-size:20px;
+
+margin-bottom:20px;
+
 color:#333;
+
 }
+
+/* BUTTON */
 
 .btn{
+
 display:block;
+
 width:100%;
-padding:16px;
-margin-top:12px;
+
+padding:18px;
+
+margin-top:14px;
+
 border:none;
+
 border-radius:14px;
-font-size:15px;
+
+font-size:16px;
+
 font-weight:500;
+
 cursor:pointer;
+
 transition:.2s;
+
 }
+
+/* teacher */
 
 .btn-teacher{
-background:linear-gradient(135deg,#e63946,#ff6b6b);
+
+background:linear-gradient(
+135deg,
+#ff6b6b,
+#ff8e8e
+);
+
 color:white;
+
 }
+
+/* admin */
 
 .btn-admin{
-background:linear-gradient(135deg,#f6c945,#ffd95c);
+
+background:linear-gradient(
+135deg,
+#ffd166,
+#ffe08a
+);
+
 color:#333;
+
 }
 
+/* manual */
+
 .btn-manual{
-background:#eef1f7;
+
+background:#f2f4f8;
+
+border:1px solid #e1e5ec;
+
 color:#333;
-border:1px solid #d8dde6;
+
 }
 
 .btn:hover{
+
 transform:translateY(-3px);
-box-shadow:0 6px 14px rgba(0,0,0,.12);
+
+box-shadow:0 8px 18px rgba(0,0,0,.12);
+
 }
+
+/* FOOTER */
 
 footer{
-background:linear-gradient(135deg,#c1121f,#e63946);
+
+background:linear-gradient(
+135deg,
+#ff6b6b,
+#ff9a8b
+);
+
 color:white;
+
 text-align:center;
-padding:22px 16px;
+
+padding:24px 16px;
+
 font-size:13px;
+
 line-height:1.7;
-margin-top:auto;
+
 }
 
+/* DESKTOP */
+
 @media(min-width:768px){
+
 .logo{
-width:140px;
+width:150px;
 }
 
 .school-name{
-font-size:28px;
+font-size:32px;
 }
 
 .card{
-padding:34px;
+padding:40px;
 }
 
 }
+
 </style>
 </head>
 
 <body>
+
 <header>
+
 <img src="burapa-logo.png" class="logo">
+
 <div class="system-name">
 ระบบบริหารจัดการสถิตินักเรียน
 </div>
@@ -188,7 +258,9 @@ padding:34px;
 <div class="main">
 
 <div class="card">
-<h2>เลือกการเข้าใช้งาน</h2>
+
+<h2>เลือกการเข้าใช้งานระบบ</h2>
+
 <button class="btn btn-teacher"
 onclick="location.href='teacher-dashboard.html'">
 
@@ -213,7 +285,7 @@ onclick="openManual()">
 </div>
 
 </div>
-  
+
 <footer>
 
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA.STU)
@@ -232,7 +304,7 @@ onclick="openManual()">
 เทศบาลนครอุบลราชธานี
 
 </footer>
-  
+
 <script>
 
 function loadTerm(){
