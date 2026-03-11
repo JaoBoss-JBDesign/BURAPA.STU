@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Teacher Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -22,67 +20,177 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:#f6f7fb;
-overflow-x:hidden;
+
+min-height:100vh;
+display:flex;
+flex-direction:column;
+
+background:
+linear-gradient(180deg,#f6f7fb,#eef1f8),
+radial-gradient(circle at 15% 20%, rgba(230,57,70,.08), transparent 40%),
+radial-gradient(circle at 85% 80%, rgba(230,57,70,.06), transparent 40%);
+
 }
 
+/* HEADER */
+
 header{
-background:#e63946;
+
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 color:white;
 text-align:center;
 padding:20px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+
 }
+
+.logo{
+width:90px;
+margin-bottom:4px;
+}
+
+.school-name{
+font-size:24px;
+font-weight:700;
+}
+
+.system-name{
+font-size:13px;
+}
+
+.time{
+font-size:12px;
+margin-top:3px;
+}
+
+/* MAIN */
 
 main{
-max-width:1200px;
+flex:1;
+padding:25px;
+max-width:1100px;
 margin:auto;
-padding:20px;
+width:100%;
 }
 
-.summary{
+/* STATS */
+
+.stats{
 
 display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:18px;
+margin-bottom:25px;
 
 }
+
+.stat-card{
+
+background:white;
+border-radius:16px;
+padding:18px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+text-align:center;
+
+}
+
+.stat-card h3{
+font-size:14px;
+color:#666;
+margin-bottom:6px;
+}
+
+.stat-card .num{
+font-size:26px;
+font-weight:700;
+color:#e63946;
+}
+
+/* GRID */
+
+.grid{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+
+}
+
+@media(max-width:900px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+/* CARD */
 
 .card{
 
 background:white;
-padding:20px;
-border-radius:12px;
-
-box-shadow:0 6px 20px rgba(0,0,0,.08);
-
-}
-
-.number{
-
-font-size:26px;
-font-weight:600;
-
-}
-
-.chart-box{
-
-margin-top:25px;
-
-background:white;
-
+border-radius:18px;
 padding:20px;
 
-border-radius:12px;
-
-box-shadow:0 6px 20px rgba(0,0,0,.08);
+box-shadow:0 15px 40px rgba(0,0,0,.08);
 
 }
+
+.card h2{
+font-size:16px;
+margin-bottom:12px;
+}
+
+/* CLASS LIST */
+
+.class-item{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:10px 0;
+border-bottom:1px solid #eee;
+
+}
+
+.class-item:last-child{
+border:none;
+}
+
+.btn{
+
+background:#e63946;
+color:white;
+
+border:none;
+padding:6px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+/* FOOTER */
+
+footer{
+
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+color:white;
+text-align:center;
+font-size:10px;
+padding:8px;
+
+}
+
+/* LOADING */
 
 #loading{
 
 position:fixed;
 inset:0;
-
 background:white;
 
 display:flex;
@@ -90,12 +198,14 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 
+z-index:999;
+
 }
 
 .loader{
 
-width:40px;
-height:40px;
+width:45px;
+height:45px;
 
 border:4px solid #eee;
 border-top:4px solid #e63946;
@@ -110,136 +220,141 @@ animation:spin 1s linear infinite;
 to{transform:rotate(360deg)}
 }
 
-@media(max-width:768px){
-
-.summary{
-grid-template-columns:1fr;
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
 
 <div id="loading">
-
 <div class="loader"></div>
-
-<div style="margin-top:10px">
-กำลังเปิดระบบสำหรับคุณครูประจำชั้น โปรดรอสักครู่...
-</div>
-
+<div style="margin-top:10px">กำลังโหลด Dashboard...</div>
 </div>
 
 <header>
 
-<h2>BURAPA STUDENT SYSTEM</h2>
-<div>Teacher Dashboard</div>
+<img src="burapa-logo.png" class="logo">
+
+<div class="system-name">
+ระบบบริหารจัดการสถิตินักเรียน
+</div>
+
+<div class="school-name">
+โรงเรียนเทศบาลบูรพาอุบล
+</div>
+
+<div class="time" id="clock"></div>
 
 </header>
 
 <main>
 
-<div class="summary">
+<div class="stats">
+
+<div class="stat-card">
+<h3>นักเรียนทั้งหมด</h3>
+<div class="num">120</div>
+</div>
+
+<div class="stat-card">
+<h3>มาเรียน</h3>
+<div class="num">110</div>
+</div>
+
+<div class="stat-card">
+<h3>ขาดเรียน</h3>
+<div class="num">5</div>
+</div>
+
+<div class="stat-card">
+<h3>ลา</h3>
+<div class="num">5</div>
+</div>
+
+</div>
+
+<div class="grid">
 
 <div class="card">
-<h3>นักเรียนชาย</h3>
-<div class="number" id="boys">0</div>
-</div>
 
-<div class="card">
-<h3>นักเรียนหญิง</h3>
-<div class="number" id="girls">0</div>
-</div>
-
-<div class="card">
-<h3>ห้องที่บันทึก</h3>
-<div class="number" id="done">0</div>
-</div>
-
-<div class="card">
-<h3>ห้องที่ยังไม่บันทึก</h3>
-<div class="number" id="left">0</div>
-</div>
-
-</div>
-
-<div class="chart-box">
-
-<h3 style="text-align:center;margin-bottom:10px">
-สัดส่วนนักเรียน
-</h3>
+<h2>สถิติการมาเรียน</h2>
 
 <canvas id="chart"></canvas>
 
 </div>
 
+<div class="card">
+
+<h2>ห้องเรียนของคุณ</h2>
+
+<div class="class-item">
+<span>ม.1/1</span>
+<button class="btn">เปิด</button>
+</div>
+
+<div class="class-item">
+<span>ม.1/2</span>
+<button class="btn">เปิด</button>
+</div>
+
+<div class="class-item">
+<span>ม.2/1</span>
+<button class="btn">เปิด</button>
+</div>
+
+</div>
+
+</div>
+
 </main>
+
+<footer>
+
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA.STUDENT)
+
+<br>
+
+โรงเรียนเทศบาลบูรพาอุบล
+
+</footer>
 
 <script>
 
-const API_URL="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
-
-let chart
-
-async function load(){
-
-let res = await fetch(API_URL+"?mode=getDashboard")
-
-let data = await res.json()
-
-document.getElementById("boys").innerHTML=data.totalMale
-document.getElementById("girls").innerHTML=data.totalFemale
-
-document.getElementById("done").innerHTML=data.submittedRooms
-document.getElementById("left").innerHTML=data.totalRooms-data.submittedRooms
-
-createChart(data.totalMale,data.totalFemale)
-
+setTimeout(()=>{
 document.getElementById("loading").style.display="none"
+},500)
+
+function updateClock(){
+
+let now=new Date()
+
+let h=String(now.getHours()).padStart(2,"0")
+let m=String(now.getMinutes()).padStart(2,"0")
+let s=String(now.getSeconds()).padStart(2,"0")
+
+document.getElementById("clock").innerHTML=
+"เวลา "+h+":"+m+":"+s
 
 }
 
-function createChart(male,female){
+setInterval(updateClock,1000)
+updateClock()
 
-if(chart){
-chart.destroy()
-}
+const ctx=document.getElementById("chart")
 
-chart=new Chart(
-
-document.getElementById("chart"),
-
-{
-type:"pie",
-
+new Chart(ctx,{
+type:'pie',
 data:{
-
-labels:["ชาย","หญิง"],
-
+labels:["มาเรียน","ขาด","ลา"],
 datasets:[{
-
-data:[male,female],
-
+data:[110,5,5],
 backgroundColor:[
-"#3a86ff",
-"#ff006e"
+"#4CAF50",
+"#ff5252",
+"#ffd166"
 ]
-
 }]
-
 }
-
-}
-
-)
-
-}
-
-load()
+})
 
 </script>
 
