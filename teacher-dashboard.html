@@ -464,18 +464,6 @@ font-size:13px;
 color:#888;
 
 }
-
-#classList{
-
-flex:1;
-
-overflow-y:auto;
-
-margin-top:8px;
-
-padding-right:4px;
-
-}
   
 </style>
 </head>
@@ -563,6 +551,8 @@ style="font-size:12px;color:#888;margin-top:6px">
 
 </div>
 
+</div>
+  
 <div class="card">
 
 <h3>ห้องเรียนทั้งหมด (เลื่อนเพื่อดู)</h3>
@@ -659,12 +649,6 @@ let a=Math.round(d.absent/total*100)
 
 new Chart(ctx,{
 type:"pie",
-options:{
-maintainAspectRatio:true,
-plugins:{
-legend:{position:"bottom"}
-}
-},
 data:{
 labels:["มาเรียน","ป่วย","ลา","ขาด"],
 datasets:[{
@@ -673,16 +657,15 @@ backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
 }]
 },
 options:{
+maintainAspectRatio:true,
 plugins:{
+legend:{position:"bottom"},
 tooltip:{
 callbacks:{
 label:function(c){
-
 let value=c.raw
 let percent=Math.round(value/total*100)
-
 return c.label+" "+value+" คน ("+percent+"%)"
-
 }
 }
 }
