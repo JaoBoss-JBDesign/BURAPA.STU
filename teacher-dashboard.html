@@ -1,76 +1,578 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Teacher Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Teacher Dashboard | BURAPA STUDENT SYSTEM</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Prompt',sans-serif;
+}
+
 body{
-font-family:sans-serif;
-padding:30px;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+
+background:
+linear-gradient(180deg,#f6f7fb,#eef1f8),
+radial-gradient(circle at 15% 20%, rgba(230,57,70,.08), transparent 40%),
+radial-gradient(circle at 85% 80%, rgba(230,57,70,.06), transparent 40%);
+}
+
+header{
+
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+
+animation:gradientMove 6s ease infinite;
+
+border-bottom:4px solid rgba(255,255,255,0.25);
+
+color:white;
+text-align:center;
+
+padding:22px 10px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+position:relative;
+overflow:hidden;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.logo{
+width:90px;
+margin-bottom:4px;
+}
+
+.system-name{
+font-size:13px;
+opacity:.95;
+}
+
+.school-name{
+font-size:26px;
+font-weight:700;
+}
+
+.term{
+font-size:12px;
+margin-top:3px;
+}
+
+.time{
+font-size:12px;
+margin-top:2px;
+}
+
+.back-btn{
+
+position:absolute;
+left:15px;
+top:18px;
+
+background:rgba(255,255,255,.2);
+border:none;
+color:white;
+
+padding:7px 12px;
+border-radius:10px;
+
+cursor:pointer;
+font-size:13px;
+}
+
+.back-btn:hover{
+background:rgba(255,255,255,.35);
+}
+
+main{
+
+flex:1;
+padding:22px;
+
+max-width:1100px;
+margin:auto;
+
+}
+
+.section-title{
+
+font-weight:600;
+margin:20px 0 10px;
+
+}
+
+.summary{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+
 }
 
 .card{
-background:#f5f5f5;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
+
+background:white;
+padding:18px;
+border-radius:16px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
 }
 
-.room{
+.card h3{
+font-size:14px;
+color:#666;
+margin-bottom:6px;
+}
+
+.card .number{
+font-size:26px;
+font-weight:600;
+}
+
+.alert{
+
+margin-top:15px;
+
+background:#fff3cd;
+border:1px solid #ffe69c;
+
 padding:12px;
-border:1px solid #ddd;
-margin:8px 0;
+border-radius:12px;
+
+font-size:13px;
+}
+
+.chart-box{
+
+background:white;
+margin-top:20px;
+
+padding:20px;
+
+border-radius:18px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.chart-update{
+
+text-align:center;
+font-size:12px;
+margin-top:8px;
+color:#777;
+
+}
+
+.today-stat{
+
+margin-top:20px;
+
+background:white;
+padding:20px;
+
+border-radius:18px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.progress{
+
+margin-top:12px;
+}
+
+.progress-bar{
+
+height:10px;
 border-radius:8px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+background:#eee;
+
+overflow:hidden;
+
 }
 
-.done{
-color:green;
-font-weight:bold;
+.progress-fill{
+
+height:100%;
+background:#e63946;
+
 }
 
-.pending{
-color:red;
-font-weight:bold;
+.class-table{
+
+margin-top:25px;
+
+background:white;
+
+border-radius:18px;
+overflow:hidden;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
 }
 
-button{
-padding:6px 12px;
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+
+padding:12px;
+font-size:14px;
+text-align:left;
+
+}
+
+th{
+background:#f6f7fb;
+}
+
+.status-ok{
+color:#2a9d8f;
+font-weight:500;
+}
+
+.status-no{
+color:#e63946;
+font-weight:500;
+}
+
+.btn{
+
+border:none;
+padding:6px 10px;
+
+border-radius:8px;
+
+font-size:13px;
+cursor:pointer;
+margin-right:5px;
+
+}
+
+.btn-start{
+background:#e63946;
+color:white;
+}
+
+.btn-history{
+background:#eee;
+}
+
+footer{
+
+margin-top:30px;
+
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+
+color:white;
+
+text-align:center;
+
+font-size:11px;
+
+padding:10px;
+
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>Teacher Dashboard</h1>
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec";
+
+async function loadDashboard(){
+
+const res = await fetch(API_URL + "?mode=getDashboard");
+const data = await res.json();
+
+console.log(data);
+
+}
+
+loadDashboard();
+
+</script>
+  
+<header>
+
+<button class="back-btn" onclick="location.href='index.html'">
+<i class="bi bi-arrow-left"></i> กลับหน้าแรก
+</button>
+
+<img src="burapa-logo.png" class="logo">
+
+<div class="system-name">
+ระบบบริหารจัดการสถิตินักเรียน
+</div>
+
+<div class="school-name">
+โรงเรียนเทศบาลบูรพาอุบล
+</div>
+
+<div class="term" id="termDisplay"></div>
+<div class="time" id="clock"></div>
+
+</header>
+
+<main>
+
+<div class="summary">
 
 <div class="card">
-
-<h2>📊 Today's Statistics</h2>
-
-<div id="stats">
-Loading...
-</div>
-
+<h3>จำนวนนักเรียนชาย (ล่าสุด)</h3>
+<div class="number">152 คน</div>
 </div>
 
 <div class="card">
+<h3>จำนวนนักเรียนหญิง (ล่าสุด)</h3>
+<div class="number">148 คน</div>
+</div>
 
-<h2>🏫 Classrooms</h2>
+<div class="card">
+<h3>บันทึกสถิติวันนี้</h3>
+<div class="number">12 / 18 ห้อง</div>
+</div>
 
-<div id="roomList"></div>
+<div class="card">
+<h3>ยังไม่บันทึก</h3>
+<div class="number">6 ห้อง</div>
+</div>
 
 </div>
-<header>BURAPA STUDENT SYSTEM</header>
 
-<div class="container">
+<div class="alert">
+
+⚠ ยังมี 6 ห้องที่ยังไม่ได้บันทึกสถิติวันนี้
+
+</div>
+
+<div class="chart-box">
+
+<h3 style="text-align:center;margin-bottom:10px">
+สัดส่วนนักเรียนล่าสุด
+</h3>
+
+<canvas id="studentChart"></canvas>
+
+<div class="chart-update">
+
+อัปเดตล่าสุด : <span id="updateTime"></span>
+
+</div>
+
+</div>
+
+<div class="today-stat">
+
+<h3>📊 สถิติการมาเรียนวันนี้</h3>
+
+<div class="progress">
+มาเรียน 280 คน (93%)
+<div class="progress-bar">
+<div class="progress-fill" style="width:93%"></div>
+</div>
+</div>
+
+<div class="progress">
+ลา 8 คน (2.6%)
+<div class="progress-bar">
+<div class="progress-fill" style="width:2.6%"></div>
+</div>
+</div>
+
+<div class="progress">
+ป่วย 5 คน (1.6%)
+<div class="progress-bar">
+<div class="progress-fill" style="width:1.6%"></div>
+</div>
+</div>
+
+<div class="progress">
+ขาด 7 คน (2.3%)
+<div class="progress-bar">
+<div class="progress-fill" style="width:2.3%"></div>
+</div>
+</div>
+
+</div>
+
+<div class="class-table">
+
+<table>
+
+<thead>
+
+<tr>
+<th>ห้อง</th>
+<th>สถานะวันนี้</th>
+<th>จัดการ</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>ป.1</td>
+<td class="status-ok">🟢 บันทึกแล้ว</td>
+<td>
+
+<button class="btn btn-start">ดูข้อมูล</button>
+<button class="btn btn-history">แก้ไขย้อนหลัง</button>
+
+</td>
+</tr>
+
+<tr>
+<td>ป.2</td>
+<td class="status-no">🔴 ยังไม่บันทึก</td>
+<td>
+
+<button class="btn btn-start">เริ่มบันทึก</button>
+<button class="btn btn-history">แก้ไขย้อนหลัง</button>
+
+</td>
+</tr>
+
+<tr>
+<td>ป.3/1</td>
+<td class="status-no">🔴 ยังไม่บันทึก</td>
+<td>
+
+<button class="btn btn-start">เริ่มบันทึก</button>
+<button class="btn btn-history">แก้ไขย้อนหลัง</button>
+
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</main>
+
+<footer>
+
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA.STUDENT)
+
+<br>
+
+ภาคเรียนที่ <span id="termFooter"></span>
+
+<br>
+
+โรงเรียนเทศบาลบูรพาอุบล
+
+<br>
+
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
+
+</footer>
+
+<script>
+
+function loadTerm(){
+
+let term=localStorage.getItem("term")
+let year=localStorage.getItem("year")
+
+if(!term){
+term="2"
+year="2568"
+}
+
+document.getElementById("termDisplay").innerHTML=
+"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+
+document.getElementById("termFooter").innerHTML=
+term+"/"+year
+
+}
+
+loadTerm()
+
+function updateClock(){
+
+let now=new Date()
+
+let days=["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"]
+let months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+
+let day=days[now.getDay()]
+let date=now.getDate()
+let month=months[now.getMonth()]
+let year=now.getFullYear()+543
+
+let h=String(now.getHours()).padStart(2,"0")
+let m=String(now.getMinutes()).padStart(2,"0")
+let s=String(now.getSeconds()).padStart(2,"0")
+
+document.getElementById("clock").innerHTML=
+day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+" น."
+
+document.getElementById("updateTime").innerHTML=
+h+":"+m+":"+s+" น."
+
+}
+
+setInterval(updateClock,1000)
+updateClock()
+
+new Chart(document.getElementById("studentChart"),{
+
+type:"pie",
+
+data:{
+labels:["นักเรียนชาย","นักเรียนหญิง"],
+datasets:[{
+
+data:[152,148],
+
+backgroundColor:[
+"#3a86ff",
+"#ff006e"
+]
+
+}]
+}
+
+})
+
+setTimeout(function(){
+
+location.reload()
+
+},300000)
+
+</script>
+
 </body>
 </html>
