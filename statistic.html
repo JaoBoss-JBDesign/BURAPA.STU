@@ -6,7 +6,6 @@
 <title>Attendance Form</title>
 
 <link rel="stylesheet" href="style.css">
-
 <script src="script.js"></script>
 
 </head>
@@ -22,27 +21,39 @@
 <div id="roomName"></div>
 
 ชายทั้งหมด
-<input type="number" id="all_boys">
+<input type="number" id="all_boys" oninput="checkTotal()">
 
 หญิงทั้งหมด
-<input type="number" id="all_girls">
-
-ชายมาวันนี้
-<input type="number" id="boys_today">
-
-หญิงมาวันนี้
-<input type="number" id="girls_today">
-
-ป่วย
-<input type="number" id="sick">
-
-ลา
-<input type="number" id="leave">
-
-ขาด
-<input type="number" id="absent">
+<input type="number" id="all_girls" oninput="checkTotal()">
 
 <br><br>
+
+<b>รวมทั้งหมด : <span id="total_all">0</span></b>
+
+<br><br>
+
+ชายมาวันนี้
+<input type="number" id="boys_today" oninput="checkTotal()">
+
+หญิงมาวันนี้
+<input type="number" id="girls_today" oninput="checkTotal()">
+
+ป่วย
+<input type="number" id="sick" oninput="checkTotal()">
+
+ลา
+<input type="number" id="leave" oninput="checkTotal()">
+
+ขาด
+<input type="number" id="absent" oninput="checkTotal()">
+
+<br><br>
+
+<b>รวมสถานะวันนี้ : <span id="total_today">0</span></b>
+
+<br><br>
+
+<div id="warning" style="color:red;font-weight:bold"></div>
 
 <button onclick="submitData()">บันทึกข้อมูล</button>
 
