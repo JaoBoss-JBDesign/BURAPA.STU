@@ -417,21 +417,25 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 
 async function load(){
 
+const start = Date.now()
+
 try{
 
-const res = Promise.all([
-fetch(API+"?mode=getdashboard&t="+Date.now())
-])
-
+const res = await fetch(API+"?mode=getdashboard&t="+Date.now())
 const dash = await res.json()
 
 renderDash(dash)
 renderRooms(dash.rooms)
 
-}catch(err){
+}catch(e){
+console.error(e)
+}
 
-console.error(err)
+const minLoad = 600
+const diff = Date.now() - start
 
+if(diff < minLoad){
+await new Promise(r=>setTimeout(r,minLoad-diff))
 }
 
 document.getElementById("loading").style.display="none"
