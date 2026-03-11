@@ -9,7 +9,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -28,13 +27,13 @@ flex-direction:column;
 background:#f6f7fb;
 }
 
-header{
+/* HEADER */
 
+header{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 color:white;
 text-align:center;
 padding:20px;
-
 }
 
 .logo{
@@ -55,6 +54,8 @@ font-size:13px;
 font-size:12px;
 }
 
+/* MAIN */
+
 main{
 flex:1;
 padding:24px;
@@ -64,33 +65,29 @@ width:100%;
 }
 
 .welcome{
-
 background:white;
 border-radius:16px;
 padding:18px;
 margin-bottom:18px;
 box-shadow:0 8px 20px rgba(0,0,0,.08);
 text-align:center;
-
 }
 
-.stats{
+/* STATS */
 
+.stats{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 gap:16px;
 margin-bottom:20px;
-
 }
 
 .stat{
-
 background:white;
 border-radius:16px;
 padding:16px;
 text-align:center;
 box-shadow:0 8px 20px rgba(0,0,0,.08);
-
 }
 
 .stat h3{
@@ -109,12 +106,12 @@ margin-top:6px;
 .leave{color:#f4a261;}
 .absent{color:#e76f51;}
 
-.grid{
+/* GRID */
 
+.grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:18px;
-
 }
 
 @media(max-width:900px){
@@ -124,12 +121,10 @@ grid-template-columns:1fr;
 }
 
 .card{
-
 background:white;
 border-radius:18px;
 padding:18px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
-
 }
 
 .card h2{
@@ -137,14 +132,14 @@ font-size:16px;
 margin-bottom:12px;
 }
 
-.class{
+/* CLASS LIST */
 
+.class{
 display:flex;
 justify-content:space-between;
 align-items:center;
 padding:10px 0;
 border-bottom:1px solid #eee;
-
 }
 
 .class:last-child{
@@ -152,53 +147,44 @@ border:none;
 }
 
 .btn{
-
 background:#e63946;
 color:white;
 border:none;
 padding:6px 12px;
 border-radius:8px;
 cursor:pointer;
-
 }
 
-footer{
+/* FOOTER */
 
+footer{
 background:#e63946;
 color:white;
 text-align:center;
 font-size:11px;
 padding:10px;
-
 }
 
-#loading{
+/* LOADING */
 
+#loading{
 position:fixed;
 inset:0;
 background:white;
-
 display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
-
 z-index:999;
-
 }
 
 .loader{
-
 width:40px;
 height:40px;
-
 border:4px solid #eee;
 border-top:4px solid #e63946;
-
 border-radius:50%;
-
 animation:spin 1s linear infinite;
-
 }
 
 @keyframes spin{
@@ -211,10 +197,8 @@ to{transform:rotate(360deg)}
 <body>
 
 <div id="loading">
-
 <div class="loader"></div>
 <div style="margin-top:10px">กำลังโหลด Dashboard...</div>
-
 </div>
 
 <header>
@@ -237,7 +221,7 @@ BURAPA STUDENT SYSTEM
 <main>
 
 <div class="welcome">
-ยินดีต้อนรับเข้าสู่ระบบ Dashboard ครู
+ยินดีต้อนรับเข้าสู่หน้า Dashboard ระบบบริหารจัดการสถิตินักเรียน
 </div>
 
 <div class="stats">
@@ -274,15 +258,14 @@ BURAPA STUDENT SYSTEM
 <div class="card">
 
 <h2>กราฟสถิติวันนี้</h2>
-
 <canvas id="chart"></canvas>
+<div id="chartText" style="text-align:center;color:#888;margin-top:10px"></div>
 
 </div>
 
 <div class="card">
 
-<h2>ห้องเรียนของคุณ</h2>
-
+<h2>ห้องเรียนทั้งหมด</h2>
 <div id="classList">กำลังโหลด...</div>
 
 </div>
@@ -293,28 +276,43 @@ BURAPA STUDENT SYSTEM
 
 <footer>
 
-BURAPA STUDENT SYSTEM  
-โรงเรียนเทศบาลบูรพาอุบล
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)  
+<br>
+โรงเรียนเทศบาลบูรพาอุบล  
+<br>
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
 
 </footer>
 
 <script>
 
+/* เวลาไทยเต็ม */
+
 function updateClock(){
 
 let now=new Date()
+
+let days=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"]
+let months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+
+let day=days[now.getDay()]
+let date=now.getDate()
+let month=months[now.getMonth()]
+let year=now.getFullYear()+543
 
 let h=String(now.getHours()).padStart(2,"0")
 let m=String(now.getMinutes()).padStart(2,"0")
 let s=String(now.getSeconds()).padStart(2,"0")
 
 document.getElementById("clock").innerHTML=
-"เวลา "+h+":"+m+":"+s
+"วัน"+day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+" น."
 
 }
 
 setInterval(updateClock,1000)
 updateClock()
+
+/* TERM */
 
 let term=localStorage.getItem("term")||"2"
 let year=localStorage.getItem("year")||"2568"
@@ -322,13 +320,12 @@ let year=localStorage.getItem("year")||"2568"
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
 
+/* DATA */
+
 let today=new Date().toISOString().slice(0,10)
 
 let data=JSON.parse(localStorage.getItem("attendance_"+today))||{
-present:0,
-sick:0,
-leave:0,
-absent:0
+present:0,sick:0,leave:0,absent:0
 }
 
 document.getElementById("present").innerText=data.present
@@ -336,28 +333,16 @@ document.getElementById("sick").innerText=data.sick
 document.getElementById("leave").innerText=data.leave
 document.getElementById("absent").innerText=data.absent
 
-let total =
-data.present +
-data.sick +
-data.leave +
-data.absent
-
+let total=data.present+data.sick+data.leave+data.absent
 document.getElementById("totalStudent").innerText=total
+
+/* CHART */
 
 let ctx=document.getElementById("chart").getContext("2d")
 
-if(total==0){
+if(total===0){
 
-new Chart(ctx,{
-type:"pie",
-data:{
-labels:["ยังไม่มีข้อมูล"],
-datasets:[{
-data:[1],
-backgroundColor:["#e5e5e5"]
-}]
-}
-})
+document.getElementById("chartText").innerText="ยังไม่มีการบันทึกข้อมูล"
 
 }else{
 
@@ -366,25 +351,15 @@ type:"pie",
 data:{
 labels:["มาเรียน","ป่วย","ลา","ขาด"],
 datasets:[{
-data:[
-data.present,
-data.sick,
-data.leave,
-data.absent
-],
-backgroundColor:[
-"#6BCB77",
-"#ff8fab",
-"#ffb86b",
-"#ff6b6b"
-]
+data:[data.present,data.sick,data.leave,data.absent],
+backgroundColor:["#6BCB77","#ff8fab","#ffb86b","#ff6b6b"]
 }]
 }
 })
 
 }
 
-/* โหลดห้องเรียน */
+/* LOAD CLASSROOMS */
 
 async function loadClassrooms(){
 
@@ -397,10 +372,12 @@ let html=""
 
 data.forEach(room=>{
 
+let name=room.name||room.classroom||room.room||"ไม่ระบุ"
+
 html+=`
 <div class="class">
-<span>${room.name}</span>
-<button class="btn">เปิด</button>
+<span>${name}</span>
+<button class="btn" onclick="openClass('${name}')">เปิด</button>
 </div>
 `
 
@@ -408,10 +385,9 @@ html+=`
 
 document.getElementById("classList").innerHTML=html
 
-}catch(e){
+}catch{
 
-document.getElementById("classList").innerHTML=
-"ไม่สามารถโหลดข้อมูลห้องเรียนได้"
+document.getElementById("classList").innerHTML="ไม่สามารถโหลดข้อมูลห้องเรียนได้"
 
 }
 
@@ -419,10 +395,14 @@ document.getElementById("classList").innerHTML=
 
 loadClassrooms()
 
+function openClass(name){
+window.location.href="class.html?room="+encodeURIComponent(name)
+}
+
+/* LOADING */
+
 window.onload=()=>{
-
 document.getElementById("loading").style.display="none"
-
 }
 
 </script>
