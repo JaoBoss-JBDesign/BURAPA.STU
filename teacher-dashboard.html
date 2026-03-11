@@ -19,74 +19,166 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
-body{
-background:#f6f7fb;
+html,body{
+max-width:100%;
 overflow-x:hidden;
+}
+
+body{
+
+min-height:100vh;
+display:flex;
+flex-direction:column;
+
+background:
+linear-gradient(180deg,#f6f7fb,#eef1f8),
+radial-gradient(circle at 15% 20%, rgba(230,57,70,.08), transparent 40%),
+radial-gradient(circle at 85% 80%, rgba(230,57,70,.06), transparent 40%);
+
 }
 
 /* HEADER */
 
 header{
+
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+
+animation:gradientMove 6s ease infinite;
+
+border-bottom:4px solid rgba(255,255,255,0.25);
+
 color:white;
-padding:18px;
 text-align:center;
+
+padding:22px 10px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+
 position:relative;
+overflow:hidden;
+
 }
+
+header::before{
+
+content:"";
+
+position:absolute;
+top:0;
+left:-50%;
+
+width:200%;
+height:100%;
+
+background:
+linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent),
+radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
+
+background-size:
+200% 100%,
+40px 40px;
+
+animation:shine 10s linear infinite;
+
+opacity:.35;
+
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+@keyframes shine{
+0%{left:-50%}
+100%{left:100%}
+}
+
+/* BACK BUTTON */
 
 .back{
 position:absolute;
-left:15px;
-top:18px;
+left:12px;
+top:12px;
 color:white;
 text-decoration:none;
-font-size:14px;
+font-size:13px;
+background:rgba(255,255,255,.15);
+padding:6px 10px;
+border-radius:8px;
 }
 
-.school{
-font-size:22px;
+/* HEADER TEXT */
+
+.system-name{
+font-size:13px;
+opacity:.95;
+}
+
+.school-name{
+font-size:24px;
 font-weight:700;
-}
-
-.system{
-font-size:12px;
+text-shadow:0 3px 10px rgba(0,0,0,.3);
 }
 
 /* MAIN */
 
 main{
-max-width:1200px;
+flex:1;
+max-width:1100px;
 margin:auto;
-padding:20px;
+padding:18px;
+width:100%;
 }
 
 /* WELCOME */
 
 .welcome{
+
 background:white;
-padding:14px;
-border-radius:14px;
+
+border-radius:16px;
+
+padding:12px;
+
 text-align:center;
-margin-bottom:18px;
-box-shadow:0 6px 18px rgba(0,0,0,.08);
-font-size:14px;
+
+margin-bottom:16px;
+
+font-size:13px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
 }
 
 /* STATS */
 
 .stats{
+
 display:grid;
+
 grid-template-columns:repeat(5,1fr);
+
 gap:12px;
-margin-bottom:18px;
+
+margin-bottom:16px;
+
 }
 
 .stat{
+
 background:white;
-border-radius:14px;
+
+border-radius:16px;
+
 padding:14px;
+
 text-align:center;
-box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
 }
 
 .stat h3{
@@ -97,7 +189,7 @@ color:#666;
 .num{
 font-size:22px;
 font-weight:700;
-margin-top:6px;
+margin-top:4px;
 }
 
 .present{color:#6BCB77}
@@ -122,9 +214,13 @@ grid-column:1/3;
 /* GRID */
 
 .grid{
+
 display:grid;
+
 grid-template-columns:1fr 1fr;
-gap:18px;
+
+gap:16px;
+
 }
 
 @media(max-width:900px){
@@ -136,47 +232,80 @@ grid-template-columns:1fr;
 /* CARD */
 
 .card{
+
 background:white;
+
+border-radius:18px;
+
 padding:16px;
-border-radius:16px;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
 }
 
-/* CLASS LIST */
+/* CLASS */
 
 .class{
-padding:12px 0;
+
+padding:10px 0;
+
 border-bottom:1px solid #eee;
+
 }
 
 .class-top{
+
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
-flex-wrap:wrap;
+
+font-size:14px;
+
 }
 
 .status{
+
 font-size:12px;
 font-weight:600;
+
 }
 
-.red{color:#e63946}
-.green{color:#2a9d8f}
+.green{
+color:#6BCB77;
+}
+
+.red{
+color:#e63946;
+}
+
+/* BUTTONS */
 
 .buttons{
+
 margin-top:6px;
+
 display:flex;
+
 gap:6px;
+
 flex-wrap:wrap;
+
 }
 
 button{
+
 border:none;
+
 padding:6px 10px;
-border-radius:6px;
+
+border-radius:8px;
+
 font-size:12px;
+
 cursor:pointer;
+
 }
 
 .btn-main{
@@ -184,19 +313,68 @@ background:#e63946;
 color:white;
 }
 
+.btn-edit{
+background:#ffd166;
+color:#333;
+}
+
 .btn-sub{
-background:#ccc;
+background:#eef1f6;
+border:1px solid #dde2ea;
 }
 
 /* FOOTER */
 
 footer{
-background:#e63946;
+
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+
 color:white;
+
 text-align:center;
-font-size:11px;
-padding:10px;
-margin-top:30px;
+
+font-size:10px;
+
+padding:8px 10px;
+
+line-height:1.5;
+
+}
+
+/* LOADING */
+
+#loading{
+
+position:fixed;
+inset:0;
+
+background:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+
+z-index:999;
+
+}
+
+.loader{
+
+width:45px;
+height:45px;
+
+border:4px solid #eee;
+border-top:4px solid #e63946;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
 }
 
 </style>
@@ -204,19 +382,34 @@ margin-top:30px;
 
 <body>
 
+<div id="loading">
+
+<div class="loader"></div>
+
+<div style="margin-top:12px;font-size:14px;color:#555">
+กำลังเข้าสู่ Dashboard โปรดรอสักครู่...
+</div>
+
+</div>
+
 <header>
 
-<a href="index.html" class="back">← กลับหน้าแรก</a>
+<a href="index.html" class="back">← หน้าแรก</a>
 
-<div class="system">BURAPA STUDENT SYSTEM</div>
-<div class="school">โรงเรียนเทศบาลบูรพาอุบล</div>
+<div class="system-name">
+ระบบบริหารจัดการสถิตินักเรียน
+</div>
+
+<div class="school-name">
+โรงเรียนเทศบาลบูรพาอุบล
+</div>
 
 </header>
 
 <main>
 
 <div class="welcome">
-ยินดีต้อนรับเข้าสู่หน้า Dashboard ระบบบริหารจัดการสถิตินักเรียน
+ยินดีต้อนรับสู่ Dashboard ระบบสถิตินักเรียน
 </div>
 
 <div class="stats">
@@ -252,17 +445,23 @@ margin-top:30px;
 
 <div class="card">
 
-<h3>กราฟสถิติวันนี้</h3>
+<h3 style="margin-bottom:10px">กราฟสถิติวันนี้</h3>
 
 <canvas id="chart"></canvas>
-<div id="chartText" style="text-align:center;color:#888;margin-top:8px"></div>
+
+<div id="chartText"
+style="text-align:center;color:#888;margin-top:8px;font-size:12px">
+</div>
 
 </div>
 
 <div class="card">
 
-<h3>ห้องเรียนทั้งหมด</h3>
-<div id="classList">กำลังโหลด...</div>
+<h3 style="margin-bottom:10px">ห้องเรียนทั้งหมด</h3>
+
+<div id="classList">
+กำลังโหลด...
+</div>
 
 </div>
 
@@ -272,8 +471,14 @@ margin-top:30px;
 
 <footer>
 
-ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)<br>
-โรงเรียนเทศบาลบูรพาอุบล<br>
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
+
+<br>
+
+โรงเรียนเทศบาลบูรพาอุบล
+
+<br>
+
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
 
 </footer>
@@ -302,6 +507,7 @@ document.getElementById("leave").innerText=d.leave
 document.getElementById("absent").innerText=d.absent
 
 let total=d.present+d.sick+d.leave+d.absent
+
 document.getElementById("total").innerText=total
 
 let ctx=document.getElementById("chart")
@@ -323,14 +529,19 @@ document.getElementById("chartText").innerText="ยังไม่มีกา�
 
 }else{
 
+let p=Math.round(d.present/total*100)
+let s=Math.round(d.sick/total*100)
+let l=Math.round(d.leave/total*100)
+let a=Math.round(d.absent/total*100)
+
 new Chart(ctx,{
 type:"pie",
 data:{
 labels:[
-"มาเรียน "+Math.round(d.present/total*100)+"%",
-"ป่วย "+Math.round(d.sick/total*100)+"%",
-"ลา "+Math.round(d.leave/total*100)+"%",
-"ขาด "+Math.round(d.absent/total*100)+"%"
+"มาเรียน "+p+"%",
+"ป่วย "+s+"%",
+"ลา "+l+"%",
+"ขาด "+a+"%"
 ],
 datasets:[{
 data:[d.present,d.sick,d.leave,d.absent],
@@ -349,34 +560,30 @@ let html=""
 
 rooms.forEach(r=>{
 
-let saved=Math.random()>0.5
-
 html+=`
+
 <div class="class">
 
 <div class="class-top">
 
 <span>${r}</span>
 
-<span class="status ${saved?'green':'red'}">
-${saved?'บันทึกแล้ว':'ยังไม่บันทึก'}
+<span class="status red">
+ยังไม่บันทึก
 </span>
 
 </div>
 
 <div class="buttons">
 
-${
-saved?
-`<button class="btn-main">แก้ไขสถิติ</button>`:
-`<button class="btn-main">บันทึกสถิติ</button>`
-}
+<button class="btn-main">บันทึกสถิติ</button>
 
 <button class="btn-sub">บันทึกย้อนหลัง</button>
 
 </div>
 
 </div>
+
 `
 
 })
@@ -386,6 +593,14 @@ document.getElementById("classList").innerHTML=html
 }
 
 load()
+
+window.onload=function(){
+
+setTimeout(()=>{
+document.getElementById("loading").style.display="none"
+},700)
+
+}
 
 </script>
 
