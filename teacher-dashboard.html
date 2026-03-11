@@ -68,6 +68,44 @@ overflow:hidden;
 
 }
 
+header::before{
+
+content:"";
+
+position:absolute;
+top:0;
+left:-50%;
+
+width:200%;
+height:100%;
+
+background:
+linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent),
+radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
+
+background-size:
+200% 100%,
+40px 40px;
+
+animation:shine 10s linear infinite;
+
+opacity:.35;
+
+z-index:0;
+
+}
+
+header img,
+header div{
+position:relative;
+z-index:1;
+}
+
+@keyframes shine{
+0%{left:-50%}
+100%{left:100%}
+}
+  
 .logo{
 
 width:clamp(80px,16vw,110px);
@@ -162,7 +200,7 @@ font-weight:700;
 
 }
 
-.present{color:#2a9d8f;}
+.present{color:#6BCB77;}
 .sick{color:#ff8fab;}
 .leave{color:#f4a261;}
 .absent{color:#e76f51;}
@@ -375,7 +413,7 @@ to{transform:rotate(360deg)}
 
 <footer>
 
-ระบบบริหารจัดการสถิตินักเรียน (BURAPA.STUDENT)
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
 
 <br>
 
@@ -435,9 +473,28 @@ document.getElementById("absent").innerText=data.absent
 document.getElementById("totalStudent").innerText=
 data.present+data.sick+data.leave+data.absent
 
-new Chart(
-document.getElementById("chart"),
-{
+let total =
+data.present +
+data.sick +
+data.leave +
+data.absent
+
+if(total==0){
+
+new Chart(chart,{
+type:"pie",
+data:{
+labels:["ยังไม่มีข้อมูล"],
+datasets:[{
+data:[1],
+backgroundColor:["#e5e5e5"]
+}]
+}
+})
+
+}else{
+
+new Chart(chart,{
 type:"pie",
 data:{
 labels:["มาเรียน","ป่วย","ลา","ขาด"],
@@ -449,31 +506,30 @@ data.leave,
 data.absent
 ],
 backgroundColor:[
-"#2a9d8f",
-"#ff8fab",
-"#f4a261",
-"#e76f51"
+"#6BCB77",
+"#ff9ec7",
+"#ffb86b",
+"#ff6b6b"
 ]
 }]
 }
 })
 
-let rooms=JSON.parse(localStorage.getItem("classrooms"))||[]
+}
+
+fetch("API_URL")
+.then(res=>res.json())
+.then(data=>{
 
 let html=""
 
-rooms.forEach(r=>{
+data.forEach(room=>{
 
 html+=`
 
 <div class="class">
-
-<span>${r}</span>
-
-<button class="btn">
-บันทึกสถิติ
-</button>
-
+<span>${room.name}</span>
+<button class="btn">เปิด</button>
 </div>
 
 `
@@ -482,12 +538,7 @@ html+=`
 
 document.getElementById("classList").innerHTML=html
 
-
-setTimeout(()=>{
-
-document.getElementById("loading").style.display="none"
-
-},500)
+})
 
 </script>
 
