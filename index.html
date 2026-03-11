@@ -319,6 +319,21 @@ background:#eef1f6;
 border:1px solid #dde2ea;
 }
 
+.watermark{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+opacity:0.05;
+z-index:-1;
+pointer-events:none;
+}
+
+.watermark img{
+width:420px;
+max-width:70vw;
+}
+
 footer{
 
 background:#e63946;
@@ -361,6 +376,10 @@ line-height:1.6;
 
 <div class="school-name">
 โรงเรียนเทศบาลบูรพาอุบล
+</div>
+
+<div class="watermark">
+<img src="burapa-logo.png">
 </div>
 
 <div class="term" id="termDisplay"></div>
