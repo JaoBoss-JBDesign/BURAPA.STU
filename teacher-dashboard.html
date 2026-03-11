@@ -279,7 +279,7 @@ height:45px;
 border:4px solid #eee;
 border-top:4px solid #e63946;
 border-radius:50%;
-animation:spin 1s linear infinite;
+animation:spin 5s linear infinite;
 }
 
 @keyframes spin{
@@ -409,16 +409,25 @@ to{transform:rotate(360deg)}
 
 </footer>
 
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js" as="script">
+  
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 async function load(){
 
-let [dash,rooms]=await Promise.all([
-fetch(API+"?mode=getdashboard&t="+Date.now()).then(r=>r.json()),
-fetch(API+"?mode=getclassrooms&t="+Date.now()).then(r=>r.json())
-])
+let dash=await fetch(API+"?mode=getdashboard&t="+Date.now())
+.then(r=>r.json())
+
+document.getElementById("loading").style.display="none"
+
+setTimeout(()=>{
+renderDash(dash)
+renderRooms(dash.rooms)
+},10)
+
+}
 
 document.getElementById("loading").style.display="none"
 
