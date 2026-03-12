@@ -447,6 +447,10 @@ loader.style.opacity="0"
 setTimeout(()=>{loader.style.display="none"},300)
 },700)
 
+let dash=null
+
+for(let attempt=1;attempt<=2;attempt++){
+
 try{
 
 const controller=new AbortController()
@@ -455,16 +459,36 @@ setTimeout(()=>controller.abort(),API_TIMEOUT)
 
 const res=await fetch(API+"?mode=getdashboard",{signal:controller.signal})
 
-const dash=await res.json()
+if(!res.ok) throw new Error("network")
+
+dash=await res.json()
+
+break
+
+}catch(e){
+
+console.log("API retry",attempt)
+
+}
+
+}
 
 if(!dash){
-throw new Error("dashboard empty")
+
+document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลแผนภูมิได้"
+
+document.getElementById("classList").innerHTML=
+"<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
+
+return
 }
 
 renderDash(dash)
 
 renderRooms(dash.rooms)
 
+}
+  
 }catch(e){
 
 console.error(e)
