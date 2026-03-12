@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>บันทึกสถิตินักเรียน</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:#f6f7fb;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+header{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+color:white;
+text-align:center;
+padding:20px;
+position:relative;
+}
+
+.back{
+position:absolute;
+left:10px;
+top:10px;
+background:rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+main{
+flex:1;
+max-width:500px;
+margin:auto;
+padding:20px;
+width:100%;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.room{
+text-align:center;
+font-size:20px;
+font-weight:600;
+margin-bottom:16px;
+}
+
+.field{
+margin-bottom:12px;
+}
+
+input{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.error{
+border:2px solid #e63946;
+}
+
+.msg{
+color:#e63946;
+font-size:12px;
+display:none;
+}
+
+.totalbox{
+background:#f3f5fa;
+padding:10px;
+border-radius:10px;
+margin-bottom:12px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#e63946;
+color:white;
+font-size:16px;
+margin-top:10px;
+cursor:pointer;
+}
+
+button:disabled{
+background:#ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="back" onclick="history.back()">← กลับ</div>
+
+<h2>บันทึกสถิตินักเรียน</h2>
+
+</header>
+
+<main>
+
+<div class="card">
+
+<div class="room" id="roomName"></div>
+
+<div class="field">
+<label>นักเรียนชายทั้งหมด</label>
+<input type="number" id="all_boys">
+</div>
+
+<div class="field">
+<label>นักเรียนหญิงทั้งหมด</label>
+<input type="number" id="all_girls">
+</div>
+
+<div class="totalbox">
+นักเรียนทั้งหมด : <b id="all_total">0</b>
+</div>
+
+<div class="field">
+<label>ชายมาเรียนวันนี้</label>
+<input type="number" id="boys_today">
+</div>
+
+<div class="field">
+<label>หญิงมาเรียนวันนี้</label>
+<input type="number" id="girls_today">
+</div>
+
+<div class="totalbox">
+มาเรียนรวม : <b id="today_total">0</b>
+</div>
+
+<div class="field">
+<label>ป่วย</label>
+<input type="number" id="sick">
+</div>
+
+<div class="field">
+<label>ลา</label>
+<input type="number" id="leave">
+</div>
+
+<div class="field">
+<label>ขาด</label>
+<input type="number" id="absent">
+</div>
+
+<div class="msg" id="errorMsg">
+จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
+</div>
+
+<button id="saveBtn" disabled onclick="save()">บันทึกข้อมูล</button>
+
+</div>
+
+</main>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+
+const params=new URLSearchParams(location.search)
+
+const room=params.get("room")
+
+document.getElementById("roomName").innerText="ห้อง "+room
+
+const inputs=document.querySelectorAll("input")
+
+inputs.forEach(i=>i.addEventListener("input",calculate))
+
+function num(id){
+return Number(document.getElementById(id).value)||0
+}
+
+function calculate(){
+
+let all_total=num("all_boys")+num("all_girls")
+document.getElementById("all_total").innerText=all_total
+
+let today_total=num("boys_today")+num("girls_today")
+document.getElementById("today_total").innerText=today_total
+
+let sum=today_total+num("sick")+num("leave")+num("absent")
+
+if(sum!==all_total){
+
+document.getElementById("errorMsg").style.display="block"
+document.getElementById("saveBtn").disabled=true
+inputs.forEach(i=>i.classList.add("error"))
+
+}else{
+
+document.getElementById("errorMsg").style.display="none"
+document.getElementById("saveBtn").disabled=false
+inputs.forEach(i=>i.classList.remove("error"))
+
+}
+
+}
+
+async function save(){
+
+let data={
+
+mode:"save",
+
+room:room,
+
+all_boys:num("all_boys"),
+all_girls:num("all_girls"),
+
+boys_today:num("boys_today"),
+girls_today:num("girls_today"),
+
+sick:num("sick"),
+leave:num("leave"),
+absent:num("absent"),
+
+source:"บันทึกโดยคุณครู"
+
+}
+
+await fetch(API,{
+method:"POST",
+body:JSON.stringify(data)
+})
+
+location.href="dashboard.html"
+
+}
+
+</script>
+
+</body>
+</html>
