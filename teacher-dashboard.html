@@ -23,12 +23,9 @@ font-family:'Prompt',sans-serif;
 html,body{
 max-width:100%;
 overflow-x:hidden;
-}
-
-html{
 scroll-behavior:smooth;
 }
-  
+
 body{
 min-height:100vh;
 display:flex;
@@ -52,30 +49,10 @@ position:relative;
 overflow:hidden;
 }
 
-header::before{
-content:"";
-position:absolute;
-top:0;
-left:-50%;
-width:200%;
-height:100%;
-background:
-linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent),
-radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
-background-size:200% 100%,40px 40px;
-animation:shine 10s linear infinite;
-opacity:.35;
-}
-
 @keyframes gradientMove{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
-}
-
-@keyframes shine{
-0%{left:-50%}
-100%{left:100%}
 }
 
 .logo{
@@ -132,12 +109,33 @@ gap:12px;
 margin-bottom:16px;
 }
 
+@media(max-width:700px){
+.stats{grid-template-columns:1fr 1fr;}
+.stat:first-child{grid-column:1/3;}
+}
+
 .stat{
 background:white;
 padding:14px;
 border-radius:16px;
 text-align:center;
 box-shadow:0 8px 20px rgba(0,0,0,.08);
+transform:translateY(10px);
+opacity:0;
+animation:cardIn .6s ease forwards;
+}
+
+.stat:nth-child(1){animation-delay:.05s}
+.stat:nth-child(2){animation-delay:.1s}
+.stat:nth-child(3){animation-delay:.15s}
+.stat:nth-child(4){animation-delay:.2s}
+.stat:nth-child(5){animation-delay:.25s}
+
+@keyframes cardIn{
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 .stat h3{font-size:12px;color:#666;}
@@ -152,14 +150,6 @@ margin-top:4px;
 .sick{color:#ff8fab}
 .leave{color:#ffd166}
 .absent{color:#f28482}
-
-@media(max-width:700px){
-
-.stats{grid-template-columns:1fr 1fr;}
-
-.stat:first-child{grid-column:1/3;}
-
-}
 
 .grid{
 display:grid;
@@ -186,10 +176,6 @@ transition:.25s;
 transform:translateY(-4px);
 box-shadow:0 14px 35px rgba(0,0,0,.12);
 }
-  
-@media(max-width:600px){
-.card{height:380px;}
-}
 
 .chartBox{
 display:flex;
@@ -215,7 +201,6 @@ margin-bottom:6px;
 flex:1;
 overflow-y:auto;
 margin-top:8px;
-padding-right:6px;
 }
 
 .loadingList{
@@ -246,12 +231,10 @@ transform:translateY(0);
 .class-top{
 display:flex;
 justify-content:space-between;
-align-items:center;
 font-size:14px;
 }
 
 .status{font-size:12px;font-weight:600;}
-
 .green{color:#6BCB77;}
 .red{color:#e63946;}
 
@@ -274,7 +257,7 @@ transition:.2s;
 button:hover{
 transform:scale(1.05);
 }
-  
+
 .btn-main{background:#e63946;color:white;}
 .btn-sub{background:#eef1f6;border:1px solid #dde2ea;}
 
@@ -284,7 +267,6 @@ color:white;
 text-align:center;
 font-size:10px;
 padding:8px 10px;
-line-height:1.5;
 }
 
 #loading{
@@ -312,43 +294,16 @@ animation:spin .6s linear infinite;
 to{transform:rotate(360deg)}
 }
 
-.stat{
-background:white;
-padding:14px;
-border-radius:16px;
-text-align:center;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-transform:translateY(10px);
-opacity:0;
-animation:cardIn .6s ease forwards;
-}
-
-.stat:nth-child(1){animation-delay:.05s}
-.stat:nth-child(2){animation-delay:.1s}
-.stat:nth-child(3){animation-delay:.15s}
-.stat:nth-child(4){animation-delay:.2s}
-.stat:nth-child(5){animation-delay:.25s}
-
-@keyframes cardIn{
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-  
 </style>
 </head>
 
 <body>
 
 <div id="loading">
-
 <div class="loader"></div>
-
 <div style="margin-top:12px;font-size:14px;color:#555">
 กำลังเข้าสู่ Dashboard...
 </div>
-
 </div>
 
 <header>
@@ -357,13 +312,9 @@ transform:translateY(0);
 
 <img src="burapa-logo.png" class="logo">
 
-<div class="system-name">
-ระบบบริหารจัดการสถิตินักเรียน
-</div>
+<div class="system-name">ระบบบริหารจัดการสถิตินักเรียน</div>
 
-<div class="school-name">
-โรงเรียนเทศบาลบูรพาอุบล
-</div>
+<div class="school-name">โรงเรียนเทศบาลบูรพาอุบล</div>
 
 <div class="term" id="termDisplay"></div>
 <div class="time" id="clock"></div>
@@ -425,12 +376,12 @@ transform:translateY(0);
 
 <div class="card">
 
-<h3>ห้องเรียนทั้งหมด (เลื่อนเพื่อดู)</h3>
+<h3>ห้องเรียนทั้งหมด</h3>
 
 <div id="classList">
 
 <div class="loadingList">
-โปรดรอสักครู่...
+กำลังโหลดข้อมูล...
 </div>
 
 </div>
@@ -453,29 +404,17 @@ transform:translateY(0);
 
 โรงเรียนเทศบาลบูรพาอุบล
 
-<br>
-
-สำนักการศึกษา เทศบาลนครอุบลราชธานี
-
 </footer>
 
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js" as="script">
-  
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 
-async function load(){
-
-try{
-
-const res = await fetch(API+"?mode=getdashboard")
-const dash = await res.json()
-
 function animateNumber(id,value){
 
 let el=document.getElementById(id)
+
 let start=0
 let duration=600
 let startTime=null
@@ -497,7 +436,22 @@ if(progress<1) requestAnimationFrame(animate)
 requestAnimationFrame(animate)
 
 }
-  
+
+
+async function load(){
+
+const loader=document.getElementById("loading")
+
+setTimeout(()=>{
+loader.style.opacity="0"
+setTimeout(()=>{loader.style.display="none"},200)
+},120)
+
+try{
+
+const res=await fetch(API+"?mode=getdashboard")
+const dash=await res.json()
+
 renderDash(dash)
 renderRooms(dash.rooms)
 
@@ -510,17 +464,8 @@ document.getElementById("classList").innerHTML="<div class='loadingList'>โห�
 
 }
 
-setTimeout(()=>{
-const loader=document.getElementById("loading")
-loader.style.opacity="0"
-
-setTimeout(()=>{
-loader.style.display="none"
-},250)
-
-},80)
-
 }
+
 
 function renderDash(d){
 
@@ -534,30 +479,6 @@ animateNumber("absent",d.absent)
 
 let ctx=document.getElementById("chart").getContext("2d")
 
-
-if(total==0){
-
-new Chart(ctx,{
-type:"pie",
-data:{
-labels:["ยังไม่มีข้อมูล"],
-datasets:[{
-data:[1],
-backgroundColor:["#e0e0e0"]
-}]
-},
-options:{
-plugins:{tooltip:{enabled:false}},
-maintainAspectRatio:false
-}
-})
-
-document.getElementById("chartText").innerText="ยังไม่มีข้อมูลวันนี้"
-
-return
-}
-
-
 new Chart(ctx,{
 type:"pie",
 data:{
@@ -568,33 +489,14 @@ backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
 }]
 },
 options:{
-maintainAspectRatio:false,
-animation:{
-duration:900,
-easing:"easeOutQuart"
-},
-plugins:{
-legend:{position:"bottom"},
-tooltip:{
-callbacks:{
-label:function(c){
-
-let value=c.raw
-let percent=Math.round(value/total*100)
-
-return c.label+" "+value+" คน ("+percent+"%)"
-
-}
-}
-}
-}
+animation:{duration:900},
+plugins:{legend:{position:"bottom"}}
 }
 })
 
 document.getElementById("chartText").style.display="none"
 
 }
-
 
 
 function renderRooms(rooms){
@@ -621,7 +523,6 @@ ${status}
 </div>
 
 </div>
-
 `
 
 })
@@ -630,10 +531,7 @@ document.getElementById("classList").innerHTML=html
 
 }
 
-
-
 load()
-
 
 
 function updateClock(){
@@ -641,7 +539,7 @@ function updateClock(){
 let now=new Date()
 
 let days=["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"]
-let months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+let months=["มกราคม","กุมภาพันธ์","กุมภาพันธ์","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
 
 let day=days[now.getDay()]
 let date=now.getDate()
@@ -661,7 +559,6 @@ setInterval(updateClock,1000)
 updateClock()
 
 
-
 let term=localStorage.getItem("term")||"2"
 let year=localStorage.getItem("year")||"2568"
 
@@ -670,7 +567,7 @@ document.getElementById("termDisplay").innerText=
 
 document.getElementById("termFooter").innerText=
 term+"/"+year
-  
+
 </script>
 
 </body>
