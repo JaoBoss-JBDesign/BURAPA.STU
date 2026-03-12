@@ -116,7 +116,7 @@ background:#ccc;
 
 <header>
 
-<div class="back" onclick="history.back()">← กลับ</div>
+<div class="back" onclick="history.back()">← กลับหน้าหลัก</div>
 
 <h2>บันทึกสถิตินักเรียน</h2>
 
@@ -175,7 +175,7 @@ background:#ccc;
 จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
 </div>
 
-<button id="saveBtn" disabled onclick="save()">บันทึกข้อมูล</button>
+<button id="saveBtn" disabled onclick="save()">บันทึกข้อมูลสถิติ</button>
 
 </div>
 
@@ -188,6 +188,12 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 const params=new URLSearchParams(location.search)
 
 const room=params.get("room")
+
+const edit=params.get("edit")
+
+if(edit){
+loadLatest()
+}
 
 document.getElementById("roomName").innerText="ห้อง "+room
 
@@ -227,6 +233,11 @@ inputs.forEach(i=>i.classList.remove("error"))
 
 async function save(){
 
+const btn=document.getElementById("saveBtn")
+
+btn.innerText="กำลังบันทึกสถิติ..."
+btn.disabled=true
+
 let data={
 
 mode:"save",
@@ -252,11 +263,32 @@ method:"POST",
 body:JSON.stringify(data)
 })
 
-location.href="dashboard.html"
+alert("บันทึกสถิติเรียบร้อยแล้ว")
+
+location.href="teacher-dashboard.html"
 
 }
 
-</script>
+async function loadLatest(){
 
+const res=await fetch(API+"?mode=getlatest&room="+room)
+
+const data=await res.json()
+
+if(!data) return
+
+document.getElementById("all_boys").value=data.all_boys||0
+document.getElementById("all_girls").value=data.all_girls||0
+document.getElementById("boys_today").value=data.boys_today||0
+document.getElementById("girls_today").value=data.girls_today||0
+document.getElementById("sick").value=data.sick||0
+document.getElementById("leave").value=data.leave||0
+document.getElementById("absent").value=data.absent||0
+
+calculate()
+
+}
+  
+</script>
 </body>
 </html>
