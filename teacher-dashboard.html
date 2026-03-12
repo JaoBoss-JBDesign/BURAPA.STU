@@ -408,8 +408,9 @@ to{transform:rotate(360deg)}
 
 <script>
 
-const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+const API_TIMEOUT = 5000
 
+const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 function animateNumber(id,value){
 
@@ -437,22 +438,31 @@ requestAnimationFrame(animate)
 
 }
 
-
 async function load(){
 
 const loader=document.getElementById("loading")
 
 setTimeout(()=>{
 loader.style.opacity="0"
-setTimeout(()=>{loader.style.display="none"},200)
-},120)
+setTimeout(()=>{loader.style.display="none"},300)
+},700)
 
 try{
 
-const res=await fetch(API+"?mode=getdashboard")
+const controller=new AbortController()
+
+setTimeout(()=>controller.abort(),API_TIMEOUT)
+
+const res=await fetch(API+"?mode=getdashboard",{signal:controller.signal})
+
 const dash=await res.json()
 
+if(!dash){
+throw new Error("dashboard empty")
+}
+
 renderDash(dash)
+
 renderRooms(dash.rooms)
 
 }catch(e){
@@ -460,32 +470,62 @@ renderRooms(dash.rooms)
 console.error(e)
 
 document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลแผนภูมิได้"
-document.getElementById("classList").innerHTML="<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
+
+document.getElementById("classList").innerHTML=
+"<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
 
 }
 
 }
-
 
 function renderDash(d){
 
-let total=d.present+d.sick+d.leave+d.absent
+let present=d.present||0
+let sick=d.sick||0
+let leave=d.leave||0
+let absent=d.absent||0
+
+let total=present+sick+leave+absent
 
 animateNumber("total",total)
-animateNumber("present",d.present)
-animateNumber("sick",d.sick)
-animateNumber("leave",d.leave)
-animateNumber("absent",d.absent)
+animateNumber("present",present)
+animateNumber("sick",sick)
+animateNumber("leave",leave)
+animateNumber("absent",absent)
 
 let ctx=document.getElementById("chart").getContext("2d")
+
+let chartData
+let chartColor
+let chartLabel
+
+if(total===0){
+
+chartData=[1]
+chartColor=["#d9d9d9"]
+chartLabel=["ยังไม่มีข้อมูล"]
+
+document.getElementById("chartText").innerText="ยังไม่มีข้อมูลวันนี้"
+
+}else{
+
+chartData=[present,sick,leave,absent]
+
+chartColor=["#6BCB77","#ff8fab","#ffd166","#f28482"]
+
+chartLabel=["มาเรียน","ป่วย","ลา","ขาด"]
+
+document.getElementById("chartText").style.display="none"
+
+}
 
 new Chart(ctx,{
 type:"pie",
 data:{
-labels:["มาเรียน","ป่วย","ลา","ขาด"],
+labels:chartLabel,
 datasets:[{
-data:[d.present,d.sick,d.leave,d.absent],
-backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
+data:chartData,
+backgroundColor:chartColor
 }]
 },
 options:{
@@ -494,12 +534,17 @@ plugins:{legend:{position:"bottom"}}
 }
 })
 
-document.getElementById("chartText").style.display="none"
-
 }
 
-
 function renderRooms(rooms){
+
+if(!rooms || rooms.length===0){
+
+document.getElementById("classList").innerHTML=
+"<div class='loadingList'>ยังไม่มีข้อมูลห้องเรียน</div>"
+
+return
+}
 
 let html=""
 
@@ -513,7 +558,7 @@ html+=`
 <div class="class" style="animation-delay:${i*0.05}s">
 
 <div class="class-top">
-<span>${r.room}</span>
+<span>${r.room || "-"}</span>
 ${status}
 </div>
 
@@ -533,13 +578,13 @@ document.getElementById("classList").innerHTML=html
 
 load()
 
-
 function updateClock(){
 
 let now=new Date()
 
 let days=["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"]
-let months=["มกราคม","กุมภาพันธ์","กุมภาพันธ์","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+
+let months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
 
 let day=days[now.getDay()]
 let date=now.getDate()
@@ -556,10 +601,11 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 }
 
 setInterval(updateClock,1000)
+
 updateClock()
 
-
 let term=localStorage.getItem("term")||"2"
+
 let year=localStorage.getItem("year")||"2568"
 
 document.getElementById("termDisplay").innerText=
