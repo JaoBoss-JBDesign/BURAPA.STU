@@ -19,17 +19,19 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:#f6f7fb;
 min-height:100vh;
 display:flex;
 flex-direction:column;
+background:
+linear-gradient(180deg,#f6f7fb,#eef1f8);
 }
 
 header{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 color:white;
 text-align:center;
-padding:20px;
+padding:20px 10px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
 position:relative;
 }
 
@@ -41,11 +43,12 @@ background:rgba(255,255,255,.2);
 padding:6px 10px;
 border-radius:8px;
 cursor:pointer;
+font-size:13px;
 }
 
 main{
 flex:1;
-max-width:500px;
+max-width:520px;
 margin:auto;
 padding:20px;
 width:100%;
@@ -53,27 +56,64 @@ width:100%;
 
 .card{
 background:white;
-padding:20px;
-border-radius:16px;
+padding:22px;
+border-radius:18px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 
-.room{
+.title{
 text-align:center;
-font-size:20px;
+margin-bottom:10px;
+}
+
+.room{
+font-size:18px;
 font-weight:600;
-margin-bottom:16px;
+}
+
+.datebox{
+margin-top:6px;
+font-size:13px;
+color:#555;
+}
+
+input[type=date]{
+padding:6px;
+border-radius:8px;
+border:1px solid #ddd;
+margin-left:6px;
+}
+
+.section{
+font-size:14px;
+font-weight:600;
+color:#c1121f;
+margin-top:16px;
+margin-bottom:8px;
 }
 
 .field{
-margin-bottom:12px;
+margin-bottom:10px;
 }
 
-input{
+label{
+font-size:13px;
+}
+
+input[type=number]{
 width:100%;
 padding:10px;
 border-radius:10px;
 border:1px solid #ddd;
+margin-top:4px;
+}
+
+.totalbox{
+background:#f3f5fa;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+font-size:13px;
 }
 
 .error{
@@ -84,13 +124,7 @@ border:2px solid #e63946;
 color:#e63946;
 font-size:12px;
 display:none;
-}
-
-.totalbox{
-background:#f3f5fa;
-padding:10px;
-border-radius:10px;
-margin-bottom:12px;
+margin-top:6px;
 }
 
 button{
@@ -100,13 +134,21 @@ border:none;
 border-radius:12px;
 background:#e63946;
 color:white;
-font-size:16px;
-margin-top:10px;
+font-size:15px;
+margin-top:12px;
 cursor:pointer;
 }
 
 button:disabled{
 background:#ccc;
+}
+
+footer{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+color:white;
+text-align:center;
+font-size:10px;
+padding:8px;
 }
 
 </style>
@@ -116,7 +158,7 @@ background:#ccc;
 
 <header>
 
-<div class="back" onclick="history.back()">← กลับหน้าหลัก</div>
+<div class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</div>
 
 <h2>บันทึกสถิตินักเรียน</h2>
 
@@ -126,7 +168,18 @@ background:#ccc;
 
 <div class="card">
 
+<div class="title">
+
 <div class="room" id="roomName"></div>
+
+<div class="datebox">
+วันที่บันทึก
+<input type="date" id="record_date">
+</div>
+
+</div>
+
+<div class="section">นักเรียนทั้งหมด</div>
 
 <div class="field">
 <label>นักเรียนชายทั้งหมด</label>
@@ -142,19 +195,23 @@ background:#ccc;
 นักเรียนทั้งหมด : <b id="all_total">0</b>
 </div>
 
+<div class="section">มาเรียนวันนี้</div>
+
 <div class="field">
-<label>ชายมาเรียนวันนี้</label>
+<label>ชายมาเรียน</label>
 <input type="number" id="boys_today">
 </div>
 
 <div class="field">
-<label>หญิงมาเรียนวันนี้</label>
+<label>หญิงมาเรียน</label>
 <input type="number" id="girls_today">
 </div>
 
 <div class="totalbox">
 มาเรียนรวม : <b id="today_total">0</b>
 </div>
+
+<div class="section">สถานะอื่น</div>
 
 <div class="field">
 <label>ป่วย</label>
@@ -175,11 +232,19 @@ background:#ccc;
 จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
 </div>
 
-<button id="saveBtn" disabled onclick="save()">บันทึกข้อมูลสถิติ</button>
+<button id="saveBtn" disabled onclick="save()">
+บันทึกข้อมูลสถิติ
+</button>
 
 </div>
 
 </main>
+
+<footer>
+
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
+
+</footer>
 
 <script>
 
@@ -191,13 +256,23 @@ const room=params.get("room")
 
 const edit=params.get("edit")
 
+const backdate=params.get("backdate")
+
+document.getElementById("roomName").innerText="ชั้น "+room
+
+const today=new Date().toISOString().split("T")[0]
+
+document.getElementById("record_date").value=today
+
+if(!backdate){
+document.getElementById("record_date").disabled=true
+}
+
 if(edit){
 loadLatest()
 }
 
-document.getElementById("roomName").innerText="ห้อง "+room
-
-const inputs=document.querySelectorAll("input")
+const inputs=document.querySelectorAll("input[type=number]")
 
 inputs.forEach(i=>i.addEventListener("input",calculate))
 
@@ -235,7 +310,7 @@ async function save(){
 
 const btn=document.getElementById("saveBtn")
 
-btn.innerText="กำลังบันทึกสถิติ..."
+btn.innerText="กำลังบันทึก..."
 btn.disabled=true
 
 let data={
@@ -243,6 +318,8 @@ let data={
 mode:"save",
 
 room:room,
+
+record_date:document.getElementById("record_date").value,
 
 all_boys:num("all_boys"),
 all_girls:num("all_girls"),
@@ -288,7 +365,8 @@ document.getElementById("absent").value=data.absent||0
 calculate()
 
 }
-  
+
 </script>
+
 </body>
 </html>
