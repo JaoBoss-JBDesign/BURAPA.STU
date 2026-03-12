@@ -302,7 +302,7 @@ to{transform:rotate(360deg)}
 <div id="loading">
 <div class="loader"></div>
 <div style="margin-top:12px;font-size:14px;color:#555">
-กำลังเข้าสู่ Dashboard...
+กำลังเข้าสู่หน้า Dashboard...
 </div>
 </div>
 
@@ -365,7 +365,7 @@ to{transform:rotate(360deg)}
 <div class="chartBox">
 
 <div id="chartText" class="chartStatus">
-กำลังซิงค์แผนภูมิ...
+กำลังโหลดแผนภูมิ...
 </div>
 
 <canvas id="chart"></canvas>
@@ -381,7 +381,7 @@ to{transform:rotate(360deg)}
 <div id="classList">
 
 <div class="loadingList">
-กำลังโหลดข้อมูล...
+กำลังโหลดรายการห้องเรียน...
 </div>
 
 </div>
@@ -459,8 +459,8 @@ renderRooms(dash.rooms)
 
 console.error(e)
 
-document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลได้"
-document.getElementById("classList").innerHTML="<div class='loadingList'>โหลดข้อมูลไม่สำเร็จ</div>"
+document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลแผนภูมิได้"
+document.getElementById("classList").innerHTML="<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
 
 }
 
