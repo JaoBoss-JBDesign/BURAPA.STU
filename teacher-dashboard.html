@@ -120,11 +120,23 @@ padding:14px;
 border-radius:16px;
 text-align:center;
 box-shadow:0 8px 20px rgba(0,0,0,.08);
-transform:translateY(10px);
+transform:translateY(10px) scale(1);
 opacity:0;
 animation:cardIn .6s ease forwards;
+cursor:pointer;
+transition:transform .15s ease, box-shadow .15s ease;
 }
 
+.stat:hover{
+transform:translateY(-3px) scale(1.03);
+box-shadow:0 14px 30px rgba(0,0,0,.12);
+}
+
+.stat:active{
+transform:scale(0.95);
+box-shadow:0 6px 15px rgba(0,0,0,.15);
+}
+  
 .stat:nth-child(1){animation-delay:.05s}
 .stat:nth-child(2){animation-delay:.1s}
 .stat:nth-child(3){animation-delay:.15s}
@@ -642,6 +654,20 @@ document.getElementById("termDisplay").innerText=
 
 document.getElementById("termFooter").innerText=
 term+"/"+year
+
+document.querySelectorAll(".stat").forEach(card=>{
+
+card.addEventListener("click",()=>{
+
+card.style.transform="scale(1.08)"
+
+setTimeout(()=>{
+card.style.transform=""
+},160)
+
+})
+
+})
 
 </script>
 </body>
