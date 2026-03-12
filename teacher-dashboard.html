@@ -416,7 +416,6 @@ function animateNumber(id,value){
 
 let el=document.getElementById(id)
 
-let start=0
 let duration=600
 let startTime=null
 
@@ -457,7 +456,7 @@ const controller=new AbortController()
 
 setTimeout(()=>controller.abort(),API_TIMEOUT)
 
-const res=await fetch(API+"?mode=getdashboard",{signal:controller.signal})
+const res=await fetch(API+"?mode=getdashboard&t="+Date.now(),{signal:controller.signal})
 
 if(!res.ok) throw new Error("network")
 
@@ -481,24 +480,12 @@ document.getElementById("classList").innerHTML=
 "<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
 
 return
+
 }
 
 renderDash(dash)
 
 renderRooms(dash.rooms)
-
-}
-  
-}catch(e){
-
-console.error(e)
-
-document.getElementById("chartText").innerText="ไม่สามารถโหลดข้อมูลแผนภูมิได้"
-
-document.getElementById("classList").innerHTML=
-"<div class='loadingList'>โหลดข้อมูลห้องเรียนไม่สำเร็จ</div>"
-
-}
 
 }
 
@@ -568,6 +555,7 @@ document.getElementById("classList").innerHTML=
 "<div class='loadingList'>ยังไม่มีข้อมูลห้องเรียน</div>"
 
 return
+
 }
 
 let html=""
