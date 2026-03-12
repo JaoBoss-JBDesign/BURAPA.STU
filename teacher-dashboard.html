@@ -25,6 +25,10 @@ max-width:100%;
 overflow-x:hidden;
 }
 
+html{
+scroll-behavior:smooth;
+}
+  
 body{
 min-height:100vh;
 display:flex;
@@ -175,8 +179,14 @@ box-shadow:0 10px 25px rgba(0,0,0,.08);
 display:flex;
 flex-direction:column;
 height:420px;
+transition:.25s;
 }
 
+.card:hover{
+transform:translateY(-4px);
+box-shadow:0 14px 35px rgba(0,0,0,.12);
+}
+  
 @media(max-width:600px){
 .card{height:380px;}
 }
@@ -221,6 +231,16 @@ min-height:200px;
 .class{
 padding:10px 0;
 border-bottom:1px solid #eee;
+opacity:0;
+transform:translateY(10px);
+animation:roomIn .5s ease forwards;
+}
+
+@keyframes roomIn{
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 .class-top{
@@ -248,8 +268,13 @@ padding:6px 10px;
 border-radius:8px;
 font-size:12px;
 cursor:pointer;
+transition:.2s;
 }
 
+button:hover{
+transform:scale(1.05);
+}
+  
 .btn-main{background:#e63946;color:white;}
 .btn-sub{background:#eef1f6;border:1px solid #dde2ea;}
 
@@ -271,6 +296,7 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:999;
+transition:opacity .25s ease;
 }
 
 .loader{
@@ -279,13 +305,37 @@ height:45px;
 border:4px solid #eee;
 border-top:4px solid #e63946;
 border-radius:50%;
-animation:spin 1s linear infinite;
+animation:spin .6s linear infinite;
 }
 
 @keyframes spin{
 to{transform:rotate(360deg)}
 }
 
+.stat{
+background:white;
+padding:14px;
+border-radius:16px;
+text-align:center;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+transform:translateY(10px);
+opacity:0;
+animation:cardIn .6s ease forwards;
+}
+
+.stat:nth-child(1){animation-delay:.05s}
+.stat:nth-child(2){animation-delay:.1s}
+.stat:nth-child(3){animation-delay:.15s}
+.stat:nth-child(4){animation-delay:.2s}
+.stat:nth-child(5){animation-delay:.25s}
+
+@keyframes cardIn{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+  
 </style>
 </head>
 
@@ -296,7 +346,7 @@ to{transform:rotate(360deg)}
 <div class="loader"></div>
 
 <div style="margin-top:12px;font-size:14px;color:#555">
-กำลังเข้าสู่ Dashboard โปรดรอสักครู่...
+กำลังเข้าสู่ Dashboard...
 </div>
 
 </div>
@@ -323,7 +373,7 @@ to{transform:rotate(360deg)}
 <main>
 
 <div class="welcome">
-ยินดีต้อนรับสู่ Dashboard ระบบสถิตินักเรียน
+ยินดีต้อนรับเข้าสู่หน้า Dashboard ระบบสถิตินักเรียน
 </div>
 
 <div class="stats">
@@ -359,7 +409,7 @@ to{transform:rotate(360deg)}
 
 <div class="card">
 
-<h3>แผนภูมิสถิติวันนี้</h3>
+<h3>แผนภูมิสรุปสถิติวันนี้</h3>
 
 <div class="chartBox">
 
@@ -423,6 +473,31 @@ try{
 const res = await fetch(API+"?mode=getdashboard")
 const dash = await res.json()
 
+function animateNumber(id,value){
+
+let el=document.getElementById(id)
+let start=0
+let duration=600
+let startTime=null
+
+function animate(time){
+
+if(!startTime) startTime=time
+
+let progress=Math.min((time-startTime)/duration,1)
+
+let number=Math.floor(progress*value)
+
+el.innerText=number
+
+if(progress<1) requestAnimationFrame(animate)
+
+}
+
+requestAnimationFrame(animate)
+
+}
+  
 renderDash(dash)
 renderRooms(dash.rooms)
 
@@ -436,23 +511,26 @@ document.getElementById("classList").innerHTML="<div class='loadingList'>โห�
 }
 
 setTimeout(()=>{
-document.getElementById("loading").style.display="none"
-},300)
+const loader=document.getElementById("loading")
+loader.style.opacity="0"
+
+setTimeout(()=>{
+loader.style.display="none"
+},250)
+
+},80)
 
 }
-
-
 
 function renderDash(d){
 
 let total=d.present+d.sick+d.leave+d.absent
 
-document.getElementById("total").innerText=total
-document.getElementById("present").innerText=d.present
-document.getElementById("sick").innerText=d.sick
-document.getElementById("leave").innerText=d.leave
-document.getElementById("absent").innerText=d.absent
-
+animateNumber("total",total)
+animateNumber("present",d.present)
+animateNumber("sick",d.sick)
+animateNumber("leave",d.leave)
+animateNumber("absent",d.absent)
 
 let ctx=document.getElementById("chart").getContext("2d")
 
@@ -491,6 +569,10 @@ backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
 },
 options:{
 maintainAspectRatio:false,
+animation:{
+duration:900,
+easing:"easeOutQuart"
+},
 plugins:{
 legend:{position:"bottom"},
 tooltip:{
@@ -519,15 +601,14 @@ function renderRooms(rooms){
 
 let html=""
 
-rooms.forEach(r=>{
+rooms.forEach((r,i)=>{
 
 let status=r.submitted
 ?'<span class="status green">บันทึกแล้ว</span>'
 :'<span class="status red">ยังไม่บันทึก</span>'
 
 html+=`
-
-<div class="class">
+<div class="class" style="animation-delay:${i*0.05}s">
 
 <div class="class-top">
 <span>${r.room}</span>
