@@ -65,8 +65,8 @@ header::after{
 content:"";
 position:absolute;
 top:0;
-left:-60%;
-width:120%;
+left:-120%;
+width:240%;
 height:100%;
 
 background:linear-gradient(
@@ -111,9 +111,8 @@ z-index:1;
 
 @keyframes shine{
 0%{
-transform:translateX(-100%);
+transform:translateX(0);
 }
-
 100%{
 transform:translateX(100%);
 }
@@ -467,13 +466,8 @@ const dash=await res.json()
 renderDash(dash)
 renderRooms(dash.rooms || [])
 
-}catch(e){
-
+catch(e){
 console.log(e)
-
-document.getElementById("classList").innerHTML =
-"<div style='color:red'>ไม่สามารถแสดงข้อมูลได้</div>"
-
 }
 
 document.getElementById("loading").style.display="none"
@@ -497,7 +491,7 @@ let chartColors
 
 if(total===0){
 chartData=[1]
-chartLabels=["ยังไม่มีข้อมูลในวันนี้"]
+chartLabels=["ยังไม่มีการบันทึกสถิติในวันนี้"]
 chartColors=["#d9d9d9"]
 
 }else{
@@ -514,10 +508,15 @@ document.getElementById("absent").innerText=absent
 
 let ctx=document.getElementById("chart").getContext("2d")
 
-if(chartInstance) chartInstance.destroy()
+if(chartInstance){
+
+chartInstance.data.labels = chartLabels
+chartInstance.data.datasets[0].data = chartData
+chartInstance.update()
+
+}else{
 
 chartInstance=new Chart(ctx,{
-
 type:"pie",
 
 data:{
@@ -531,10 +530,9 @@ backgroundColor:chartColors
 plugins:[ChartDataLabels],
 
 options:{
-
 animation:{
-duration:1200,
-easing:'easeOutBounce'
+duration:900,
+easing:'easeOutQuart'
 },
 
 plugins:{
@@ -551,9 +549,7 @@ return Math.round((value/sum)*100)+"%"
 }
 }
 }
-
 }
-
 })
 
 }
@@ -600,9 +596,9 @@ document.getElementById("classList").innerHTML=html
 
 }
 
-setTimeout(load,1000)
+setTimeout(load,300)
 
-setInterval(load,30000)
+setInterval(load,60000)
 
 window.addEventListener("focus",load)
 
