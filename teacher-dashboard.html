@@ -18,6 +18,11 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
+html,body{
+max-width:100%;
+overflow-x:hidden;
+}
+  
 body{
 min-height:100vh;
 display:flex;
@@ -39,23 +44,25 @@ position:relative;
 overflow:hidden;
 z-index:1;
 }
-
+  
 header::before{
 content:"";
 position:absolute;
-top:0;
-left:-50%;
-width:200%;
-height:100%;
+inset:0;
 background:
-linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent),
 radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
-background-size:
-200% 100%,
-40px 40px;
-animation:shine 10s linear infinite;
+background-size:40px 40px;
+animation:dotsMove 25s linear infinite;
 opacity:.35;
-z-index:0;
+}
+
+@keyframes dotsMove{
+0%{
+background-position:0 0;
+}
+100%{
+background-position:400px 0;
+}
 }
 
 header img,
@@ -139,7 +146,12 @@ margin-bottom:16px;
 }
 
 @media(max-width:700px){
-.stats{grid-template-columns:1fr 1fr;}
+.stats{
+grid-template-columns:1fr 1fr;
+}
+.stat:first-child{
+grid-column:1/3;
+}
 }
 
 .stat{
@@ -179,6 +191,8 @@ border-radius:18px;
 padding:16px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 height:420px;
+display:flex;
+flex-direction:column;
 }
 
 .chartBox{
@@ -195,9 +209,9 @@ max-height:280px;
 }
 
 #classList{
+flex:1;
 overflow-y:auto;
 margin-top:8px;
-height:300px;
 }
 
 .class{
@@ -441,11 +455,19 @@ let absent=d.absent||0
 
 let total=present+sick+leave+absent
 
+let chartData
+let chartLabels
+let chartColors
+
 if(total===0){
-present=1
-sick=0
-leave=0
-absent=0
+chartData=[1]
+chartLabels=["ยังไม่มีข้อมูลในวันนี้"]
+chartColors=["#d9d9d9"]
+
+}else{
+chartData=[present,sick,leave,absent]
+chartLabels=["มาเรียน","ป่วย","ลา","ขาด"]
+chartColors=["#6BCB77","#ff8fab","#ffd166","#f28482"]
 }
   
 document.getElementById("total").innerText=total
@@ -463,12 +485,12 @@ chartInstance=new Chart(ctx,{
 type:"pie",
 
 data:{
-labels:["มาเรียน","ป่วย","ลา","ขาด"],
+labels:chartLabels,
 datasets:[{
-data:[present,sick,leave,absent],
-backgroundColor:["#6BCB77","#ff8fab","#ffd166","#f28482"]
+data:chartData,
+backgroundColor:chartColors
 }]
-},
+}
 
 plugins:[ChartDataLabels],
 
@@ -535,7 +557,7 @@ document.getElementById("classList").innerHTML=html
 
 }
 
-load()
+setTimeout(load,1000)
 
 setInterval(load,30000)
 
