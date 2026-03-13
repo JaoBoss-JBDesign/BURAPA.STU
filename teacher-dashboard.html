@@ -453,49 +453,46 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 let chartInstance=null
 let loadingNow=false
 
-async function load(){
+async function load() {
+if (loadingNow) return;
+loadingNow = true;
 
-if(loadingNow) return
-loadingNow=true
+document.getElementById("loading").style.display = "flex";
 
-document.getElementById("loading").style.display="flex"
-
-try{
-
-const controller = new AbortController()
-const timeout = setTimeout(()=>controller.abort(),8000)
+try {
+const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 8000);
 
 const res = await fetch(
-API+"?mode=getdashboard&t="+Date.now(),
-{
-cache:"no-store",
-signal:controller.signal
-})
+API + "?mode=getdashboard&t=" + Date.now(),{
+cache: "no-store",
+signal: controller.signal
+}
+);
 
-clearTimeout(timeout)
+clearTimeout(timeout);
 
-if(!res.ok) throw new Error("API error")
+if (!res.ok) throw new Error("API error");
 
-const dash = await res.json()
+const dash = await res.json();
 
-renderDash(dash)
-renderRooms(dash.rooms || [])
+renderDash(dash);
+renderRooms(dash.rooms || []);
 
-}catch(e){
+} catch (e) {
+console.log("โหลดข้อมูลไม่สำเร็จ", e);
 
-console.log("โหลดข้อมูลไม่สำเร็จ",e)
-
-renderDash({present:0,sick:0,leave:0,absent:0})
-renderRooms([])
-
-}finally{
-
-setTimeout(()=>{
-document.getElementById("loading").style.display="none"
-},5000)
-
+renderDash({ present: 0, sick: 0, leave: 0, absent: 0 });
+renderRooms([]);
 }
 
+finally {
+
+setTimeout(() => {
+document.getElementById("loading").style.display = "none";
+loadingNow = false; 
+}, 500);
+    }
 }
 
 function renderDash(d){
