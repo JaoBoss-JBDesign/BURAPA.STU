@@ -462,7 +462,6 @@ loadingNow=true
 try{
 
 const res=await fetch(API+"?mode=getdashboard&t="+Date.now(),{cache:"no-store"})
-
 const dash=await res.json()
 
 renderDash(dash)
