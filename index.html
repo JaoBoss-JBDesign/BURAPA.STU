@@ -92,7 +92,7 @@ rgba(255,255,255,.25) 60%,
 rgba(255,255,255,0) 100%
 );
 
-filter:blur(20px);
+filter:blur(28px);
 
 animation:shine 6s linear infinite;
 
@@ -114,12 +114,15 @@ z-index:1;
 }
 
 @keyframes shine{
+
 0%{
-transform:translateX(0);
+transform:translateX(-100%);
 }
+
 100%{
 transform:translateX(100%);
 }
+
 }
   
 @keyframes dotsMove{
