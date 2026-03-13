@@ -440,6 +440,7 @@ loading.style.display="none"
 
 function renderDash(d){
 
+let total = d.total || 0
 let present = d.present || 0
 let sick = d.sick || 0
 let leave = d.leave || 0
@@ -447,25 +448,29 @@ let absent = d.absent || 0
 
 let sum = present + sick + leave + absent
 
-let data = sum===0
-? [total]
-: [present,sick,leave,absent]
-
 document.getElementById("total").innerText=total
 document.getElementById("present").innerText=present
 document.getElementById("sick").innerText=sick
 document.getElementById("leave").innerText=leave
 document.getElementById("absent").innerText=absent
 
-let data=total===0?[1]:[present,sick,leave,absent]
+let labels
+let colors
+let data
 
-let labels=sum===0
-?["ยังไม่มีการบันทึกในวันนี้"]
-:["มาเรียน","ป่วย","ลา","ขาด"]
+if(sum===0){
 
-let colors=sum===0
-?["#d9d9d9"]
-:["#6abf69","#ff9aa2","#ffd166","#f28482"]
+labels=["ยังไม่มีการบันทึกในวันนี้"]
+colors=["#d9d9d9"]
+data=[1]
+
+}else{
+
+labels=["มาเรียน","ป่วย","ลา","ขาด"]
+colors=["#6abf69","#ff9aa2","#ffd166","#f28482"]
+data=[present,sick,leave,absent]
+
+}
 
 let ctx=document.getElementById("chart")
 
@@ -479,7 +484,6 @@ chartInstance.update()
 
 chartInstance=new Chart(ctx,{
 type:"pie",
-cutout:"35%",
 data:{
 labels:labels,
 datasets:[{data:data,backgroundColor:colors}]
