@@ -27,28 +27,18 @@ background:linear-gradient(180deg,#f6f7fb,#eef1f8);
 }
 
 header{
-
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 background-size:200% 200%;
-
 animation:gradientMove 6s ease infinite;
-
 border-bottom:4px solid rgba(255,255,255,0.25);
-
 color:white;
 text-align:center;
-
 padding:22px 10px;
-
 box-shadow:0 10px 25px rgba(0,0,0,.15);
-
 position:relative;
 overflow:hidden;
-
 z-index:1;
-
 backdrop-filter: blur(2px);
-
 }
 
 header::before{
@@ -82,55 +72,41 @@ rgba(255,255,255,.35) 50%,
 rgba(255,255,255,.25) 60%,
 rgba(255,255,255,0) 100%
 );
-
+  
 filter:blur(28px);
-
 animation:shine 6s linear infinite;
-
 pointer-events:none;
 }
 
 @keyframes gradientMove{
-
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
-
 }
 
 @keyframes dotsMove{
-
 0%{transform:translateX(0)}
 100%{transform:translateX(-400px)}
-
 }
 
 @keyframes shine{
-
 0%{transform:translateX(-100%)}
 100%{transform:translateX(100%)}
-
 }
   
 .logo{
-
 width:clamp(80px,16vw,110px);
 margin-bottom:4px;
-
 animation:float 4s ease-in-out infinite;
-
 filter:
 drop-shadow(0 8px 14px rgba(0,0,0,.3))
 drop-shadow(0 0 25px rgba(255,255,255,.35));
-
 }
 
 @keyframes float{
-
 0%{transform:translateY(0)}
 50%{transform:translateY(-6px)}
 100%{transform:translateY(0)}
-
 }
   
 .system-name{font-size:13px;}
@@ -208,8 +184,9 @@ height:100%;
 }
 
 .chartBox canvas{
-max-width:260px;
-max-height:260px;
+width:100% !important;
+max-width:380px;
+max-height:380px;
 }
 
 #classList{
@@ -288,7 +265,7 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:999;
-transition:opacity .3s ease;
+transition:opacity .25s ease;
 }
 
 .loader{
@@ -396,7 +373,6 @@ width:100%;
 <h3>ขาด</h3>
 <div class="num absent" id="absent">0</div>
 </div>
-
 </div>
 
 <div class="grid">
@@ -416,29 +392,18 @@ width:100%;
 <h3>รายการห้องเรียนทั้งหมด</h3>
 
 <div id="classList"></div>
-
 </div>
-
 </div>
-
 </main>
 
 <footer>
-
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
-
 <br>
-
 ภาคเรียนที่ <span id="termFooter"></span>
-
 <br>
-
 โรงเรียนเทศบาลบูรพาอุบล
-
 <br>
-
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
-
 </footer>
 
 <script>
@@ -478,6 +443,7 @@ const dash=await res.json()
 
 renderDash(dash)
 renderRooms(dash.rooms||[])
+hideLoading()
 
 }catch(e){
 
@@ -485,12 +451,10 @@ console.error(e)
 
 renderDash({present:0,sick:0,leave:0,absent:0})
 renderRooms([])
-
+hideLoading()
 }
 
-hideLoading()
 loadingNow=false
-
 }
 
 function hideLoading(){
@@ -501,8 +465,7 @@ loading.style.opacity="0"
 
 setTimeout(()=>{
 loading.style.display="none"
-},300)
-
+},120)
 }
 
 function renderDash(d){
@@ -536,7 +499,6 @@ data=[1]
 labels=["มาเรียน","ป่วย","ลา","ขาด"]
 colors=["#22c55e","#ff8fab","#ffd166","#f87171"]
 data=[present,sick,leave,absent]
-
 }
 
 let ctx=document.getElementById("chart")
@@ -566,7 +528,6 @@ formatter:(v,ctx)=>{
 let sum=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0)
 if(sum===0)return""
 let percent=(v/sum*100).toFixed(1)
-
 if(percent<0.1 && v>0){
 return "<0.1%"
 }
@@ -658,6 +619,5 @@ setInterval(updateClock,1000)
 updateClock()
 
 </script>
-
 </body>
 </html>
