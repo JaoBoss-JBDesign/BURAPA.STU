@@ -177,19 +177,34 @@ display:flex;
 flex-direction:column;
 }
 
+.card h3{
+text-align:center;
+margin-bottom:10px;
+}
+  
 .chartBox{
 display:flex;
 align-items:center;
 justify-content:center;
-height:100%;
+flex:1;
+position:relative;
+padding-bottom:10px;
 }
 
 .chartBox canvas{
 width:100% !important;
-max-width:380px;
-max-height:380px;
+max-width:280px;
+max-height:280px;
 }
 
+.noData{
+position:absolute;
+text-align:center;
+font-size:16px;
+color:#888;
+font-weight:500;
+}
+  
 #classList{
 flex:1;
 overflow-y:auto;
@@ -199,6 +214,12 @@ margin-top:8px;
 .class{
 padding:14px 0;
 border-bottom:2px solid #e6e6e6;
+transition:.25s;
+}
+
+.class:hover{
+background:#fafafa;
+padding-left:6px;
 }
 
 .class-top{
@@ -220,8 +241,14 @@ font-size:13px;
 font-weight:700;
 }
   
-.green{color:#6BCB77;}
-.red{color:#e63946;}
+.green{
+color:#6BCB77;
+}
+
+.red{
+color:#e63946;
+animation:blink 1.4s infinite;
+}
 
 .buttons{
 margin-top:6px;
@@ -320,6 +347,12 @@ width:100%;
 }
 
 }
+
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:.4}
+100%{opacity:1}
+}
   
 </style>
 </head>
@@ -357,7 +390,7 @@ width:100%;
 </div>
 
 <div class="stat">
-<h3>มาเรียน</h3>
+<h3>มาเรียนวันนี้</h3>
 <div class="num present" id="present">0</div>
 </div>
 
@@ -384,7 +417,13 @@ width:100%;
 <h3>แผนภูมิสรุปสถิติวันนี้</h3>
 
 <div class="chartBox">
+
 <canvas id="chart"></canvas>
+
+<div id="noData" class="noData">
+ยังไม่มีการบันทึกสถิติในวันนี้
+</div>
+
 </div>
 
 </div>
@@ -480,6 +519,17 @@ let absent = d.absent || 0
 
 let sum = present + sick + leave + absent
 
+let noData=document.getElementById("noData")
+let canvas=document.getElementById("chart")
+
+if(sum===0){
+canvas.style.display="none"
+noData.style.display="block"
+}else{
+canvas.style.display="block"
+noData.style.display="none"
+}
+
 document.getElementById("total").innerText=total
 document.getElementById("present").innerText=present
 document.getElementById("sick").innerText=sick
@@ -492,7 +542,7 @@ let data
 
 if(sum===0){
 
-labels=["ยังไม่มีการบันทึกในวันนี้"]
+labels=["ยังไม่บันทึกสถิติในวันนี้"]
 colors=["#d9d9d9"]
 data=[1]
 
@@ -503,7 +553,10 @@ colors=["#22c55e","#ff8fab","#ffd166","#f87171"]
 data=[present,sick,leave,absent]
 }
 
-let ctx=document.getElementById("chart")
+let canvas=document.getElementById("chart")
+if(!canvas) return
+
+let ctx=canvas.getContext("2d")
 
 if(chartInstance){
 
@@ -517,19 +570,39 @@ chartInstance=new Chart(ctx,{
 type:"pie",
 data:{
 labels:labels,
-datasets:[{data:data,backgroundColor:colors}]
+datasets:[{
+data:data,
+backgroundColor:colors
+}]
 },
 plugins:[ChartDataLabels],
 options:{
+layout:{
+padding:{
+bottom:10
+}
+},
 plugins:{
-legend:{position:"bottom"},
+legend:{
+position:"bottom",
+labels:{
+padding:20,
+boxWidth:12,
+boxHeight:12
+}
+},
 datalabels:{
 color:"#fff",
 font:{weight:"bold"},
 formatter:(v,ctx)=>{
 let sum=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0)
-if(sum===0)return""
+
+if(ctx.chart.data.labels.length===1){
+return ""
+}
+
 let percent=(v/sum*100).toFixed(1)
+
 if(percent<0.1 && v>0){
 return "<0.1%"
 }
@@ -549,11 +622,19 @@ function renderRooms(rooms){
 
 let html=""
 
+if(rooms.length===0){
+
+document.getElementById("classList").innerHTML=
+"<div style='text-align:center;padding:30px;color:#999'>ไม่พบข้อมูลห้องเรียน</div>"
+
+return
+}
+  
 rooms.forEach(r=>{
 
 let status=r.submitted
-?'<span class="status green">บันทึกเรียบร้อยแล้ว</span>'
-:'<span class="status red">ยังไม่ได้ทำการบันทึก</span>'
+?'<span class="status green">บันทึกสถิติเรียบร้อยแล้ว</span>'
+:'<span class="status red">ยังไม่ได้ทำการบันทึกสถิติ</span>'
 
 html+=`
 <div class="class">
@@ -563,7 +644,7 @@ html+=`
 <div>
 ${r.room}
 <br>
-<small style="color:#888">นักเรียนทั้งหมด ${r.total || 0} คน</small>
+<small style="color:#888">มีนักเรียนทั้งหมด ${r.total || 0} คน</small>
 </div>
 
 ${status}
@@ -574,11 +655,11 @@ ${status}
 
 ${r.submitted
 ?`<button class="btn-edit" onclick="location.href='form.html?room=${r.room}&edit=1'">แก้ไขสถิติวันนี้</button>`
-:`<button class="btn-main" onclick="location.href='form.html?room=${r.room}'">บันทึกสถิติวันนี้</button>`
+:`<button class="btn-main" onclick="location.href='form.html?room=${r.room}'">เริ่มบันทึกสถิติวันนี้</button>`
 }
 
 <button class="btn-sub" onclick="location.href='form.html?room=${r.room}&backdate=1'">
-แก้ไขย้อนหลัง
+แก้ไขข้อมูลย้อนหลัง
 </button>
 
 </div>
@@ -594,7 +675,14 @@ document.getElementById("classList").innerHTML=html
 
 load()
 
-setInterval(load,15000)
+let refreshTimer
+
+function startAutoRefresh(){
+clearInterval(refreshTimer)
+refreshTimer=setInterval(load,15000)
+}
+
+startAutoRefresh()
 
 function updateClock(){
 
