@@ -365,6 +365,8 @@ width:100%;
 
 <body>
 
+<script src="session.js"></script>
+  
 <div id="loading">
 <div class="loader"></div>
 <div style="margin-top:12px;font-size:14px;color:#555">
@@ -455,6 +457,10 @@ width:100%;
 
 <script>
 
+if(!localStorage.getItem("last_active")){
+location.href="index.html"
+}
+  
 function loadTerm(){
 
 let term=localStorage.getItem("term")||"2"
