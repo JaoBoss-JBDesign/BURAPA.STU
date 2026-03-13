@@ -567,8 +567,8 @@ let html=""
 rooms.forEach(r=>{
 
 let status=r.submitted
-?'<span class="status green">บันทึกแล้ว</span>'
-:'<span class="status red">ยังไม่ได้บันทึก</span>'
+?'<span class="status green">บันทึกเรียบร้อยแล้ว</span>'
+:'<span class="status red">ยังไม่ได้ทำการบันทึก</span>'
 
 html+=`
 <div class="class">
@@ -578,7 +578,7 @@ html+=`
 <div>
 ${r.room}
 <br>
-<small style="color:#888">นักเรียน ${r.total || 0} คน</small>
+<small style="color:#888">นักเรียนทั้งหมด ${r.total || 0} คน</small>
 </div>
 
 ${status}
