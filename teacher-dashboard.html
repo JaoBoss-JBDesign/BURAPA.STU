@@ -466,13 +466,18 @@ const dash=await res.json()
 renderDash(dash)
 renderRooms(dash.rooms || [])
 
-catch(e){
+}catch(e){
+
 console.log(e)
+
 }
 
-document.getElementById("loading").style.display="none"
+finally{
 
+document.getElementById("loading").style.display="none"
 loadingNow=false
+
+}
 
 }
 
