@@ -339,7 +339,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="totalbox">
-นักเรียนทั้งหมด : <b id="all_total">0</b>
+รวมนักเรียนทั้งหมด : <b id="all_total">0</b>
 </div>
 
 </div>
@@ -389,7 +389,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="msg" id="errorMsg">
-จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
+จำนวนไม่สัมพันธ์กับจำนวนนักเรียนทั้งหมด
 </div>
 
 <button id="saveBtn" disabled onclick="save()">
@@ -493,7 +493,7 @@ const today=new Date().toISOString().split("T")[0]
 
 const dateInput=document.getElementById("record_date")
 
-if(edit){
+if(backdate){
 
 dateInput.disabled=false
 
@@ -501,6 +501,11 @@ let yesterday=new Date()
 yesterday.setDate(yesterday.getDate()-1)
 
 dateInput.max=yesterday.toISOString().split("T")[0]
+dateInput.value=dateInput.max
+loadDateData()
+
+document.getElementById("roomName").innerText=
+"แบบบันทึกสถิตินักเรียนย้อนหลัง "+room
 
 }else{
 
@@ -509,6 +514,42 @@ dateInput.disabled=true
 
 }
 
+dateInput.addEventListener("change",loadDateData)
+
+async function loadDateData(){
+
+showLoading("กำลังโหลดข้อมูล...")
+
+let date=dateInput.value
+
+try{
+
+const res=await fetch(API+"?mode=getbydate&room="+room+"&date="+date)
+const data=await res.json()
+
+if(!data){
+hideLoading()
+return
+}
+
+document.getElementById("all_boys").value=data.all_boys||0
+document.getElementById("all_girls").value=data.all_girls||0
+document.getElementById("boys_today").value=data.boys_today||0
+document.getElementById("girls_today").value=data.girls_today||0
+document.getElementById("sick").value=data.sick||0
+document.getElementById("leave").value=data.leave||0
+document.getElementById("absent").value=data.absent||0
+
+calculate()
+
+}catch(e){
+console.error(e)
+}
+
+hideLoading()
+
+}
+  
 if(!backdate){
 document.getElementById("record_date").disabled=true
 }
@@ -531,16 +572,35 @@ let all_total=num("all_boys")+num("all_girls")
 document.getElementById("all_total").innerText=all_total
 
 let today_total=num("boys_today")+num("girls_today")
-let remain = Math.max(all_total - today_total,0)
+let sum = today_total + num("sick") + num("leave") + num("absent")
+
+let remain = all_total - sum
+
+if(remain >= 0){
 document.getElementById("remain").innerText = remain
+}else{
+document.getElementById("remain").innerText = Math.abs(remain)
+}
+
 document.getElementById("today_total").innerText=today_total
+if(sum>all_total){
 
-let sum=today_total+num("sick")+num("leave")+num("absent")
-
-if(sum!==all_total){
+document.getElementById("errorMsg").innerText =
+"คุณกรอกนักเรียนเกินจำนวนทั้งหมด "+(sum-all_total)+" คน"
 
 document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
+
+inputs.forEach(i=>i.classList.add("error"))
+
+}else if(sum<all_total){
+
+document.getElementById("errorMsg").innerText =
+"ยังมีนักเรียนที่ยังไม่ได้กรอก "+(all_total-sum)+" คน"
+
+document.getElementById("errorMsg").style.display="block"
+document.getElementById("saveBtn").disabled=true
+
 inputs.forEach(i=>i.classList.add("error"))
 
 }else{
@@ -552,10 +612,10 @@ inputs.forEach(i=>i.classList.remove("error"))
 }
 
 }
-
+  
 async function save(){
 
-showLoading("กำลังบันทึกสถิติ...")
+showLoading("กำลังบันทึกสถิติ โปรดรอสักครู่...")
 
 const btn=document.getElementById("saveBtn")
 btn.disabled=true
@@ -583,13 +643,13 @@ body:JSON.stringify(data)
 
 hideLoading()
 
-alert("ทำการบันทึกสถิติเรียบร้อยแล้ว")
+alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
 location.href="teacher-dashboard.html"
 
 }catch(e){
 
 hideLoading()
-alert("เกิดข้อผิดพลาดในการบันทึก")
+alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
 
 }
 
