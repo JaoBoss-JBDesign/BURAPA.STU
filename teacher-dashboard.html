@@ -365,6 +365,12 @@ width:100%;
 
 <body>
 
+<script>
+if(!localStorage.getItem("last_active")){
+location.href="index.html"
+}
+</script>
+
 <script src="session.js"></script>
   
 <div id="loading">
@@ -456,10 +462,6 @@ width:100%;
 </footer>
 
 <script>
-
-if(!localStorage.getItem("last_active")){
-location.href="index.html"
-}
   
 function loadTerm(){
 
