@@ -488,10 +488,13 @@ console.log("โหลดข้อมูลไม่สำเร็จ",e)
 renderDash({present:0,sick:0,leave:0,absent:0})
 renderRooms([])
 
-}
+}finally{
 
-loadingNow=false
+setTimeout(()=>{
 document.getElementById("loading").style.display="none"
+},5000)
+
+}
 
 }
 
