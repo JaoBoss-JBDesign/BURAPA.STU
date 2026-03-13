@@ -242,10 +242,17 @@ flex-wrap:wrap;
 
 button{
 border:none;
-padding:6px 10px;
-border-radius:8px;
+padding:8px 12px;
+border-radius:10px;
 font-size:12px;
 cursor:pointer;
+font-weight:500;
+transition:.2s;
+}
+
+button:hover{
+transform:translateY(-1px);
+box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
 .btn-edit{background:#ffd166;}
@@ -285,6 +292,40 @@ animation:spin 1s linear infinite;
 to{transform:rotate(360deg)}
 }
 
+@media (max-width:768px){
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.card{
+height:auto;
+}
+
+.chartBox canvas{
+max-width:220px;
+max-height:220px;
+}
+
+.class-top{
+flex-direction:column;
+gap:4px;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+button{
+width:100%;
+}
+
+}
+  
 </style>
 </head>
 
@@ -533,8 +574,15 @@ html+=`
 <div class="class">
 
 <div class="class-top">
-<span>${r.room}</span>
+
+<div>
+${r.room}
+<br>
+<small style="color:#888">นักเรียน ${r.total || 0} คน</small>
+</div>
+
 ${status}
+
 </div>
 
 <div class="buttons">
