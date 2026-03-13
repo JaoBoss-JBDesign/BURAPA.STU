@@ -290,6 +290,12 @@ grid-template-columns:1fr;
 
 <body>
 
+<script>
+if(!localStorage.getItem("last_active")){
+location.href="index.html"
+}
+</script>
+
 <script src="session.js"></script>
   
 <div id="loading">
@@ -409,10 +415,6 @@ grid-template-columns:1fr;
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
 </footer>
 <script>
-
-if(!localStorage.getItem("last_active")){
-location.href="index.html"
-}
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
