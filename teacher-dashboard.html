@@ -154,6 +154,11 @@ box-shadow:0 8px 20px rgba(0,0,0,.08);
 font-size:26px;
 font-weight:700;
 margin-top:4px;
+transition:transform .3s;
+}
+
+.num:hover{
+transform:scale(1.1);
 }
 
 .present{color:#6BCB77}
@@ -329,8 +334,9 @@ height:auto;
 }
 
 .chartBox canvas{
-max-width:220px;
-max-height:220px;
+width:100% !important;
+max-width:320px;
+max-height:320px;
 }
 
 .class-top{
@@ -502,13 +508,48 @@ function hideLoading(){
 
 const loading=document.getElementById("loading")
 
+if(!loading)return
+
 loading.style.opacity="0"
 
 setTimeout(()=>{
 loading.style.display="none"
-},200)
+},300)
+
 }
 
+function animateNumber(id,value){
+
+let el=document.getElementById(id)
+
+if(parseInt(el.innerText)===value) return
+
+let duration=800
+let startTime=null
+
+function step(timestamp){
+
+if(!startTime) startTime=timestamp
+
+let progress=timestamp-startTime
+let percent=Math.min(progress/duration,1)
+
+let current=Math.floor(percent*value)
+
+el.innerText=current
+
+if(percent<1){
+requestAnimationFrame(step)
+}else{
+el.innerText=value
+}
+
+}
+
+requestAnimationFrame(step)
+
+}
+  
 function renderDash(d){
 
 let total = d.total || 0
@@ -530,11 +571,11 @@ canvas.style.display="block"
 noData.style.display="none"
 }
 
-document.getElementById("total").innerText=total
-document.getElementById("present").innerText=present
-document.getElementById("sick").innerText=sick
-document.getElementById("leave").innerText=leave
-document.getElementById("absent").innerText=absent
+animateNumber("total",total)
+animateNumber("present",present)
+animateNumber("sick",sick)
+animateNumber("leave",leave)
+animateNumber("absent",absent)
 
 let labels
 let colors
@@ -553,7 +594,6 @@ colors=["#22c55e","#ff8fab","#ffd166","#f87171"]
 data=[present,sick,leave,absent]
 }
 
-let canvas=document.getElementById("chart")
 if(!canvas) return
 
 let ctx=canvas.getContext("2d")
@@ -577,6 +617,10 @@ backgroundColor:colors
 },
 plugins:[ChartDataLabels],
 options:{
+animation:{
+animateRotate:true,
+duration:900
+},
 layout:{
 padding:{
 bottom:10
