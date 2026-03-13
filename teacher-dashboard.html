@@ -265,9 +265,10 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:999;
-transition:opacity .25s ease;
+opacity:1;
+transition:opacity .6s ease;
 }
-
+  
 .loader{
 width:45px;
 height:45px;
@@ -465,7 +466,7 @@ loading.style.opacity="0"
 
 setTimeout(()=>{
 loading.style.display="none"
-},60)
+},200)
 }
 
 function renderDash(d){
