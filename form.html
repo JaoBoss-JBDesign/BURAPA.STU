@@ -77,12 +77,6 @@ position:relative;
 overflow:hidden;
 }
 
-@keyframes gradientMove{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
-}
-
 .back{
 position:absolute;
 left:12px;
@@ -99,9 +93,6 @@ border-radius:8px;
 width:clamp(80px,16vw,110px);
 margin-bottom:4px;
 animation:float 4s ease-in-out infinite;
-filter:
-drop-shadow(0 8px 14px rgba(0,0,0,.3))
-drop-shadow(0 0 25px rgba(255,255,255,.35));
 }
 
 .system-name{font-size:13px;}
@@ -111,19 +102,6 @@ drop-shadow(0 0 25px rgba(255,255,255,.35));
 0%{transform:translateY(0)}
 50%{transform:translateY(-6px)}
 100%{transform:translateY(0)}
-}
-
-header{
-background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
-background-size:200% 200%;
-animation:gradientMove 6s ease infinite;
-border-bottom:4px solid rgba(255,255,255,0.25);
-color:white;
-text-align:center;
-padding:22px 10px;
-box-shadow:0 10px 25px rgba(0,0,0,.15);
-position:relative;
-overflow:hidden;
 }
 
 @keyframes gradientMove{
@@ -146,7 +124,7 @@ border-radius:8px;
   
 main{
 flex:1;
-max-width:520px;
+max-width:1000px;
 margin:auto;
 padding:20px;
 width:100%;
@@ -157,6 +135,12 @@ background:white;
 padding:22px;
 border-radius:18px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+box-shadow:0 18px 35px rgba(0,0,0,.12);
 }
 
 .title{
@@ -204,6 +188,13 @@ padding:10px;
 border-radius:10px;
 border:1px solid #ddd;
 margin-top:4px;
+transition:.15s;
+}
+
+input[type=number]:focus{
+border:1px solid #e63946;
+box-shadow:0 0 0 2px rgba(230,57,70,.15);
+outline:none;
 }
 
 .totalbox{
@@ -214,6 +205,11 @@ margin-bottom:10px;
 font-size:13px;
 }
 
+.totalbox b{
+font-size:16px;
+color:#c1121f;
+}
+  
 .error{
 border:2px solid #e63946;
 }
@@ -253,12 +249,12 @@ padding:8px;
 position:fixed;
 inset:0;
 background:white;
-display:flex;
+display:none;
 align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:999;
-transition:opacity .6s ease;
+transition:opacity .3s ease;
 }
 
 .loader{
@@ -272,6 +268,20 @@ animation:spin 1s linear infinite;
 
 @keyframes spin{
 to{transform:rotate(360deg)}
+}
+
+.card-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:16px;
+}
+
+@media (max-width:900px){
+
+.card-grid{
+grid-template-columns:1fr;
+}
+
 }
   
 </style>
@@ -302,8 +312,6 @@ to{transform:rotate(360deg)}
 
 <main>
 
-<div class="card">
-
 <div class="title">
 
 <div class="room" id="roomName"></div>
@@ -315,62 +323,74 @@ to{transform:rotate(360deg)}
 
 </div>
 
+<div class="card-grid">
+  
+<div class="card">
+
 <div class="section">นักเรียนทั้งหมด</div>
 
 <div class="field">
 <label>นักเรียนชายทั้งหมด</label>
-<input type="number" id="all_boys">
+<input type="number" id="all_boys" min="0" max="100">
 </div>
 
 <div class="field">
 <label>นักเรียนหญิงทั้งหมด</label>
-<input type="number" id="all_girls">
+<input type="number" id="all_girls" min="0" max="100">
 </div>
 
 <div class="totalbox">
 นักเรียนทั้งหมด : <b id="all_total">0</b>
 </div>
 
+</div>
+  
+<div class="card">
+
 <div class="section">มาเรียนวันนี้</div>
 
 <div class="field">
 <label>ชายมาเรียน</label>
-<input type="number" id="boys_today">
+<input type="number" inputmode="numeric" id="boys_today" min="0" max="100">
 </div>
 
 <div class="field">
 <label>หญิงมาเรียน</label>
-<input type="number" id="girls_today">
+<input type="number" inputmode="numeric" id="girls_today" min="0" max="100">
 </div>
 
 <div class="totalbox">
 มาเรียนรวม : <b id="today_total">0</b>
 </div>
 
-<div class="section">สถานะอื่นๆ</div>
+</div>
+
+<div class="card">
+
+<div class="section">สถานะอื่น</div>
+
+<div class="field">
+<label>ป่วย</label>
+<input type="number" inputmode="numeric" id="sick" min="0" max="100">
+</div>
+
+<div class="field">
+<label>ลา</label>
+<input type="number" inputmode="numeric" id="leave" min="0" max="100">
+</div>
+
+<div class="field">
+<label>ขาด</label>
+<input type="number" inputmode="numeric" id="absent" min="0" max="100">
+</div>
 
 <div class="totalbox">
 สามารถกรอกสถานะอื่นได้อีก :
 <b id="remain">0</b> คน
 </div>
 
-<div class="field">
-<label>ป่วย</label>
-<input type="number" id="sick">
-</div>
-
-<div class="field">
-<label>ลา</label>
-<input type="number" id="leave">
-</div>
-
-<div class="field">
-<label>ขาด</label>
-<input type="number" id="absent">
-</div>
-
 <div class="msg" id="errorMsg">
-จำนวนที่กรอกไม่สัมพันธ์กับนักเรียนทั้งหมด
+จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
 </div>
 
 <button id="saveBtn" disabled onclick="save()">
@@ -378,7 +398,7 @@ to{transform:rotate(360deg)}
 </button>
 
 </div>
-
+</div>
 </main>
 
 <footer>
@@ -391,6 +411,31 @@ to{transform:rotate(360deg)}
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
+function showLoading(text){
+
+const loading=document.getElementById("loading")
+
+loading.style.display="flex"
+loading.style.opacity="1"
+
+if(text){
+loading.querySelector("div:last-child").innerText=text
+}
+
+}
+
+function hideLoading(){
+
+const loading=document.getElementById("loading")
+
+loading.style.opacity="0"
+
+setTimeout(()=>{
+loading.style.display="none"
+},300)
+
+}
+  
 function loadTerm(){
 
 let term=localStorage.getItem("term")||"2"
@@ -429,7 +474,7 @@ updateClock()
   
 const params=new URLSearchParams(location.search)
 
-const room=params.get("room")
+const room=params.get("room") || "-"
 
 const edit=params.get("edit")
 
@@ -443,13 +488,8 @@ document.getElementById("record_date").value=today
 
 if(!backdate){
 document.getElementById("record_date").disabled=true
-let yesterday=new Date(Date.now()-86400000)
-.toISOString().split("T")[0]
 
-document.getElementById("record_date").max=yesterday
-}
-
-if(edit){
+if(edit && !backdate){
 loadLatest()
 }
 
@@ -491,59 +531,57 @@ inputs.forEach(i=>i.classList.remove("error"))
 
 async function save(){
 
-const btn=document.getElementById("saveBtn")
+showLoading("กำลังบันทึกสถิติ...")
 
-btn.innerText="กำลังบันทึก..."
+const btn=document.getElementById("saveBtn")
 btn.disabled=true
 
 let data={
-
 mode:"save",
-
 room:room,
-
 record_date:document.getElementById("record_date").value,
-
 all_boys:num("all_boys"),
 all_girls:num("all_girls"),
-
 boys_today:num("boys_today"),
 girls_today:num("girls_today"),
-
 sick:num("sick"),
 leave:num("leave"),
 absent:num("absent"),
-
 source:"บันทึกโดยคุณครู"
-
 }
 
-fetch(API,{
+try{
+
+await fetch(API,{
 method:"POST",
 body:JSON.stringify(data)
-})
+}).catch(()=>{})
 
 alert("ทำการบันทึกสถิติเรียบร้อยแล้ว")
-
 location.href="teacher-dashboard.html"
+
+}catch(e){
+
+hideLoading()
+alert("เกิดข้อผิดพลาดในการบันทึก")
+
+}
 
 }
 
 async function loadLatest(){
 
-document.getElementById("loading").style.display="flex"
+showLoading("กำลังซิงค์ข้อมูลเดิมที่บันทึกแล้ว...")
+
+try{
 
 const res=await fetch(API+"?mode=getlatest&room="+room)
-
 const data=await res.json()
 
-document.getElementById("loading").style.opacity="0"
-
-setTimeout(()=>{
-document.getElementById("loading").style.display="none"
-},300)
-
-if(!data) return
+if(!data){
+hideLoading()
+return
+}
 
 document.getElementById("all_boys").value=data.all_boys||0
 document.getElementById("all_girls").value=data.all_girls||0
@@ -555,8 +593,14 @@ document.getElementById("absent").value=data.absent||0
 
 calculate()
 
+}catch(e){
+console.error(e)
 }
 
+hideLoading()
+
+}
+  
 </script>
 
 </body>
