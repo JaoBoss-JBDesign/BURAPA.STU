@@ -290,6 +290,8 @@ grid-template-columns:1fr;
 
 <body>
 
+<script src="session.js"></script>
+  
 <div id="loading">
 <div class="loader"></div>
 <div style="margin-top:12px;font-size:14px;color:#555">
@@ -408,6 +410,10 @@ grid-template-columns:1fr;
 </footer>
 <script>
 
+if(!localStorage.getItem("last_active")){
+location.href="index.html"
+}
+  
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 function showLoading(text){
