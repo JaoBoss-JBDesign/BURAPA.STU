@@ -24,26 +24,6 @@ background:
 linear-gradient(180deg,#f6f7fb,#eef1f8);
 }
 
-header{
-background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
-color:white;
-text-align:center;
-padding:20px 10px;
-box-shadow:0 10px 25px rgba(0,0,0,.15);
-position:relative;
-}
-
-.back{
-position:absolute;
-left:10px;
-top:10px;
-background:rgba(255,255,255,.2);
-padding:6px 10px;
-border-radius:8px;
-cursor:pointer;
-font-size:13px;
-}
-
 .logo{
 width:clamp(80px,16vw,110px);
 margin-bottom:4px;
@@ -53,9 +33,6 @@ drop-shadow(0 8px 14px rgba(0,0,0,.3))
 drop-shadow(0 0 25px rgba(255,255,255,.35));
 }
 
-.system-name{font-size:13px;}
-.school-name{font-size:26px;font-weight:700;}
-
 @keyframes float{
 0%{transform:translateY(0)}
 50%{transform:translateY(-6px)}
@@ -63,47 +40,57 @@ drop-shadow(0 0 25px rgba(255,255,255,.35));
 }
 
 header{
-background:linear-gradient(135deg,#8B0000,#c1121f,#e63946);
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 background-size:200% 200%;
 animation:gradientMove 6s ease infinite;
 border-bottom:4px solid rgba(255,255,255,0.25);
 color:white;
 text-align:center;
-padding:24px 10px;
+padding:22px 10px;
 box-shadow:0 10px 25px rgba(0,0,0,.15);
 position:relative;
 overflow:hidden;
+z-index:1;
+backdrop-filter: blur(2px);
 }
 
-.back{
+header::before{
+content:"";
 position:absolute;
-left:12px;
-top:12px;
-color:white;
-text-decoration:none;
-font-size:13px;
-background:rgba(255,255,255,.2);
-padding:6px 10px;
-border-radius:8px;
+top:0;
+left:0;
+width:200%;
+height:100%;
+background:
+radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
+background-size:40px 40px;
+animation:dotsMove 30s linear infinite;
+opacity:.35;
+pointer-events:none;
 }
 
-.logo{
-width:clamp(80px,16vw,110px);
-margin-bottom:6px;
-animation:float 4s ease-in-out infinite;
-filter:
-drop-shadow(0 10px 16px rgba(0,0,0,.35))
-drop-shadow(0 0 20px rgba(255,255,255,.35));
+header::after{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:240%;
+height:100%;
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0) 0%,
+rgba(255,255,255,.25) 40%,
+rgba(255,255,255,.35) 50%,
+rgba(255,255,255,.25) 60%,
+rgba(255,255,255,0) 100%
+);
+filter:blur(28px);
+animation:shine 6s linear infinite;
+pointer-events:none;
 }
 
 .system-name{font-size:13px;}
 .school-name{font-size:26px;font-weight:700;}
-
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-6px)}
-100%{transform:translateY(0)}
-}
 
 @keyframes gradientMove{
 0%{background-position:0% 50%}
@@ -111,6 +98,16 @@ drop-shadow(0 0 20px rgba(255,255,255,.35));
 100%{background-position:0% 50%}
 }
 
+@keyframes dotsMove{
+0%{transform:translateX(0)}
+100%{transform:translateX(-400px)}
+}
+
+@keyframes shine{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+  
 .back{
 position:absolute;
 left:12px;
@@ -121,6 +118,7 @@ font-size:13px;
 background:rgba(255,255,255,.2);
 padding:6px 10px;
 border-radius:8px;
+cursor:pointer;
 }
   
 main{
@@ -299,7 +297,7 @@ grid-template-columns:1fr;
   
 <header>
 
-<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</a>
+<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับหน้า Dashboard</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -386,7 +384,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="totalbox">
-สามารถกรอกสถานะอื่นได้อีก :
+จำนวนนักเรียนที่ยังไม่กรอก :
 <b id="remain">0</b> คน
 </div>
 
@@ -403,11 +401,14 @@ grid-template-columns:1fr;
 </main>
 
 <footer>
-
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
-
+<br>
+ภาคเรียนที่ <span id="termFooter"></span>
+<br>
+โรงเรียนเทศบาลบูรพาอุบล
+<br>
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
 </footer>
-
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
@@ -444,6 +445,11 @@ let year=localStorage.getItem("year")||"2568"
 
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+
+if(document.getElementById("termFooter")){
+document.getElementById("termFooter").innerHTML=
+term+"/"+year
+}
 
 }
 
@@ -503,18 +509,6 @@ dateInput.disabled=true
 
 }
 
-if(edit){
-
-dateInput.disabled=false
-dateInput.max=new Date(Date.now()-86400000).toISOString().split("T")[0]
-
-}else{
-
-dateInput.value=today
-dateInput.disabled=true
-
-}
-
 if(!backdate){
 document.getElementById("record_date").disabled=true
 }
@@ -537,7 +531,7 @@ let all_total=num("all_boys")+num("all_girls")
 document.getElementById("all_total").innerText=all_total
 
 let today_total=num("boys_today")+num("girls_today")
-let remain = all_total - today_total
+let remain = Math.max(all_total - today_total,0)
 document.getElementById("remain").innerText = remain
 document.getElementById("today_total").innerText=today_total
 
@@ -604,7 +598,6 @@ alert("เกิดข้อผิดพลาดในการบันทึ�
 async function loadLatest(){
 
 showLoading("กำลังซิงค์ข้อมูลเดิมที่บันทึกแล้ว...")
-hideLoading()
 
 try{
 
