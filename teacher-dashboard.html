@@ -43,26 +43,58 @@ box-shadow:0 10px 25px rgba(0,0,0,.15);
 position:relative;
 overflow:hidden;
 z-index:1;
+backdrop-filter: blur(2px);
 }
   
 header::before{
 content:"";
 position:absolute;
-inset:0;
+top:0;
+left:0;
+width:200%;
+height:100%;
 background:
 radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
 background-size:40px 40px;
-animation:dotsMove 25s linear infinite;
+animation:dotsMove 30s linear infinite;
 opacity:.35;
+pointer-events:none;
 }
 
+header::after{
+content:"";
+position:absolute;
+top:0;
+left:-60%;
+width:120%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0) 0%,
+rgba(255,255,255,.25) 40%,
+rgba(255,255,255,.35) 50%,
+rgba(255,255,255,.25) 60%,
+rgba(255,255,255,0) 100%
+);
+
+filter:blur(20px);
+
+animation:shine 6s linear infinite;
+
+pointer-events:none;
+}
+  
 @keyframes dotsMove{
+
 0%{
-background-position:0 0;
+transform:translateX(0);
 }
+
 100%{
-background-position:400px 0;
+transform:translateX(-400px);
 }
+
 }
 
 header img,
@@ -78,8 +110,13 @@ z-index:1;
 }
 
 @keyframes shine{
-0%{left:-50%}
-100%{left:100%}
+0%{
+transform:translateX(-100%);
+}
+
+100%{
+transform:translateX(100%);
+}
 }
   
 .logo{
@@ -495,6 +532,15 @@ backgroundColor:chartColors
 plugins:[ChartDataLabels],
 
 options:{
+
+responsive:true,
+maintainAspectRatio:false,
+  
+animation:{
+duration:1200,
+easing:'easeOutBounce'
+},
+
 plugins:{
 legend:{position:"bottom"},
 datalabels:{
@@ -509,6 +555,7 @@ return Math.round((value/sum)*100)+"%"
 }
 }
 }
+
 }
 
 })
