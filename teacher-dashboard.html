@@ -458,6 +458,8 @@ async function load(){
 if(loadingNow) return
 loadingNow=true
 
+document.getElementById("loading").style.display="flex"
+
 try{
 
 const controller = new AbortController()
@@ -488,12 +490,8 @@ renderRooms([])
 
 }
 
-finally{
-
-document.getElementById("loading").style.display="none"
 loadingNow=false
-
-}
+document.getElementById("loading").style.display="none"
 
 }
 
