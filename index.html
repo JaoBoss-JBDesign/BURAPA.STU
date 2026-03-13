@@ -23,7 +23,6 @@ overflow-x:hidden;
 }
 
 body{
-
 min-height:100vh;
 display:flex;
 flex-direction:column;
@@ -36,28 +35,18 @@ radial-gradient(circle at 85% 80%, rgba(230,57,70,.05), transparent 45%);
 }
   
 header{
-
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 background-size:200% 200%;
-
 animation:gradientMove 6s ease infinite;
-
 border-bottom:4px solid rgba(255,255,255,0.25);
-
 color:white;
 text-align:center;
-
 padding:22px 10px;
-
 box-shadow:0 10px 25px rgba(0,0,0,.15);
-
 position:relative;
 overflow:hidden;
-
 z-index:1;
-
 backdrop-filter: blur(2px);
-  
 }
 
 header::before{
@@ -95,12 +84,6 @@ filter:blur(28px);
 animation:shine 6s linear infinite;
 pointer-events:none;
 }
-  
-header img,
-header div{
-position:relative;
-z-index:1;
-}
 
 @keyframes gradientMove{
 0%{background-position:0% 50%}
@@ -109,21 +92,13 @@ z-index:1;
 }
 
 @keyframes shine{
-0%{
-transform:translateX(-100%);
-}
-100%{
-transform:translateX(100%);
-}
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
 }
   
 @keyframes dotsMove{
-0%{
-transform:translateX(0);
-}
-100%{
-transform:translateX(-400px);
-}
+0%{transform:translateX(0)}
+100%{transform:translateX(-400px)}
 }
   
 .logo{
@@ -141,17 +116,22 @@ drop-shadow(0 0 25px rgba(255,255,255,.35));
 100%{transform:translateY(0)}
 }
 
-.system-name{
+.system-name{font-size:13px;}
+.school-name{font-size:26px;font-weight:700;}
+
+.back{
+position:absolute;
+left:12px;
+top:12px;
+color:white;
+text-decoration:none;
 font-size:13px;
-opacity:.95;
+background:rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
 }
-
-.school-name{
-font-size:26px;
-font-weight:700;
-text-shadow:0 3px 10px rgba(0,0,0,.3);
-}
-
+  
 .term{
 font-size:12px;
 margin-top:3px;
