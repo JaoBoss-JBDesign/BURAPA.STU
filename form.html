@@ -148,8 +148,10 @@ margin-bottom:10px;
 }
 
 .room{
-font-size:18px;
+font-size:clamp(15px,4vw,18px);
 font-weight:600;
+line-height:1.3;
+word-break:break-word;
 }
 
 .datebox{
@@ -383,11 +385,6 @@ grid-template-columns:1fr;
 <input type="number" inputmode="numeric" id="absent" min="0" max="100">
 </div>
 
-<div class="totalbox">
-จำนวนนักเรียนที่ยังไม่กรอก :
-<b id="remain">0</b> คน
-</div>
-
 <div class="msg" id="errorMsg">
 จำนวนไม่สัมพันธ์กับจำนวนนักเรียนทั้งหมด
 </div>
@@ -487,7 +484,8 @@ const edit=params.get("edit")
 
 const backdate=params.get("backdate")
 
-document.getElementById("roomName").innerText="แบบบันทึกสถิตินักเรียน "+room
+document.getElementById("roomName").innerHTML =
+"แบบบันทึกสถิตินักเรียน<br>ชั้น "+room
 
 const today=new Date().toISOString().split("T")[0]
 
@@ -498,14 +496,19 @@ if(backdate){
 dateInput.disabled=false
 
 let yesterday=new Date()
+yesterday.setHours(0,0,0,0)
 yesterday.setDate(yesterday.getDate()-1)
 
-dateInput.max=yesterday.toISOString().split("T")[0]
-dateInput.value=dateInput.max
+dateInput.max = yesterday.toISOString().split("T")[0]
+
+dateInput.value = dateInput.max
+
 loadDateData()
 
-document.getElementById("roomName").innerText=
-"แบบบันทึกสถิตินักเรียนย้อนหลัง "+room
+}
+
+document.getElementById("roomName").innerHTML =
+"แบบบันทึกสถิตินักเรียน<br>ชั้น "+room
 
 }else{
 
@@ -574,14 +577,6 @@ document.getElementById("all_total").innerText=all_total
 let today_total=num("boys_today")+num("girls_today")
 let sum = today_total + num("sick") + num("leave") + num("absent")
 
-let remain = all_total - sum
-
-if(remain >= 0){
-document.getElementById("remain").innerText = remain
-}else{
-document.getElementById("remain").innerText = Math.abs(remain)
-}
-
 document.getElementById("today_total").innerText=today_total
 if(sum>all_total){
 
@@ -641,9 +636,8 @@ method:"POST",
 body:JSON.stringify(data)
 })
 
-hideLoading()
-
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
+
 location.href="teacher-dashboard.html"
 
 }catch(e){
@@ -688,6 +682,5 @@ hideLoading()
 }
   
 </script>
-
 </body>
 </html>
