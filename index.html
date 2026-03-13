@@ -257,7 +257,7 @@ justify-content:center;
 flex-direction:column;
 z-index:999;
 opacity:1;
-transition:opacity .25s ease;
+transition:opacity .6s ease;
 }
 
 .loader{
@@ -385,7 +385,8 @@ window.onload=function(){
 setTimeout(()=>{
 let loading=document.getElementById("loading")
 loading.style.opacity="0"
-setTimeout(()=>{ loading.style.display="none"
+setTimeout(()=>{
+loading.style.display="none"
 },600)
 }
 </script>
