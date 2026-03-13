@@ -415,6 +415,13 @@ location.href="index.html"
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
 </footer>
 <script>
+
+const urlParams=new URLSearchParams(window.location.search)
+const room=urlParams.get("room")
+
+if(!room){
+location.href="teacher-dashboard.html"
+}
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
