@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>บันทึกสถิตินักเรียน</title>
+<title>ระบบบันทึกสถิตินักเรียน</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -46,6 +46,104 @@ cursor:pointer;
 font-size:13px;
 }
 
+.logo{
+width:clamp(80px,16vw,110px);
+margin-bottom:4px;
+animation:float 4s ease-in-out infinite;
+filter:
+drop-shadow(0 8px 14px rgba(0,0,0,.3))
+drop-shadow(0 0 25px rgba(255,255,255,.35));
+}
+
+.system-name{font-size:13px;}
+.school-name{font-size:26px;font-weight:700;}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
+
+header{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+animation:gradientMove 6s ease infinite;
+border-bottom:4px solid rgba(255,255,255,0.25);
+color:white;
+text-align:center;
+padding:22px 10px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+position:relative;
+overflow:hidden;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.back{
+position:absolute;
+left:12px;
+top:12px;
+color:white;
+text-decoration:none;
+font-size:13px;
+background:rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:8px;
+}
+
+.logo{
+width:clamp(80px,16vw,110px);
+margin-bottom:4px;
+animation:float 4s ease-in-out infinite;
+filter:
+drop-shadow(0 8px 14px rgba(0,0,0,.3))
+drop-shadow(0 0 25px rgba(255,255,255,.35));
+}
+
+.system-name{font-size:13px;}
+.school-name{font-size:26px;font-weight:700;}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
+
+header{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+animation:gradientMove 6s ease infinite;
+border-bottom:4px solid rgba(255,255,255,0.25);
+color:white;
+text-align:center;
+padding:22px 10px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+position:relative;
+overflow:hidden;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.back{
+position:absolute;
+left:12px;
+top:12px;
+color:white;
+text-decoration:none;
+font-size:13px;
+background:rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:8px;
+}
+  
 main{
 flex:1;
 max-width:520px;
@@ -151,16 +249,54 @@ font-size:10px;
 padding:8px;
 }
 
+#loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:999;
+transition:opacity .6s ease;
+}
+
+.loader{
+width:45px;
+height:45px;
+border:4px solid #eee;
+border-top:4px solid #e63946;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+  
 </style>
 </head>
 
 <body>
 
+<div id="loading">
+<div class="loader"></div>
+<div style="margin-top:12px;font-size:14px;color:#555">
+โปรดรอสักครู่...
+</div>
+</div>
+  
 <header>
 
-<div class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</div>
+<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</a>
 
-<h2>บันทึกสถิตินักเรียน</h2>
+<img src="burapa-logo.png" class="logo">
+
+<div class="system-name">ระบบบริหารจัดการสถิตินักเรียน</div>
+<div class="school-name">โรงเรียนเทศบาลบูรพาอุบล</div>
+
+<div id="termDisplay"></div>
+<div id="clock"></div>
 
 </header>
 
@@ -211,7 +347,12 @@ padding:8px;
 มาเรียนรวม : <b id="today_total">0</b>
 </div>
 
-<div class="section">สถานะอื่น</div>
+<div class="section">สถานะอื่นๆ</div>
+
+<div class="totalbox">
+สามารถกรอกสถานะอื่นได้อีก :
+<b id="remain">0</b> คน
+</div>
 
 <div class="field">
 <label>ป่วย</label>
@@ -229,7 +370,7 @@ padding:8px;
 </div>
 
 <div class="msg" id="errorMsg">
-จำนวนไม่สัมพันธ์กับนักเรียนทั้งหมด
+จำนวนที่กรอกไม่สัมพันธ์กับนักเรียนทั้งหมด
 </div>
 
 <button id="saveBtn" disabled onclick="save()">
@@ -250,6 +391,42 @@ padding:8px;
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
+function loadTerm(){
+
+let term=localStorage.getItem("term")||"2"
+let year=localStorage.getItem("year")||"2568"
+
+document.getElementById("termDisplay").innerHTML=
+"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+
+}
+
+loadTerm()
+
+function updateClock(){
+
+let now=new Date()
+
+let days=["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"]
+let months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+
+let day=days[now.getDay()]
+let date=now.getDate()
+let month=months[now.getMonth()]
+let year=now.getFullYear()+543
+
+let h=String(now.getHours()).padStart(2,"0")
+let m=String(now.getMinutes()).padStart(2,"0")
+let s=String(now.getSeconds()).padStart(2,"0")
+
+document.getElementById("clock").innerHTML=
+day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+" น."
+
+}
+
+setInterval(updateClock,1000)
+updateClock()
+  
 const params=new URLSearchParams(location.search)
 
 const room=params.get("room")
@@ -258,7 +435,7 @@ const edit=params.get("edit")
 
 const backdate=params.get("backdate")
 
-document.getElementById("roomName").innerText="ชั้น "+room
+document.getElementById("roomName").innerText="แบบบันทึกสถิติ "+room
 
 const today=new Date().toISOString().split("T")[0]
 
@@ -266,6 +443,10 @@ document.getElementById("record_date").value=today
 
 if(!backdate){
 document.getElementById("record_date").disabled=true
+let yesterday=new Date(Date.now()-86400000)
+.toISOString().split("T")[0]
+
+document.getElementById("record_date").max=yesterday
 }
 
 if(edit){
@@ -286,6 +467,8 @@ let all_total=num("all_boys")+num("all_girls")
 document.getElementById("all_total").innerText=all_total
 
 let today_total=num("boys_today")+num("girls_today")
+let remain = all_total - today_total
+document.getElementById("remain").innerText = remain
 document.getElementById("today_total").innerText=today_total
 
 let sum=today_total+num("sick")+num("leave")+num("absent")
@@ -335,12 +518,12 @@ source:"บันทึกโดยคุณครู"
 
 }
 
-await fetch(API,{
+fetch(API,{
 method:"POST",
 body:JSON.stringify(data)
 })
 
-alert("บันทึกสถิติเรียบร้อยแล้ว")
+alert("ทำการบันทึกสถิติเรียบร้อยแล้ว")
 
 location.href="teacher-dashboard.html"
 
@@ -348,9 +531,17 @@ location.href="teacher-dashboard.html"
 
 async function loadLatest(){
 
+document.getElementById("loading").style.display="flex"
+
 const res=await fetch(API+"?mode=getlatest&room="+room)
 
 const data=await res.json()
+
+document.getElementById("loading").style.opacity="0"
+
+setTimeout(()=>{
+document.getElementById("loading").style.display="none"
+},300)
 
 if(!data) return
 
