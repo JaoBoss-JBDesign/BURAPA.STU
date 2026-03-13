@@ -481,11 +481,27 @@ const edit=params.get("edit")
 
 const backdate=params.get("backdate")
 
-document.getElementById("roomName").innerText="แบบบันทึกสถิติ "+room
+document.getElementById("roomName").innerText="แบบบันทึกสถิตินักเรียน "+room
 
 const today=new Date().toISOString().split("T")[0]
 
 const dateInput=document.getElementById("record_date")
+
+if(edit){
+
+dateInput.disabled=false
+
+let yesterday=new Date()
+yesterday.setDate(yesterday.getDate()-1)
+
+dateInput.max=yesterday.toISOString().split("T")[0]
+
+}else{
+
+dateInput.value=today
+dateInput.disabled=true
+
+}
 
 if(edit){
 
