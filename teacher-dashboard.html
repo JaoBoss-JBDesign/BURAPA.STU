@@ -440,12 +440,12 @@ loading.style.display="none"
 
 function renderDash(d){
 
-let present=d.present||0
-let sick=d.sick||0
-let leave=d.leave||0
-let absent=d.absent||0
+let present = d.present || 0
+let sick = d.sick || 0
+let leave = d.leave || 0
+let absent = d.absent || 0
 
-let total=present+sick+leave+absent
+let total = d.total || (present + sick + leave + absent)
 
 document.getElementById("total").innerText=total
 document.getElementById("present").innerText=present
@@ -461,7 +461,7 @@ let labels=total===0
 
 let colors=total===0
 ?["#d9d9d9"]
-:["#6BCB77","#ff8fab","#ffd166","#f28482"]
+:["#6abf69","#ff9aa2","#ffd166","#f28482"]
 
 let ctx=document.getElementById("chart")
 
@@ -475,6 +475,7 @@ chartInstance.update()
 
 chartInstance=new Chart(ctx,{
 type:"pie",
+cutout:"35%",
 data:{
 labels:labels,
 datasets:[{data:data,backgroundColor:colors}]
@@ -507,8 +508,8 @@ let html=""
 rooms.forEach(r=>{
 
 let status=r.submitted
-?'<span class="status green">บันทึกแล้ว</span>'
-:'<span class="status red">ยังไม่บันทึก</span>'
+?'<span class="status green">บันทึกเแล้ว</span>'
+:'<span class="status red">ยังไม่ได้บันทึก</span>'
 
 html+=`
 <div class="class">
