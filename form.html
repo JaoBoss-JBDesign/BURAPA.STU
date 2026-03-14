@@ -351,7 +351,7 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>นักเรียนชายทั้งหมด</label>
-<input type="number" id="all_boys" min="0" max="100" ="1">
+<input type="number" id="all_boys" min="0" max="100" step="1">
 </div>
 
 <div class="field">
@@ -468,8 +468,6 @@ term+"/"+year
 
 }
 
-loadTerm()
-
 if(!localStorage.getItem("term")){
 localStorage.setItem("term","2")
 }
@@ -477,8 +475,6 @@ localStorage.setItem("term","2")
 if(!localStorage.getItem("year")){
 localStorage.setItem("year","2568")
 }
-  
-loadTerm()
 
 function updateClock(){
 
@@ -521,11 +517,9 @@ function todayLocal(){
 
 let d=new Date()
 
-let y=d.getFullYear()
-let m=String(d.getMonth()+1).padStart(2,"0")
-let day=String(d.getDate()).padStart(2,"0")
+d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
 
-return `${y}-${m}-${day}`
+return d.toISOString().split('T')[0]
 
 }
 
@@ -634,7 +628,19 @@ if(edit && !backdate){
 loadLatest()
 }
 
-const inputs=document.querySelectorAll("input[type=number]")
+let inputs
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+inputs=document.querySelectorAll("input[type=number]")
+
+inputs.forEach(i=>{
+i.addEventListener("input",calculate)
+})
+
+calculate()
+
+})
 
 inputs.forEach(i=>i.addEventListener("input",calculate))
 
@@ -843,6 +849,13 @@ return "ข้อมูลยังไม่ได้ทำการบันท
 }
 
 }
+
+document.addEventListener("DOMContentLoaded",function(){
+
+loadTerm()
+updateClock()
+
+})
   
 </script>
 </body>
