@@ -293,15 +293,15 @@ to{transform:rotate(360deg)}
 </p>
 
 <button class="btn btn-teacher"
-onclick="location.href='teacher-dashboard.html'">
+onclick="openTeacherDashboard()">
 
 <i class="bi bi-person-workspace"></i>
 สำหรับคุณครูประจำชั้น
 
 </button>
 
-<button class="btn btn-admin"
-onclick="location.href='admin-login.html'">
+<button class="btn btn-teacher"
+onclick="openAdminLogin()">
 
 <i class="bi bi-person-gear"></i>
 สำหรับผู้บริหาร / ผู้ดูแลระบบ
@@ -326,8 +326,23 @@ onclick="window.open('https://jaoboss-jbdesign.github.io/BURAPA.STU/','_blank')"
 <br>
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
 </footer>
-
+  
 <script>
+
+function openTeacherDashboard(){
+
+localStorage.setItem("last_active", Date.now())
+location.href="teacher-dashboard.html"
+
+}
+
+function openAdminLogin(){
+
+localStorage.setItem("last_active", Date.now())
+location.href="admin-login.html"
+
+}
+  
 function loadTerm(){
 
 let term=localStorage.getItem("term") || "2"
