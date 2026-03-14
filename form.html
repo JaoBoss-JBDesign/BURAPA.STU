@@ -351,12 +351,12 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>นักเรียนชายทั้งหมด</label>
-<input type="number" id="all_boys" min="0" step="1">
+<input type="number" id="all_boys" min="0" max="100" ="1">
 </div>
 
 <div class="field">
 <label>นักเรียนหญิงทั้งหมด</label>
-<input type="number" id="all_girls" min="0" step="1">
+<input type="number" id="all_girls" min="0" max="100" step="1">
 </div>
 
 <div class="totalbox">
@@ -371,12 +371,12 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>ชายมาเรียน</label>
-<input type="number" inputmode="numeric" id="boys_today" min="0" step="1">
+<input type="number" inputmode="numeric" id="boys_today" min="0" max="100" step="1">
 </div>
 
 <div class="field">
 <label>หญิงมาเรียน</label>
-<input type="number" inputmode="numeric" id="girls_today" min="0" step="1">
+<input type="number" inputmode="numeric" id="girls_today" min="0" max="100" step="1">
 </div>
 
 <div class="totalbox">
@@ -391,17 +391,17 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>ป่วย</label>
-<input type="number" inputmode="numeric" id="sick" min="0" step="1">
+<input type="number" inputmode="numeric" id="sick" min="0" max="100" step="1">
 </div>
 
 <div class="field">
 <label>ลา</label>
-<input type="number" inputmode="numeric" id="leave" min="0" step="1">
+<input type="number" inputmode="numeric" id="leave" min="0" max="100" step="1">
 </div>
 
 <div class="field">
 <label>ขาด</label>
-<input type="number" inputmode="numeric" id="absent" min="0" step="1">
+<input type="number" inputmode="numeric" id="absent" min="0" max="100" step="1">
 </div>
 
 <div class="msg" id="errorMsg">
@@ -463,12 +463,12 @@ let year=localStorage.getItem("year")||"2568"
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
 
-if(document.getElementById("termFooter")){
 document.getElementById("termFooter").innerHTML=
 term+"/"+year
-}
 
 }
+
+loadTerm()
 
 if(!localStorage.getItem("term")){
 localStorage.setItem("term","2")
@@ -568,7 +568,6 @@ document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียน<br>"+room
 
 }
-
 dateInput.addEventListener("change",loadDateData)
 
 async function loadDateData(){
@@ -595,6 +594,7 @@ data = {}
 }
 
 if(!data || Object.keys(data).length===0){
+hideLoading()
 return
 }
 
@@ -620,8 +620,6 @@ document.getElementById("errorMsg").style.display="none"
 document.getElementById("saveBtn").disabled=true
 return
 }
-  
-calculate()
 
 }catch(e){
 console.error(e)
@@ -649,10 +647,15 @@ return parseInt(document.getElementById(id).value)||0
 function calculate(){
 
 inputs.forEach(i=>{
+
 if(i.value < 0) i.value = 0
+
+i.value = Math.floor(i.value)
+
 if(i.max && Number(i.value) > Number(i.max)){
 i.value = i.max
 }
+
 })
 
 let all_total = num("all_boys") + num("all_girls")
@@ -682,8 +685,6 @@ document.getElementById("errorMsg").innerText =
 
 document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
-
-const err = document.getElementById("errorMsg")
 
 inputs.forEach(i=>i.classList.add("error"))
 
@@ -717,6 +718,19 @@ async function save(){
 if(saving) return
 saving=true
 
+let date=document.getElementById("record_date").value
+
+if(!date){
+
+alert("กรุณาเลือกวันที่ก่อนบันทึก")
+
+saving=false
+hideLoading()
+
+return
+
+}
+
 showLoading("กำลังบันทึกสถิติ โปรดรอสักครู่...")
 
 const btn=document.getElementById("saveBtn")
@@ -727,7 +741,7 @@ btn.style.opacity="0.7"
 let data={
 mode:"save",
 room:room,
-record_date:document.getElementById("record_date").value,
+record_date:date,
 all_boys:num("all_boys"),
 all_girls:num("all_girls"),
 boys_today:num("boys_today"),
@@ -798,6 +812,7 @@ const res=await fetch(API+"?mode=getlatest&room="+encodeURIComponent(room))
 const data=await res.json()
 
 if(!data){
+hideLoading()
 return
 }
 
