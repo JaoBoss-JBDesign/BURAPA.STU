@@ -743,10 +743,7 @@ try{
   
 await fetch(API,{
 method:"POST",
-body:JSON.stringify(data),
-headers:{
-"Content-Type":"application/json"
-}
+body:new URLSearchParams(data)
 })
 
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
