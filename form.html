@@ -713,12 +713,8 @@ saving=true
 let date=document.getElementById("record_date").value
 
 if(!date){
-
 alert("กรุณาเลือกวันที่ก่อนบันทึก")
-
 saving=false
-hideLoading()
-
 return
 
 }
@@ -728,7 +724,6 @@ showLoading("กำลังบันทึกสถิติ โปรดรอ
 const btn=document.getElementById("saveBtn")
 btn.disabled=true
 btn.innerText="กำลังบันทึกสถิติ..."
-btn.style.opacity="0.7"
 
 let data={
 mode:"save",
@@ -745,27 +740,16 @@ source:"บันทึกโดยคุณครู"
 }
 
 try{
-
-const controller = new AbortController()
-setTimeout(()=>controller.abort(),15000)
   
-const res = await fetch(API,{
+await fetch(API,{
 method:"POST",
 body:JSON.stringify(data),
-signal:controller.signal
+mode:"no-cors"
 })
 
-const text = await res.text()
-console.log(text)
-
-if(!res.ok){
-throw new Error(text)
-}
-
-window.onbeforeunload=null
-  
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
 
+window.onbeforeunload=null
 location.href="teacher-dashboard.html"
 
 }catch(e){
@@ -774,11 +758,8 @@ console.error(e)
 
 saving=false
 
-const btn=document.getElementById("saveBtn")
-
 btn.disabled=false
 btn.innerText="บันทึกข้อมูลสถิติ"
-btn.style.opacity="1"
 
 alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
 
