@@ -565,6 +565,7 @@ let present = d.present || 0
 let sick = d.sick || 0
 let leave = d.leave || 0
 let absent = d.absent || 0
+let unknown = d.unknown || 0
 
 let sum = present + sick + leave + absent
 
@@ -598,7 +599,7 @@ data=[1]
 }else{
 
 labels=["มาเรียน","ป่วย","ลา","ขาด","ยังไม่มีข้อมูล"]
-colors=["#22c55e","#ff8fab","#ffd166","#f87171",","#9ca3af"]
+colors=["#22c55e","#ff8fab","#ffd166","#f87171","#9ca3af"]
 data=[present,sick,leave,absent,unknown]
 }
 
