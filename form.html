@@ -295,6 +295,14 @@ let last = localStorage.getItem("last_active")
 if(!last || Date.now() - last > 30*60*1000){
 location.href="index.html"
 }
+
+document.addEventListener("click",()=>{
+localStorage.setItem("last_active", Date.now())
+})
+
+document.addEventListener("input",()=>{
+localStorage.setItem("last_active", Date.now())
+})
 </script>
 
 <script src="session.js"></script>
@@ -492,13 +500,26 @@ const room=params.get("room")
 
 if(!room){
 location.href="teacher-dashboard.html"
+return
 }
   
 const edit=params.get("edit")
 
 const backdate=params.get("backdate")
 
-const today=new Date().toISOString().split("T")[0]
+function todayLocal(){
+
+let d=new Date()
+
+let y=d.getFullYear()
+let m=String(d.getMonth()+1).padStart(2,"0")
+let day=String(d.getDate()).padStart(2,"0")
+
+return `${y}-${m}-${day}`
+
+}
+
+const today=todayLocal()
 
 const dateInput=document.getElementById("record_date")
 
@@ -549,7 +570,6 @@ const res=await fetch(API+"?mode=getbydate&room="+encodeURIComponent(room)+"&dat
 const data=await res.json()
 
 if(!data || Object.keys(data).length===0){
-hideLoading()
 return
 }
 
@@ -561,12 +581,13 @@ document.getElementById("sick").value=data.sick||0
 document.getElementById("leave").value=data.leave||0
 document.getElementById("absent").value=data.absent||0
 
+inputs.forEach(i=>i.classList.remove("error"))
+  
 let all_total = num("all_boys") + num("all_girls")
   
 if(all_total === 0){
 document.getElementById("errorMsg").style.display="none"
 document.getElementById("saveBtn").disabled=true
-hideLoading()
 return
 }
   
@@ -575,8 +596,9 @@ calculate()
 }catch(e){
 console.error(e)
 }
-
+finally{
 hideLoading()
+}
 
 }
 
@@ -595,18 +617,23 @@ return Number(document.getElementById(id).value)||0
 function calculate(){
 
 inputs.forEach(i=>{
-if(i.value < 0){
-i.value = 0
+if(i.value < 0) i.value = 0
+if(i.max && Number(i.value) > Number(i.max)){
+i.value = i.max
 }
 })
 
 let all_total = num("all_boys") + num("all_girls")
 document.getElementById("all_total").innerText = all_total
 
-let maxStudents = all_total || 100
+if(all_total === 0){
+document.getElementById("saveBtn").disabled=true
+}
 
-document.getElementById("boys_today").max = maxStudents
-document.getElementById("girls_today").max = maxStudents
+let maxStudents = all_total
+  
+document.getElementById("boys_today").max = num("all_boys")
+document.getElementById("girls_today").max = num("all_girls")
 document.getElementById("sick").max = maxStudents
 document.getElementById("leave").max = maxStudents
 document.getElementById("absent").max = maxStudents
@@ -624,10 +651,16 @@ document.getElementById("errorMsg").innerText =
 document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
 
-document.getElementById("errorMsg").scrollIntoView({
+const err = document.getElementById("errorMsg")
+
+if(err.style.display !== "block"){
+err.scrollIntoView({
 behavior:"smooth",
 block:"center"
 })
+}
+
+err.style.display="block"
 
 inputs.forEach(i=>i.classList.add("error"))
 
@@ -684,40 +717,64 @@ source:"บันทึกโดยคุณครู"
 
 try{
 
-await fetch(API,{
+const controller = new AbortController()
+setTimeout(()=>controller.abort(),15000)
+  
+const res = await fetch(API,{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify(data)
+body:JSON.stringify(data),
+signal:controller.signal
 })
 
+const text = await res.text()
+console.log(text)
+
+if(!res.ok){
+throw new Error(text)
+}
+
+window.onbeforeunload=null
+  
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
 
 location.href="teacher-dashboard.html"
 
 }catch(e){
 
+console.error(e)
+
 saving=false
 
-hideLoading()
+const btn=document.getElementById("saveBtn")
+
+btn.disabled=false
+btn.innerText="บันทึกข้อมูลสถิติ"
+btn.style.opacity="1"
+
 alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
 
 }
-
+finally{
+hideLoading()
 }
 
+}
+  
 async function loadLatest(){
 
 showLoading("กำลังซิงค์ข้อมูลเดิมที่บันทึกแล้ว...")
 
+let date=dateInput.value
+  
 try{
 
 const res=await fetch(API+"?mode=getlatest&room="+encodeURIComponent(room))
 const data=await res.json()
 
 if(!data){
-hideLoading()
 return
 }
 
@@ -729,33 +786,24 @@ document.getElementById("sick").value=data.sick||0
 document.getElementById("leave").value=data.leave||0
 document.getElementById("absent").value=data.absent||0
 
-inputs.forEach(i=>{
-
-if(i.value < 0){
-i.value = 0
-}
-
-if(i.max && Number(i.value) > Number(i.max)){
-i.value = i.max
-}
-
-})
-
 calculate()
 
 }catch(e){
 console.error(e)
-alert("ไม่สามารถโหลดข้อมูลได้")
 }
-
+finally{
 hideLoading()
-
 }
 
+}
 window.onbeforeunload=function(){
-if(!document.getElementById("saveBtn").disabled){
+
+const btn=document.getElementById("saveBtn")
+
+if(!btn.disabled){
 return "ข้อมูลยังไม่ได้ทำการบันทึก"
 }
+
 }
   
 </script>
