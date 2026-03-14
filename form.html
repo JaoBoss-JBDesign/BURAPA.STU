@@ -290,22 +290,7 @@ grid-template-columns:1fr;
 </head>
 
 <body>
-
-<script>
-let last = localStorage.getItem("last_active")
-if(!last || Date.now() - last > 30*60*1000){
-location.href="index.html"
-}
-
-document.addEventListener("click",()=>{
-localStorage.setItem("last_active", Date.now())
-})
-
-document.addEventListener("input",()=>{
-localStorage.setItem("last_active", Date.now())
-})
-</script>
-
+  
 <script src="session.js"></script>
   
 <div id="loading">
@@ -506,7 +491,7 @@ const room=params.get("room")
 
 if(!room){
 location.href="teacher-dashboard.html"
-return
+throw new Error("room not found")
 }
   
 const edit=params.get("edit")
@@ -605,7 +590,9 @@ document.getElementById("sourceInfo").innerText =
 
 calculate()
   
+if(inputs){
 inputs.forEach(i=>i.classList.remove("error"))
+}
   
 let all_total = num("all_boys") + num("all_girls")
   
@@ -647,6 +634,8 @@ return parseInt(document.getElementById(id).value)||0
 }
 
 function calculate(){
+
+if(!inputs) return
 
 inputs.forEach(i=>{
 
@@ -812,7 +801,15 @@ let date=dateInput.value
 try{
 
 const res=await fetch(API+"?mode=getlatest&room="+encodeURIComponent(room))
-const data=await res.json()
+
+let text = await res.text()
+let data = {}
+
+try{
+data = JSON.parse(text)
+}catch{
+data = {}
+}
 
 if(!data){
 hideLoading()
