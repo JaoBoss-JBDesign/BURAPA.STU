@@ -308,7 +308,7 @@ location.href="index.html"
   
 <header>
 
-<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับหน้า Dashboard</a>
+<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -510,11 +510,18 @@ let yesterday=new Date()
 yesterday.setHours(0,0,0,0)
 yesterday.setDate(yesterday.getDate()-1)
 
-dateInput.max=yesterday.toISOString().split("T")[0]
-dateInput.value=dateInput.max
+function formatDate(d){
+let year=d.getFullYear()
+let month=String(d.getMonth()+1).padStart(2,"0")
+let day=String(d.getDate()).padStart(2,"0")
+return `${year}-${month}-${day}`
+}
+
+dateInput.max=formatDate(yesterday)
+dateInput.value=formatDate(yesterday)
 
 document.getElementById("roomName").innerHTML=
-"แบบบันทึกสถิตินักเรียนย้อนหลัง<br>ชั้น "+room
+"แบบบันทึกสถิตินักเรียนย้อนหลัง<br>"+room
 
 loadDateData()
 
@@ -524,7 +531,7 @@ dateInput.value=today
 dateInput.disabled=true
 
 document.getElementById("roomName").innerHTML=
-"แบบบันทึกสถิตินักเรียน<br>ชั้น "+room
+"แบบบันทึกสถิตินักเรียน<br>"+room
 
 }
 
@@ -612,7 +619,7 @@ document.getElementById("today_total").innerText = today_total
 if(sum > all_total){
 
 document.getElementById("errorMsg").innerText =
-"คุณกรอกนักเรียนเกินจำนวนทั้งหมด " + (sum-all_total) + " คน"
+"คุณกรอกจำนวนนักเรียนเกิน " + (sum-all_total) + " คน"
 
 document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
@@ -628,7 +635,7 @@ inputs.forEach(i=>i.classList.add("error"))
 else if(sum < all_total){
 
 document.getElementById("errorMsg").innerText =
-"ยังมีนักเรียนที่ยังไม่ได้กรอก " + (all_total-sum) + " คน"
+"จำนวนนักเรียนที่ยังไม่ได้กรอกเหลือ " + (all_total-sum) + " คน"
 
 document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
@@ -658,7 +665,7 @@ showLoading("กำลังบันทึกสถิติ โปรดรอ
 
 const btn=document.getElementById("saveBtn")
 btn.disabled=true
-btn.innerText="กำลังบันทึก..."
+btn.innerText="กำลังบันทึกสถิติ..."
 btn.style.opacity="0.7"
 
 let data={
