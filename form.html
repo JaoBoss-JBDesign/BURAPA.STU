@@ -337,6 +337,7 @@ localStorage.setItem("last_active", Date.now())
 <div class="datebox">
 วันที่บันทึก
 <input type="date" id="record_date">
+<div id="sourceInfo" style="font-size:12px;color:#666;margin-top:4px"></div>
 </div>
 
 </div>
@@ -522,7 +523,7 @@ return `${y}-${m}-${day}`
 const today=todayLocal()
 
 const dateInput=document.getElementById("record_date")
-
+document.getElementById("sourceInfo").innerText=""
 if(backdate){
 
 dateInput.disabled=false
@@ -539,7 +540,8 @@ return `${year}-${month}-${day}`
 }
 
 dateInput.max=formatDate(yesterday)
-dateInput.value=formatDate(yesterday)
+dateInput.min="01-01-2026"
+dateInput.value=""
 
 document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียนย้อนหลัง<br>"+room
@@ -550,6 +552,8 @@ loadDateData()
 
 dateInput.value=today
 dateInput.disabled=true
+dateInput.min=today
+dateInput.max=today
 
 document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียน<br>"+room
@@ -581,6 +585,11 @@ document.getElementById("sick").value=data.sick||0
 document.getElementById("leave").value=data.leave||0
 document.getElementById("absent").value=data.absent||0
 
+document.getElementById("sourceInfo").innerText =
+"ที่มาของข้อมูล : " + (data.source || "-")
+
+calculate()
+  
 inputs.forEach(i=>i.classList.remove("error"))
   
 let all_total = num("all_boys") + num("all_girls")
