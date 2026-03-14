@@ -110,15 +110,16 @@ pointer-events:none;
   
 .back{
 position:absolute;
-left:12px;
-top:12px;
+left:10px;
+top:10px;
 color:white;
 text-decoration:none;
-font-size:13px;
+font-size:12px;
 background:rgba(255,255,255,.2);
-padding:6px 10px;
-border-radius:8px;
+padding:4px 8px;
+border-radius:6px;
 cursor:pointer;
+white-space:nowrap;
 }
   
 main{
@@ -350,12 +351,12 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>นักเรียนชายทั้งหมด</label>
-<input type="number" id="all_boys" min="0" max="100">
+<input type="number" id="all_boys" min="0" step="1">
 </div>
 
 <div class="field">
 <label>นักเรียนหญิงทั้งหมด</label>
-<input type="number" id="all_girls" min="0" max="100">
+<input type="number" id="all_girls" min="0" step="1">
 </div>
 
 <div class="totalbox">
@@ -370,12 +371,12 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>ชายมาเรียน</label>
-<input type="number" inputmode="numeric" id="boys_today" min="0" max="100">
+<input type="number" inputmode="numeric" id="boys_today" min="0" step="1">
 </div>
 
 <div class="field">
 <label>หญิงมาเรียน</label>
-<input type="number" inputmode="numeric" id="girls_today" min="0" max="100">
+<input type="number" inputmode="numeric" id="girls_today" min="0" step="1">
 </div>
 
 <div class="totalbox">
@@ -390,17 +391,17 @@ localStorage.setItem("last_active", Date.now())
 
 <div class="field">
 <label>ป่วย</label>
-<input type="number" inputmode="numeric" id="sick" min="0" max="100">
+<input type="number" inputmode="numeric" id="sick" min="0" step="1">
 </div>
 
 <div class="field">
 <label>ลา</label>
-<input type="number" inputmode="numeric" id="leave" min="0" max="100">
+<input type="number" inputmode="numeric" id="leave" min="0" step="1">
 </div>
 
 <div class="field">
 <label>ขาด</label>
-<input type="number" inputmode="numeric" id="absent" min="0" max="100">
+<input type="number" inputmode="numeric" id="absent" min="0" step="1">
 </div>
 
 <div class="msg" id="errorMsg">
@@ -540,7 +541,7 @@ return `${year}-${month}-${day}`
 }
 
 dateInput.max=formatDate(yesterday)
-dateInput.min="01-01-2026"
+dateInput.min="2025-01-01"
 dateInput.value=""
 
 document.getElementById("roomName").innerHTML=
@@ -554,6 +555,7 @@ dateInput.value=today
 dateInput.disabled=true
 dateInput.min=today
 dateInput.max=today
+dateInput.value=today
 
 document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียน<br>"+room
@@ -568,10 +570,22 @@ showLoading("กำลังโหลดข้อมูล...")
 
 let date=dateInput.value
 
+if(!date){
+hideLoading()
+return
+}
+
 try{
 
 const res=await fetch(API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date)
-const data=await res.json()
+let text = await res.text()
+let data = {}
+
+try{
+data = JSON.parse(text)
+}catch{
+data = {}
+}
 
 if(!data || Object.keys(data).length===0){
 return
@@ -619,6 +633,8 @@ const inputs=document.querySelectorAll("input[type=number]")
 
 inputs.forEach(i=>i.addEventListener("input",calculate))
 
+calculate()
+
 function num(id){
 return Number(document.getElementById(id).value)||0
 }
@@ -661,15 +677,6 @@ document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
 
 const err = document.getElementById("errorMsg")
-
-if(err.style.display !== "block"){
-err.scrollIntoView({
-behavior:"smooth",
-block:"center"
-})
-}
-
-err.style.display="block"
 
 inputs.forEach(i=>i.classList.add("error"))
 
