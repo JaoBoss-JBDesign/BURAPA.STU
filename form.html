@@ -470,6 +470,14 @@ term+"/"+year
 
 }
 
+if(!localStorage.getItem("term")){
+localStorage.setItem("term","2")
+}
+
+if(!localStorage.getItem("year")){
+localStorage.setItem("year","2568")
+}
+  
 loadTerm()
 
 function updateClock(){
@@ -541,7 +549,7 @@ return `${year}-${month}-${day}`
 }
 
 dateInput.max=formatDate(yesterday)
-dateInput.min="2025-01-01"
+dateInput.min="2024-01-01"
 dateInput.value=""
 
 document.getElementById("roomName").innerHTML=
@@ -555,7 +563,6 @@ dateInput.value=today
 dateInput.disabled=true
 dateInput.min=today
 dateInput.max=today
-dateInput.value=today
 
 document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียน<br>"+room
@@ -636,7 +643,7 @@ inputs.forEach(i=>i.addEventListener("input",calculate))
 calculate()
 
 function num(id){
-return Number(document.getElementById(id).value)||0
+return parseInt(document.getElementById(id).value)||0
 }
 
 function calculate(){
