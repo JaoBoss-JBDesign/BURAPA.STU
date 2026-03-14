@@ -642,10 +642,6 @@ calculate()
 
 })
 
-inputs.forEach(i=>i.addEventListener("input",calculate))
-
-calculate()
-
 function num(id){
 return parseInt(document.getElementById(id).value)||0
 }
@@ -669,6 +665,7 @@ document.getElementById("all_total").innerText = all_total
 
 if(all_total === 0){
 document.getElementById("saveBtn").disabled=true
+return
 }
 
 let maxStudents = all_total
