@@ -80,6 +80,7 @@ rgba(255,255,255,.35) 50%,
 rgba(255,255,255,.25) 60%,
 rgba(255,255,255,0) 100%
 );
+  
 filter:blur(28px);
 animation:shine 6s linear infinite;
 pointer-events:none;
@@ -91,14 +92,14 @@ pointer-events:none;
 100%{background-position:0% 50%}
 }
 
-@keyframes shine{
-0%{transform:translateX(-100%)}
-100%{transform:translateX(100%)}
-}
-  
 @keyframes dotsMove{
 0%{transform:translateX(0)}
 100%{transform:translateX(-400px)}
+}
+
+@keyframes shine{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
 }
   
 .logo{
@@ -115,7 +116,7 @@ drop-shadow(0 0 25px rgba(255,255,255,.35));
 50%{transform:translateY(-6px)}
 100%{transform:translateY(0)}
 }
-
+  
 .system-name{font-size:13px;}
 .school-name{font-size:26px;font-weight:700;}
 
