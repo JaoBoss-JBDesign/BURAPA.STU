@@ -551,7 +551,7 @@ dateInput.addEventListener("change",loadDateData)
 
 async function loadDateData(){
 
-showLoading("กำลังโหลดข้อมูล...")
+showLoading("กำลังซิงค์ข้อมูล...")
 
 let date=dateInput.value
 
@@ -771,13 +771,15 @@ hideLoading()
   
 async function loadLatest(){
 
-showLoading("กำลังซิงค์ข้อมูลเดิมที่บันทึกแล้ว...")
+showLoading("กำลังซิงค์ข้อมูล...")
 
 let date=dateInput.value
   
 try{
 
-const res=await fetch(API+"?mode=getlatest&room="+encodeURIComponent(room))
+const res = await fetch(
+API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date
+)
 
 let text = await res.text()
 let data = {}
