@@ -744,7 +744,9 @@ try{
 await fetch(API,{
 method:"POST",
 body:JSON.stringify(data),
-mode:"no-cors"
+headers:{
+"Content-Type":"application/json"
+}
 })
 
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
