@@ -17,6 +17,11 @@ padding:0;
 font-family:'Prompt',sans-serif;
 }
 
+html,body{
+max-width:100%;
+overflow-x:hidden;
+}
+  
 body{
 min-height:100vh;
 display:flex;
@@ -30,18 +35,87 @@ radial-gradient(circle at 85% 80%, rgba(230,57,70,.05), transparent 45%);
 
 header{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+animation:gradientMove 6s ease infinite;
+border-bottom:4px solid rgba(255,255,255,0.25);
 color:white;
 text-align:center;
 padding:22px 10px;
 box-shadow:0 10px 25px rgba(0,0,0,.15);
 position:relative;
+overflow:hidden;
+z-index:1;
+backdrop-filter: blur(2px);
 }
 
+header::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:200%;
+height:100%;
+background:
+radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
+background-size:40px 40px;
+animation:dotsMove 30s linear infinite;
+opacity:.35;
+pointer-events:none;
+}
+
+header::after{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:240%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0) 0%,
+rgba(255,255,255,.25) 40%,
+rgba(255,255,255,.35) 50%,
+rgba(255,255,255,.25) 60%,
+rgba(255,255,255,0) 100%
+);
+  
+filter:blur(28px);
+animation:shine 6s linear infinite;
+pointer-events:none;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+@keyframes dotsMove{
+0%{transform:translateX(0)}
+100%{transform:translateX(-400px)}
+}
+
+@keyframes shine{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+  
 .logo{
-width:90px;
+width:clamp(80px,16vw,110px);
 margin-bottom:4px;
+animation:float 4s ease-in-out infinite;
+filter:
+drop-shadow(0 8px 14px rgba(0,0,0,.3))
+drop-shadow(0 0 25px rgba(255,255,255,.35));
 }
 
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
+  
 .system-name{font-size:13px;}
 .school-name{font-size:26px;font-weight:700;}
 
@@ -55,10 +129,18 @@ font-size:13px;
 background:rgba(255,255,255,.2);
 padding:6px 10px;
 border-radius:8px;
+cursor:pointer;
 }
 
-.term{font-size:16px;margin-top:3px;}
-.time{font-size:16px;margin-top:2px;}
+.term{
+font-size:16px;
+margin-top:3px;
+}
+
+.time{
+font-size:16px;
+margin-top:2px;
+}
 
 main{
 flex:1;
@@ -141,6 +223,32 @@ padding:8px 10px;
 line-height:1.5;
 }
 
+#loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:999;
+opacity:1;
+transition:opacity .6s ease;
+}
+
+.loader{
+width:45px;
+height:45px;
+border:4px solid #eee;
+border-top:4px solid #e63946;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+  
 </style>
 </head>
 
@@ -178,7 +286,6 @@ location.href="index.html"
 
 <div class="term" id="termDisplay"></div>
 <div class="time" id="clock"></div>
-
 </header>
 
 <main>
@@ -189,9 +296,9 @@ location.href="index.html"
 
 <p>เข้าสู่ระบบผู้ดูแลระบบ</p>
 
-<input id="user" class="input" placeholder="Username" value="adminburapa">
+<input id="user" class="input" placeholder="Username">
 
-<input id="pass" class="input" type="password" placeholder="Password" value="burapaubon55555">
+<input id="pass" class="input" type="password" placeholder="Password">
 
 <button class="btn btn-admin" onclick="loginAdmin()">
 <i class="bi bi-shield-lock"></i>
@@ -278,8 +385,6 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 
 updateClock()
 setInterval(updateClock,1000)
-
 </script>
-
 </body>
 </html>
