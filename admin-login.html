@@ -292,9 +292,9 @@ to{transform:rotate(360deg)}
 <input id="user" class="input" placeholder="Username" required>
 <input id="pass" class="input" type="password" placeholder="Password" required>
 
-<button class="btn btn-admin" onclick="loginAdmin()">
+<button id="loginBtn" class="btn btn-admin" onclick="loginAdmin()">
 <i class="bi bi-shield-lock"></i>
-เข้าสู่ระบบ
+<span id="btnText">เข้าสู่ระบบ</span>
 </button>
 
 </div>
@@ -317,6 +317,12 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c5
   
 async function loginAdmin(){
 
+const btn = document.getElementById("loginBtn")
+const btnText = document.getElementById("btnText")
+
+btn.disabled = true
+btnText.innerHTML = "ระบบกำลังตรวจสอบ..."
+  
 const u=document.getElementById("user").value
 const p=document.getElementById("pass").value
 
@@ -348,11 +354,15 @@ location.href="admin-dashboard.html"
 }else{
 
 alert("Username หรือ Password ไม่ถูกต้อง")
-
+btn.disabled = false
+btnText.innerHTML = "เข้าสู่ระบบ"
+  
 }
 
 }catch(err){
-
+btn.disabled = false
+btnText.innerHTML = "เข้าสู่ระบบ"
+  
 alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาติดต่อผู้ดูแลระบบ")
 
 }
