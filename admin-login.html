@@ -254,12 +254,6 @@ to{transform:rotate(360deg)}
 
 <body>
 
-<script>
-if(!localStorage.getItem("last_active")){
-location.href="index.html"
-}
-</script>
-
 <script src="session.js"></script>
   
 <div id="loading">
@@ -271,8 +265,7 @@ location.href="index.html"
   
 <header>
 
-<a href="index.html" class="back">
-<i class="bi bi-arrow-left"></i>← กลับหน้าแรก</a>
+<a class="back" href="index.html">← กลับหน้าแรก</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -292,9 +285,9 @@ location.href="index.html"
 
 <div class="card">
 
-<h2>Administrator Login</h2>
+<h2>สำหรับผู้บริหาร / ผู้ดูแลระบบ</h2>
 
-<p>เข้าสู่ระบบผู้ดูแลระบบ</p>
+<p>กรอกชื่อและรหัสผู้ใช้งานสำหรับเข้าสู่ระบบ</p>
 
 <input id="user" class="input" placeholder="Username" required>
 <input id="pass" class="input" type="password" placeholder="Password" required>
@@ -325,6 +318,11 @@ async function loginAdmin(){
 const u=document.getElementById("user").value
 const p=document.getElementById("pass").value
 
+if(!u || !p){
+alert("กรุณากรอก Username และ Password")
+return
+}
+  
 const res = await fetch("https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec",{
 method:"POST",
 body:JSON.stringify({
@@ -335,7 +333,7 @@ password:p
 
 const data = await res.json()
 
-if(data.status=="success"){
+if(data && data.status==="success"){
 
 localStorage.setItem("adminLogin","true")
 location.href="admin-dashboard.html"
@@ -345,7 +343,7 @@ location.href="admin-dashboard.html"
 alert("Username หรือ Password ไม่ถูกต้อง")
 
 }
-
+  
 }
 
 function loadTerm(){
