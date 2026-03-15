@@ -551,8 +551,23 @@ dateInput.addEventListener("change",loadDateData)
 
 async function loadDateData(){
 
-showLoading("กำลังซิงค์ข้อมูล...")
+showLoading("กำลังโหลดข้อมูลของวันย้อนหลัง...")
+clearInputs()
 
+function clearInputs(){
+
+document.getElementById("all_boys").value=""
+document.getElementById("all_girls").value=""
+document.getElementById("boys_today").value=""
+document.getElementById("girls_today").value=""
+document.getElementById("sick").value=""
+document.getElementById("leave").value=""
+document.getElementById("absent").value=""
+
+calculate()
+
+}
+  
 let date=dateInput.value
 
 if(!date){
@@ -573,6 +588,10 @@ data = {}
 }
 
 if(!data || Object.keys(data).length===0){
+
+document.getElementById("sourceInfo").innerText =
+"ที่มาของข้อมูล : ไม่มีข้อมูลในวันนี้"
+
 hideLoading()
 return
 }
