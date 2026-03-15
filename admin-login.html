@@ -312,6 +312,8 @@ to{transform:rotate(360deg)}
 </footer>
 
 <script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
   
 async function loginAdmin(){
 
@@ -335,8 +337,6 @@ const res = await fetch(API_URL,{
 method:"POST",
 body:formData
 })
-
-const data = await res.json()
 
 const data = await res.json()
 
