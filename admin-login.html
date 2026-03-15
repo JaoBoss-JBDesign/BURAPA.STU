@@ -265,7 +265,7 @@ to{transform:rotate(360deg)}
   
 <header>
 
-<a href="index.html">← กลับหน้าแรก</a>
+<a class="back" href="index.html">← กลับหน้าแรก</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -325,16 +325,18 @@ return
   
 try{
 
-const res = await fetch("https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec",{
+const formData = new FormData()
+
+formData.append("mode","login")
+formData.append("username",u)
+formData.append("password",p)
+
+const res = await fetch(API_URL,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-username:u,
-password:p
+body:formData
 })
-})
+
+const data = await res.json()
 
 const data = await res.json()
 
@@ -351,7 +353,7 @@ alert("Username หรือ Password ไม่ถูกต้อง")
 
 }catch(err){
 
-alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้")
+alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาติดต่อผู้ดูแลระบบ")
 
 }
 
