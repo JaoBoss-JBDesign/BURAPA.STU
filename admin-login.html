@@ -296,9 +296,8 @@ location.href="index.html"
 
 <p>เข้าสู่ระบบผู้ดูแลระบบ</p>
 
-<input id="user" class="input" placeholder="Username">
-
-<input id="pass" class="input" type="password" placeholder="Password">
+<input id="user" class="input" placeholder="Username" required>
+<input id="pass" class="input" type="password" placeholder="Password" required>
 
 <button class="btn btn-admin" onclick="loginAdmin()">
 <i class="bi bi-shield-lock"></i>
@@ -326,7 +325,7 @@ async function loginAdmin(){
 const u=document.getElementById("user").value
 const p=document.getElementById("pass").value
 
-const res = await fetch("000000",{
+const res = await fetch("https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec",{
 method:"POST",
 body:JSON.stringify({
 username:u,
