@@ -385,6 +385,16 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 
 updateClock()
 setInterval(updateClock,1000)
+
+window.onload=function(){
+setTimeout(()=>{
+let loading=document.getElementById("loading")
+loading.style.opacity="0"
+setTimeout(()=>{
+loading.style.display="none"
+},200)
+},400)
+}
 </script>
 </body>
 </html>
