@@ -265,7 +265,7 @@ to{transform:rotate(360deg)}
   
 <header>
 
-<a class="back" href="index.html">← กลับหน้าแรก</a>
+<a href="index.html">← กลับหน้าแรก</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -287,7 +287,7 @@ to{transform:rotate(360deg)}
 
 <h2>สำหรับผู้บริหาร / ผู้ดูแลระบบ</h2>
 
-<p>กรอกชื่อและรหัสผู้ใช้งานสำหรับเข้าสู่ระบบ</p>
+<p>กรอก Username และ Password เพื่อเข้าสู่ระบบผู้บริหาร</p>
 
 <input id="user" class="input" placeholder="Username" required>
 <input id="pass" class="input" type="password" placeholder="Password" required>
@@ -312,7 +312,7 @@ to{transform:rotate(360deg)}
 </footer>
 
 <script>
-
+  
 async function loginAdmin(){
 
 const u=document.getElementById("user").value
@@ -323,8 +323,13 @@ alert("กรุณากรอก Username และ Password")
 return
 }
   
+try{
+
 const res = await fetch("https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec",{
 method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify({
 username:u,
 password:p
@@ -343,9 +348,21 @@ location.href="admin-dashboard.html"
 alert("Username หรือ Password ไม่ถูกต้อง")
 
 }
-  
+
+}catch(err){
+
+alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้")
+
 }
 
+}
+
+document.getElementById("pass").addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+loginAdmin()
+}
+})
+  
 function loadTerm(){
 
 let term=localStorage.getItem("term") || "2"
