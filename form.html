@@ -563,10 +563,6 @@ document.getElementById("sick").value=""
 document.getElementById("leave").value=""
 document.getElementById("absent").value=""
 
-if(inputs && inputs.length){
-calculate()
-}
-
 }
 
 async function loadDateData(){
@@ -885,7 +881,7 @@ data = JSON.parse(text)
 data = {}
 }
 
-if(!data) return
+if(!data || Object.keys(data).length === 0) return
 
 document.getElementById("all_boys").value=data.all_boys||0
 document.getElementById("all_girls").value=data.all_girls||0
