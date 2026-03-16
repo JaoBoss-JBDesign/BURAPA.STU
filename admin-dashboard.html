@@ -133,7 +133,7 @@ width:100%;
 
 .stats{
 display:grid;
-grid-template-columns:repeat(5,1fr);
+grid-template-columns:repeat(6,1fr);
 gap:12px;
 margin-bottom:16px;
 }
@@ -382,7 +382,7 @@ location.replace("admin-login.html")
 <header>
 
 <a class="back" onclick="logout()">← ออกจากระบบ</a>
-
+  
 <img src="burapa-logo.png" class="logo">
 
 <div class="system-name">ระบบบริหารจัดการสถิตินักเรียน</div>
@@ -393,10 +393,26 @@ location.replace("admin-login.html")
 
 </header>
 
+<div id="alertBar" style="
+background:#fff3cd;
+color:#856404;
+padding:10px;
+text-align:center;
+font-size:14px;
+display:none;
+font-weight:600;
+">
+</div>
+  
 <main>
 
 <div class="stats">
 
+<div class="stat">
+<h3>ห้องที่บันทึกแล้ว</h3>
+<div class="num" id="roomsDone">0</div>
+</div>
+  
 <div class="stat">
 <h3>นักเรียนทั้งหมด</h3>
 <div class="num" id="total">0</div>
@@ -433,6 +449,13 @@ location.replace("admin-login.html")
 
 <canvas id="chart"></canvas>
 
+<div id="lastUpdate" style="
+text-align:center;
+font-size:12px;
+color:#777;
+margin-top:8px;
+"></div>
+  
 <div id="noData" class="noData">
 ยังไม่มีการบันทึกสถิติในวันนี้
 </div>
@@ -443,13 +466,41 @@ location.replace("admin-login.html")
 
 <div class="card">
 
-<h3>รายการห้องเรียนทั้งหมด</h3>
+<h3>
+รายการห้องเรียนทั้งหมด 
+<span id="roomCount" style="font-size:13px;color:#888"></span>
+</h3>
 
 <div id="classList"></div>
 </div>
 </div>
 </main>
 
+<div style="margin-top:30px">
+
+<h3 style="margin-bottom:10px">เมนูผู้ดูแลระบบ</h3>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+
+<button class="btn-sub" onclick="location.href='rooms.html'">
+จัดการห้องเรียน
+</button>
+
+<button class="btn-sub" onclick="location.href='students.html'">
+จัดการนักเรียน
+</button>
+
+<button class="btn-sub" onclick="location.href='reports.html'">
+รายงานย้อนหลัง
+</button>
+
+<button class="btn-sub" onclick="location.href='settings.html'">
+ตั้งค่าระบบ
+</button>
+
+</div>
+</div>
+  
 <footer>
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
 <br>
@@ -507,6 +558,9 @@ const dash=await res.json()
 renderDash(dash)
 renderRooms(dash.rooms||[])
 hideLoading()
+
+document.getElementById("lastUpdate").innerText =
+"อัปเดตล่าสุด " + new Date().toLocaleTimeString("th-TH")
 
 }catch(e){
 
@@ -568,7 +622,7 @@ requestAnimationFrame(step)
 }
 
 function renderDash(d){
-
+  
 let total = d.total || 0
 let present = d.present || 0
 let sick = d.sick || 0
@@ -669,17 +723,38 @@ return percent+"%"
 }
 
 }
-
+  
 function renderRooms(rooms){
 
 let html=""
 
 if(rooms.length===0){
 
-document.getElementById("classList").innerHTML=
+document.getElementById("classList").innerHTML =
 "<div style='text-align:center;padding:30px;color:#999'>ไม่พบข้อมูลห้องเรียน</div>"
 
+document.getElementById("roomsDone").innerText = 0
+
+document.getElementById("alertBar").style.display="none"
+
 return
+}
+
+let done = rooms.filter(r => r.submitted).length
+document.getElementById("roomsDone").innerText = done
+
+let pending = rooms.filter(r => !r.submitted).length
+let alertBar = document.getElementById("alertBar")
+
+if(pending>0){
+
+alertBar.style.display="block"
+alertBar.innerHTML="⚠ ยังมี "+pending+" ห้องที่ยังไม่ได้บันทึกสถิติวันนี้"
+
+}else{
+
+alertBar.style.display="none"
+
 }
 
 rooms.forEach(r=>{
