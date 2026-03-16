@@ -364,9 +364,11 @@ width:100%;
   
 <body>                  
 
+<script src="session.js"></script>
+  
 <script>
 if(localStorage.getItem("adminLogin")!=="true"){
-window.location.replace("admin-login.html")
+location.replace("admin-login.html")
 }
 </script>
   
@@ -461,8 +463,12 @@ window.location.replace("admin-login.html")
 <script>
 
 function logout(){
+
+if(!confirm("ต้องการออกจากระบบหรือไม่")) return
+
 localStorage.removeItem("adminLogin")
 window.location.replace("admin-login.html")
+
 }
 
 function loadTerm(){
@@ -531,6 +537,7 @@ loading.style.display="none"
 function animateNumber(id,value){
 
 let el=document.getElementById(id)
+if(!el) return
 
 if(parseInt(el.innerText)===value) return
 
@@ -567,9 +574,10 @@ let present = d.present || 0
 let sick = d.sick || 0
 let leave = d.leave || 0
 let absent = d.absent || 0
-let unknown = d.unknown || 0
+let unknown = total - (present + sick + leave + absent)
+if(unknown < 0) unknown = 0
 
-let sum = present + sick + leave + absent
+let sum = present + sick + leave + absent + unknown
 
 let noData=document.getElementById("noData")
 let canvas=document.getElementById("chart")
@@ -723,7 +731,11 @@ let refreshTimer
 
 function startAutoRefresh(){
 clearInterval(refreshTimer)
-refreshTimer=setInterval(load,15000)
+refreshTimer=setInterval(()=>{
+if(!loadingNow){
+load()
+}
+},15000)
 }
 
 startAutoRefresh()
@@ -753,6 +765,5 @@ setInterval(updateClock,1000)
 updateClock()
   
 </script>
-<script src="script.js" defer></script>
 </body>
 </html>
