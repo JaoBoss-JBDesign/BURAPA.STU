@@ -636,9 +636,11 @@ if(edit && !backdate){
 loadLatest()
 }
 
-let inputs = document.querySelectorAll("input[type=number]")
+let inputs = []
 
 window.addEventListener("DOMContentLoaded",()=>{
+
+inputs = document.querySelectorAll("input[type=number]")
 
 inputs.forEach(i=>{
 i.addEventListener("input",calculate)
@@ -654,7 +656,7 @@ return parseInt(document.getElementById(id).value)||0
 
 function calculate(){
 
-if(!inputs) return
+if(!inputs || inputs.length === 0) return
 
 inputs.forEach(i=>{
 
