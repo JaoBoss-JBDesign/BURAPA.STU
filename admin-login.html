@@ -253,8 +253,6 @@ to{transform:rotate(360deg)}
 </head>
 
 <body>
-
-<script src="session.js"></script>
   
 <div id="loading">
 <div class="loader"></div>
@@ -351,6 +349,9 @@ const data = await res.json()
 if(data && data.status==="success"){
 
 localStorage.setItem("adminLogin","true")
+localStorage.setItem("loginTime",Date.now())
+localStorage.setItem("token",Math.random().toString(36).substring(2))
+
 location.replace("admin-dashboard.html")
 
 }else{
@@ -416,7 +417,11 @@ setInterval(updateClock,1000)
 
 window.onload=function(){
 
-if(localStorage.getItem("adminLogin")==="true"){
+const login = localStorage.getItem("adminLogin")
+const token = localStorage.getItem("token")
+const loginTime = localStorage.getItem("loginTime")
+
+if(login==="true" && token && loginTime){
 location.replace("admin-dashboard.html")
 }
 
