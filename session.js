@@ -8,7 +8,8 @@ const now = Date.now()
 
 if(now - Number(last) > SESSION_LIMIT){
 
-localStorage.clear()
+localStorage.removeItem("adminLogin")
+localStorage.removeItem("last_active")
 
 location.href="index.html"
 
