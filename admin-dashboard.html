@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
+<style>
 *{
 box-sizing:border-box;
 margin:0;
@@ -361,19 +362,14 @@ width:100%;
 </style>
 </head>
   
-<body>
-                          
+<body>                  
+
 <script>
-if(!localStorage.getItem("last_active")){
-location.href="index.html"
+if(localStorage.getItem("adminLogin")!=="true"){
+window.location.replace("admin-login.html")
 }
 </script>
-
   
-<script src="script.js"></script
-
-<button onclick="logout()">Logout</button>
-
 <div id="loading">
 <div class="loader"></div>
 <div style="margin-top:12px;font-size:14px;color:#555">
@@ -383,7 +379,7 @@ location.href="index.html"
 
 <header>
 
-<a class="back" onclick="location.href='index.html'">← กลับหน้าแรก</a>
+<a class="back" onclick="logout()">← ออกจากระบบ</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -464,10 +460,6 @@ location.href="index.html"
 
 <script>
 
-if(localStorage.getItem("adminLogin")!=="true"){
-location.href="admin-login.html"
-}
-
 function logout(){
 
 localStorage.removeItem("adminLogin")
@@ -476,5 +468,6 @@ location.href="admin-login.html"
 }
   
 </script>
+<script src="script.js" defer></script>
 </body>
 </html>
