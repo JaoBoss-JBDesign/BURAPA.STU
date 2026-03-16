@@ -563,6 +563,9 @@ document.getElementById("sick").value=""
 document.getElementById("leave").value=""
 document.getElementById("absent").value=""
 
+document.getElementById("all_total").innerText="0"
+document.getElementById("today_total").innerText="0"
+
 }
 
 async function loadDateData(){
@@ -593,6 +596,8 @@ data = {}
 
 if(!data || Object.keys(data).length===0){
 
+calculate()
+  
 const check = await fetch(
 API+"?mode=hasdata&date="+date+"&t="+Date.now()
 )
