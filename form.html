@@ -415,6 +415,8 @@ grid-template-columns:1fr;
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
+let inputs = []
+  
 function showLoading(text){
 
 const loading=document.getElementById("loading")
@@ -635,8 +637,6 @@ hideLoading()
 if(edit && !backdate){
 loadLatest()
 }
-
-let inputs = []
 
 window.addEventListener("DOMContentLoaded",()=>{
 
