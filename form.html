@@ -309,8 +309,10 @@ grid-template-columns:1fr;
 <div class="system-name">ระบบบริหารจัดการสถิตินักเรียน</div>
 <div class="school-name">โรงเรียนเทศบาลบูรพาอุบล</div>
 
+<div id="headerDateTime">
 <div id="termDisplay"></div>
 <div id="clock"></div>
+</div>
 
 </header>
 
@@ -415,7 +417,7 @@ grid-template-columns:1fr;
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
-let inputs = []
+let inputs = null
   
 function showLoading(text){
 
@@ -516,6 +518,8 @@ const dateInput=document.getElementById("record_date")
 document.getElementById("sourceInfo").innerText=""
 if(backdate){
 
+document.getElementById("headerDateTime").style.display="none"
+
 dateInput.disabled=false
 
 let yesterday=new Date()
@@ -536,8 +540,6 @@ dateInput.value=""
 document.getElementById("roomName").innerHTML=
 "แบบบันทึกสถิตินักเรียนย้อนหลัง<br>"+room
 
-loadDateData()
-
 }else{
 
 dateInput.value=today
@@ -551,11 +553,6 @@ document.getElementById("roomName").innerHTML=
 }
 dateInput.addEventListener("change",loadDateData)
 
-async function loadDateData(){
-
-showLoading("กำลังโหลดข้อมูล...")
-clearInputs()
-
 function clearInputs(){
 
 document.getElementById("all_boys").value=""
@@ -567,10 +564,15 @@ document.getElementById("leave").value=""
 document.getElementById("absent").value=""
 
 if(inputs && inputs.length){
-  calculate()
+calculate()
 }
 
 }
+
+async function loadDateData(){
+
+showLoading("กำลังโหลดข้อมูล...")
+clearInputs()
   
 let date=dateInput.value
 
@@ -581,7 +583,9 @@ return
 
 try{
 
-const res=await fetch(API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date)
+const res=await fetch(
+API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date+"&t="+Date.now()
+)
 let text = await res.text()
 let data = {}
 
@@ -593,8 +597,31 @@ data = {}
 
 if(!data || Object.keys(data).length===0){
 
+const check = await fetch(
+API+"?mode=hasdata&date="+date+"&t="+Date.now()
+)
+const hasDataText = await check.text()
+let hasData = false
+
+try{
+hasData = JSON.parse(hasDataText)
+}catch{
+hasData = hasDataText.includes("true")
+}
+
+if(hasData && backdate){
+
+await loadLastRoomData()
+
+document.getElementById("sourceInfo").innerText =
+"ที่มาของข้อมูล : บันทึกโดยระบบอัตโนมัติ"
+
+}else{
+
 document.getElementById("sourceInfo").innerText =
 "ที่มาของข้อมูล : ไม่มีข้อมูลในวันนี้"
+
+}
 
 hideLoading()
 return
@@ -674,7 +701,13 @@ let all_total = num("all_boys") + num("all_girls")
 document.getElementById("all_total").innerText = all_total
 
 if(all_total === 0){
+
+document.getElementById("errorMsg").innerText =
+"กรุณากรอกจำนวนนักเรียนทั้งหมดก่อน"
+
+document.getElementById("errorMsg").style.display="block"
 document.getElementById("saveBtn").disabled=true
+
 return
 }
 
@@ -799,7 +832,7 @@ let date=dateInput.value
 try{
 
 const res = await fetch(
-API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date
+API+"?mode=getbydate&room="+encodeURIComponent(room)+"&date="+date+"&t="+Date.now()
 )
 
 let text = await res.text()
@@ -811,7 +844,7 @@ data = JSON.parse(text)
 data = {}
 }
 
-if(!data){
+if(!data || Object.keys(data).length === 0){
 hideLoading()
 return
 }
@@ -834,6 +867,44 @@ hideLoading()
 }
 
 }
+
+async function loadLastRoomData(){
+
+try{
+
+const res = await fetch(
+API+"?mode=getlatestroom&room="+encodeURIComponent(room)+"&t="+Date.now()
+)
+
+let text = await res.text()
+let data = {}
+
+try{
+data = JSON.parse(text)
+}catch{
+data = {}
+}
+
+if(!data) return
+
+document.getElementById("all_boys").value=data.all_boys||0
+document.getElementById("all_girls").value=data.all_girls||0
+
+document.getElementById("boys_today").value=data.all_boys||0
+document.getElementById("girls_today").value=data.all_girls||0
+
+document.getElementById("sick").value=0
+document.getElementById("leave").value=0
+document.getElementById("absent").value=0
+
+calculate()
+
+}catch(e){
+console.error(e)
+}
+
+}
+  
 window.onbeforeunload=function(){
 
 const btn=document.getElementById("saveBtn")
