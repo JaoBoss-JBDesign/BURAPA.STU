@@ -564,7 +564,9 @@ document.getElementById("sick").value=""
 document.getElementById("leave").value=""
 document.getElementById("absent").value=""
 
-calculate()
+if(inputs && inputs.length){
+  calculate()
+}
 
 }
   
@@ -634,11 +636,9 @@ if(edit && !backdate){
 loadLatest()
 }
 
-let inputs
+let inputs = document.querySelectorAll("input[type=number]")
 
 window.addEventListener("DOMContentLoaded",()=>{
-
-inputs=document.querySelectorAll("input[type=number]")
 
 inputs.forEach(i=>{
 i.addEventListener("input",calculate)
