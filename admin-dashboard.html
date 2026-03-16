@@ -1,23 +1,466 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+background:linear-gradient(180deg,#f6f7fb,#eef1f8);
+}
+
+header{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+background-size:200% 200%;
+animation:gradientMove 6s ease infinite;
+border-bottom:4px solid rgba(255,255,255,0.25);
+color:white;
+text-align:center;
+padding:22px 10px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+position:relative;
+overflow:hidden;
+z-index:1;
+backdrop-filter: blur(2px);
+}
+
+header::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:200%;
+height:100%;
+background:
+radial-gradient(rgba(255,255,255,.12) 2px, transparent 2px);
+background-size:40px 40px;
+animation:dotsMove 30s linear infinite;
+opacity:.35;
+pointer-events:none;
+}
+
+header::after{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:240%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0) 0%,
+rgba(255,255,255,.25) 40%,
+rgba(255,255,255,.35) 50%,
+rgba(255,255,255,.25) 60%,
+rgba(255,255,255,0) 100%
+);
+  
+filter:blur(28px);
+animation:shine 6s linear infinite;
+pointer-events:none;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+@keyframes dotsMove{
+0%{transform:translateX(0)}
+100%{transform:translateX(-400px)}
+}
+
+@keyframes shine{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+  
+.logo{
+width:clamp(80px,16vw,110px);
+margin-bottom:4px;
+animation:float 4s ease-in-out infinite;
+filter:
+drop-shadow(0 8px 14px rgba(0,0,0,.3))
+drop-shadow(0 0 25px rgba(255,255,255,.35));
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
+  
+.system-name{font-size:13px;}
+.school-name{font-size:26px;font-weight:700;}
+
+.back{
+position:absolute;
+left:12px;
+top:12px;
+color:white;
+text-decoration:none;
+font-size:13px;
+background:rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+main{
+flex:1;
+max-width:1100px;
+margin:auto;
+padding:16px;
+width:100%;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-bottom:16px;
+}
+
+.stat{
+background:white;
+padding:14px;
+border-radius:16px;
+text-align:center;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.stat h3{font-size:12px;color:#666;}
+
+.num{
+font-size:26px;
+font-weight:700;
+margin-top:4px;
+transition:transform .3s;
+}
+
+.num:hover{
+transform:scale(1.1);
+}
+
+.present{color:#6BCB77}
+.sick{color:#ff8fab}
+.leave{color:#ffd166}
+.absent{color:#f28482}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+height:420px;
+display:flex;
+flex-direction:column;
+}
+
+.card h3{
+text-align:center;
+margin-bottom:10px;
+}
+  
+.chartBox{
+display:flex;
+align-items:center;
+justify-content:center;
+flex:1;
+position:relative;
+padding-bottom:10px;
+}
+
+.chartBox canvas{
+width:100% !important;
+max-width:280px;
+max-height:280px;
+}
+
+.noData{
+position:absolute;
+text-align:center;
+font-size:16px;
+color:#888;
+font-weight:500;
+}
+  
+#classList{
+flex:1;
+overflow-y:auto;
+margin-top:8px;
+}
+
+.class{
+padding:14px 0;
+border-bottom:2px solid #e6e6e6;
+transition:.25s;
+}
+
+.class:hover{
+background:#fafafa;
+padding-left:6px;
+}
+
+.class-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:16px;
+font-weight:600;
+}
+
+.class-top div{
+font-size:18px;
+font-weight:700;
+color:#333;
+}
+
+.status{
+font-size:13px;
+font-weight:700;
+}
+  
+.green{
+color:#6BCB77;
+}
+
+.red{
+color:#e63946;
+animation:blink 1.4s infinite;
+}
+
+.buttons{
+margin-top:6px;
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+button{
+border:none;
+padding:8px 12px;
+border-radius:10px;
+font-size:12px;
+cursor:pointer;
+font-weight:500;
+transition:.2s;
+}
+
+button:hover{
+transform:translateY(-1px);
+box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.btn-edit{background:#ffd166;}
+.btn-main{background:#e63946;color:white;}
+.btn-sub{background:#eef1f6;}
+
+footer{
+background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
+color:white;
+text-align:center;
+font-size:10px;
+padding:8px;
+}
+
+#loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:999;
+opacity:1;
+transition:opacity .6s ease;
+}
+  
+.loader{
+width:45px;
+height:45px;
+border:4px solid #eee;
+border-top:4px solid #e63946;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+@media (max-width:768px){
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.stat:first-child{
+grid-column:1/3;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.card{
+height:auto;
+}
+
+.chartBox canvas{
+width:100% !important;
+max-width:320px;
+max-height:320px;
+}
+
+.class-top{
+flex-direction:column;
+gap:4px;
+align-items:center;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+button{
+width:100%;
+}
+
+}
+
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:.4}
+100%{opacity:1}
+}
+  
+</style>
 </head>
   
 <body>
-
+                          
 <script>
 if(!localStorage.getItem("last_active")){
 location.href="index.html"
 }
 </script>
 
-<h1>Admin Dashboard</h1>
+  
+<script src="script.js"></script
 
 <button onclick="logout()">Logout</button>
+
+<div id="loading">
+<div class="loader"></div>
+<div style="margin-top:12px;font-size:14px;color:#555">
+กำลังเปิดหน้า Dashboard...
+</div>
+</div>
+
+<header>
+
+<a class="back" onclick="location.href='index.html'">← กลับหน้าแรก</a>
+
+<img src="burapa-logo.png" class="logo">
+
+<div class="system-name">ระบบบริหารจัดการสถิตินักเรียน</div>
+<div class="school-name">โรงเรียนเทศบาลบูรพาอุบล</div>
+
+<div id="termDisplay"></div>
+<div id="clock"></div>
+
+</header>
+
+<main>
+
+<div class="stats">
+
+<div class="stat">
+<h3>นักเรียนทั้งหมด</h3>
+<div class="num" id="total">0</div>
+</div>
+
+<div class="stat">
+<h3>มาเรียนวันนี้</h3>
+<div class="num present" id="present">0</div>
+</div>
+
+<div class="stat">
+<h3>ป่วย</h3>
+<div class="num sick" id="sick">0</div>
+</div>
+
+<div class="stat">
+<h3>ลา</h3>
+<div class="num leave" id="leave">0</div>
+</div>
+
+<div class="stat">
+<h3>ขาด</h3>
+<div class="num absent" id="absent">0</div>
+</div>
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>แผนภูมิสรุปสถิติวันนี้</h3>
+
+<div class="chartBox">
+
+<canvas id="chart"></canvas>
+
+<div id="noData" class="noData">
+ยังไม่มีการบันทึกสถิติในวันนี้
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>รายการห้องเรียนทั้งหมด</h3>
+
+<div id="classList"></div>
+</div>
+</div>
+</main>
+
+<footer>
+ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
+<br>
+ภาคเรียนที่ <span id="termFooter"></span>
+<br>
+โรงเรียนเทศบาลบูรพาอุบล
+<br>
+สำนักการศึกษา เทศบาลนครอุบลราชธานี
+</footer>
 
 <script>
 
