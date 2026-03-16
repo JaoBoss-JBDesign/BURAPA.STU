@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
 <style>
+  
 *{
 box-sizing:border-box;
 margin:0;
@@ -381,12 +382,6 @@ width:100%;
 
 <script src="session.js"></script>
   
-<script>
-if(localStorage.getItem("adminLogin")!=="true"){
-location.replace("admin-login.html")
-}
-</script>
-  
 <div id="loading">
 <div class="loader"></div>
 <div style="margin-top:12px;font-size:14px;color:#555">
@@ -520,11 +515,20 @@ margin-bottom:6px;
 
 <script>
 
+const token = localStorage.getItem("adminToken")
+
+if(!token){
+alert("กรุณาเข้าสู่ระบบก่อน")
+location.replace("admin-login.html")
+}
+  
 function logout(){
 
 if(!confirm("คุณต้องการออกจากระบบหรือไม่")) return
 
-localStorage.removeItem("adminLogin")
+localStorage.removeItem("adminToken")
+localStorage.removeItem("loginTime")
+  
 window.location.replace("admin-login.html")
 
 }
@@ -739,15 +743,12 @@ if(rooms.length===0){
 document.getElementById("classList").innerHTML =
 "<div style='text-align:center;padding:30px;color:#999'>ไม่พบข้อมูลห้องเรียน</div>"
 
-document.getElementById("roomsDone").innerText = 0
-
 document.getElementById("alertBar").style.display="none"
 
 return
 }
 
 let done = rooms.filter(r => r.submitted).length
-document.getElementById("roomsDone").innerText = done
 
 let pending = rooms.filter(r => !r.submitted).length
 let alertBar = document.getElementById("alertBar")
