@@ -328,6 +328,8 @@ const p=document.getElementById("pass").value
 
 if(!u || !p){
 alert("กรุณากรอก Username และ Password")
+btn.disabled=false
+btnText.innerHTML="เข้าสู่ระบบ"
 return
 }
   
@@ -349,7 +351,7 @@ const data = await res.json()
 if(data && data.status==="success"){
 
 localStorage.setItem("adminLogin","true")
-location.href="admin-dashboard.html"
+location.replace("admin-dashboard.html")
 
 }else{
 
@@ -413,14 +415,23 @@ updateClock()
 setInterval(updateClock,1000)
 
 window.onload=function(){
+
+if(localStorage.getItem("adminLogin")==="true"){
+location.replace("admin-dashboard.html")
+}
+
 setTimeout(()=>{
 let loading=document.getElementById("loading")
 loading.style.opacity="0"
+
 setTimeout(()=>{
 loading.style.display="none"
 },200)
+
 },400)
+
 }
+  
 </script>
 </body>
 </html>
