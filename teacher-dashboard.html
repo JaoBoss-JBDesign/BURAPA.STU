@@ -569,9 +569,10 @@ let present = d.present || 0
 let sick = d.sick || 0
 let leave = d.leave || 0
 let absent = d.absent || 0
-let unknown = d.unknown || 0
+let unknown = total - (present + sick + leave + absent)
+if(unknown < 0) unknown = 0
 
-let sum = present + sick + leave + absent
+let sum = present + sick + leave + absent + unknown
 
 let noData=document.getElementById("noData")
 let canvas=document.getElementById("chart")
@@ -613,8 +614,9 @@ let ctx=canvas.getContext("2d")
 
 if(chartInstance){
 
-chartInstance.data.labels=labels
-chartInstance.data.datasets[0].data=data
+chartInstance.data.labels = labels
+chartInstance.data.datasets[0].data = data
+chartInstance.data.datasets[0].backgroundColor = colors
 chartInstance.update()
 
 }else{
@@ -625,14 +627,18 @@ data:{
 labels:labels,
 datasets:[{
 data:data,
-backgroundColor:colors
+backgroundColor:colors,
+borderWidth:2,
+borderColor:"#fff"
 }]
 },
 plugins:[ChartDataLabels],
 options:{
 animation:{
 animateRotate:true,
-duration:900
+animateScale:true,
+duration:900,
+easing:"easeOutQuart"
 },
 layout:{
 padding:{
