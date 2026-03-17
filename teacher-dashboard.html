@@ -182,34 +182,58 @@ grid-template-columns:1fr 1fr;
 gap:16px;
 }
 
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 4px;
+margin-bottom:6px;
+}
+
+.card-header span:first-child{
+font-size:16px;
+font-weight:600;
+}
+  
 .card{
 background:white;
 border-radius:18px;
 padding:16px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
-height:420px;
 display:flex;
 flex-direction:column;
+gap:12px;
+transition:.25s ease;
 }
 
-.card h3{
+.card:hover{
+transform:translateY(-2px);
+box-shadow:0 14px 30px rgba(0,0,0,.12);
+}
+  
+.card-title{
 text-align:center;
-margin-bottom:10px;
+font-size:16px;
+font-weight:600;
+margin-bottom:4px;
 }
   
 .chartBox{
+flex:1;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-flex:1;
+padding:16px 0 12px;
 position:relative;
-padding-bottom:10px;
+min-height:0;
 }
 
 .chartBox canvas{
 width:100% !important;
-max-width:280px;
-max-height:280px;
+height:100% !important;
+max-width:260px;
+max-height:260px;
 }
 
 .noData{
@@ -224,36 +248,63 @@ font-weight:500;
 flex:1;
 overflow-y:auto;
 margin-top:8px;
+padding-right:4px;
+scroll-behavior:smooth;
 }
 
+#classList::-webkit-scrollbar{
+width:6px;
+}
+
+#classList::-webkit-scrollbar-thumb{
+background:#e5e7eb;
+border-radius:10px;
+}
+
+.divider{
+height:1px;
+background:#e5e7eb;
+margin:6px 0 10px;
+border:none;
+}
+
+#roomCount{
+font-size:12px;
+color:#9ca3af;
+background:#f3f4f6;
+padding:2px 8px;
+border-radius:999px;
+}
+
+.status{
+font-size:13px;
+font-weight:700;
+white-space:nowrap;
+}
+  
 .class{
-padding:14px 0;
-border-bottom:2px solid #e6e6e6;
-transition:.25s;
+padding:14px 10px;
+border-bottom:1px solid #f1f5f9;
+border-radius:14px;
+transition:.2s ease;
 }
 
+  
 .class:hover{
-background:#fafafa;
-padding-left:6px;
+background:#f9fafb;
 }
 
 .class-top{
 display:flex;
 justify-content:space-between;
-align-items:center;
-font-size:16px;
-font-weight:600;
+align-items:flex-start;
+gap:10px;
 }
 
 .class-top div{
 font-size:18px;
 font-weight:700;
 color:#333;
-}
-
-.status{
-font-size:13px;
-font-weight:700;
 }
   
 .green{
@@ -262,24 +313,27 @@ color:#6BCB77;
 
 .red{
 color:#e63946;
-animation:blink 1.4s infinite;
-}
-
-.buttons{
-margin-top:6px;
-display:flex;
-gap:6px;
-flex-wrap:wrap;
+animation:blink 2s infinite;
 }
 
 button{
 border:none;
-padding:8px 12px;
-border-radius:10px;
+padding:9px 14px;
+border-radius:12px;
 font-size:12px;
 cursor:pointer;
 font-weight:500;
 transition:.2s;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+}
+
+.buttons{
+margin-top:10px;
+display:flex;
+gap:8px;
+flex-wrap:wrap;
 }
 
 button:hover{
@@ -287,8 +341,17 @@ transform:translateY(-1px);
 box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
+button:active{
+transform:scale(0.97);
+}
+  
 .btn-edit{background:#ffd166;}
-.btn-main{background:#e63946;color:white;}
+  
+.btn-main{
+background:linear-gradient(135deg,#e63946,#ff6b6b);
+color:white;
+}
+  
 .btn-sub{background:#eef1f6;}
 
 footer{
@@ -432,7 +495,7 @@ width:100%;
 
 <div class="card">
 
-<h3>แผนภูมิสรุปสถิติวันนี้</h3>
+<div class="card-header">แผนภูมิสรุปสถิติวันนี้</div>
 
 <div class="chartBox">
 
@@ -448,8 +511,12 @@ width:100%;
 
 <div class="card">
 
-<h3>รายการห้องเรียนทั้งหมด</h3>
+<div class="card-header">
+  <span>รายการห้องเรียนทั้งหมด</span>
+  <span id="roomCount"></span>
+</div>
 
+<hr class="divider">
 <div id="classList"></div>
 </div>
 </div>
@@ -536,7 +603,7 @@ let el=document.getElementById(id)
 
 if(parseInt(el.innerText)===value) return
 
-let duration=800
+let duration=600
 let startTime=null
 
 function step(timestamp){
@@ -649,9 +716,9 @@ plugins:{
 legend:{
 position:"bottom",
 labels:{
-padding:20,
-boxWidth:12,
-boxHeight:12
+padding:12,
+boxWidth:10,
+boxHeight:10
 }
 },
 datalabels:{
@@ -683,6 +750,8 @@ return percent+"%"
 
 function renderRooms(rooms){
 
+document.getElementById("roomCount").innerText="("+rooms.length+" ห้อง)"
+  
 let html=""
 
 if(rooms.length===0){
