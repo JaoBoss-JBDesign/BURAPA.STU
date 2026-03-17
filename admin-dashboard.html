@@ -789,7 +789,11 @@ html+=`
 <div>
 ${r.room}
 <br>
-<small style="color:#888">มีนักเรียนทั้งหมด ${r.total || 0} คน</small>
+<small style="color:#888">
+มีนักเรียนทั้งหมด ${r.total || 0} คน
+<br>
+${renderUpdateInfo(r)}
+</small>
 </div>
 
 ${status}
@@ -856,6 +860,27 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 
 setInterval(updateClock,1000)
 updateClock()
+
+function renderUpdateInfo(r){
+
+if(!r.lastUpdateTime){
+  return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`
+}
+
+let source = (r.updatedBy || "").toLowerCase()
+
+let isAuto = source.includes("ระบบ Autofill")
+
+let color = isAuto ? "#9ca3af" : "#22c55e"
+let text = isAuto ? "ระบบ Autofill" : "คุณครู"
+
+return `
+<span style="color:${color};font-size:12px;font-weight:500">
+อัปเดตล่าสุด ${r.lastUpdateTime} (${text})
+</span>
+`
+
+}
   
 </script>
 </body>
