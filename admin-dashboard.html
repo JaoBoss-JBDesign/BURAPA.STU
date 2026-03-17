@@ -199,6 +199,7 @@ margin-bottom:12px;
 .chartBox{
 flex:1;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
 position:relative;
@@ -684,8 +685,9 @@ easing:"easeOutQuart"
 plugins:{
 legend:{
 position:"bottom",
+align:"center",
 labels:{
-padding:20,
+padding:16,
 boxWidth:12,
 boxHeight:12
 }
@@ -845,18 +847,27 @@ if(!r.lastUpdateTime){
   return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`
 }
 
-// 👉 เพิ่มตรงนี้
-let dateText = r.lastUpdateDate ? r.lastUpdateDate : ""
+let dateText = r.lastUpdateDate || ""
+
+if(dateText){
+  let d = new Date(dateText)
+  if(!isNaN(d)){
+    let day = String(d.getDate()).padStart(2,"0")
+    let month = String(d.getMonth()+1).padStart(2,"0")
+    let year = d.getFullYear() + 543
+    dateText = `${day}/${month}/${year}`
+  }
+}
 
 let source = (r.updatedBy || "").toLowerCase()
-let isAuto = source.includes("ระบบ Autofill")
+let isAuto = source.includes("autofill")
 
 let color = isAuto ? "#9ca3af" : "#22c55e"
-let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึก"
+let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึกเอง"
 
 return `
 <span style="color:${color};font-size:12px;font-weight:500">
-อัปเดตล่าสุด ${dateText} ${r.lastUpdateTime} (${text})
+รายงานสถิติล่าสุด ${dateText} เวลา ${r.lastUpdateTime} น. (${text})
 </span>
 `
 }
