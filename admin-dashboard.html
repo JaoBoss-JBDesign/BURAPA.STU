@@ -680,8 +680,9 @@ let ctx=canvas.getContext("2d")
 
 if(chartInstance){
 
-chartInstance.data.labels=labels
-chartInstance.data.datasets[0].data=data
+chartInstance.data.labels = labels
+chartInstance.data.datasets[0].data = data
+chartInstance.data.datasets[0].backgroundColor = colors
 chartInstance.update()
 
 }else{
@@ -692,18 +693,27 @@ data:{
 labels:labels,
 datasets:[{
 data:data,
-backgroundColor:colors
+backgroundColor:colors,
+borderWidth:2,
+borderColor:"#fff"
 }]
 },
 plugins:[ChartDataLabels],
 options:{
 animation:{
 animateRotate:true,
-duration:900
+animateScale:true,
+duration:900,
+easing:"easeOutQuart"
 },
 plugins:{
 legend:{
-position:"bottom"
+position:"bottom",
+labels:{
+padding:20,
+boxWidth:12,
+boxHeight:12
+}
 },
 datalabels:{
 color:"#fff",
@@ -711,9 +721,8 @@ font:{weight:"bold"},
 formatter:(v,ctx)=>{
 let sum=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0)
 
-if(ctx.chart.data.labels.length===1){
-return ""
-}
+if(sum===0) return ""
+if(ctx.chart.data.labels.length===1) return ""
 
 let percent=(v/sum*100).toFixed(1)
 
@@ -726,7 +735,7 @@ return percent+"%"
 }
 }
 }
-})
+});
 
 }
 
