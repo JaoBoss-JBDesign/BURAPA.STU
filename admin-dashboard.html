@@ -188,7 +188,7 @@ padding:16px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 display:flex;
 flex-direction:column;
-min-height:420px;
+height:420px;
 }
 
 .card h3{
@@ -197,18 +197,19 @@ margin-bottom:12px;
 }
   
 .chartBox{
+flex:1;
 display:flex;
 align-items:center;
 justify-content:center;
-flex:1;
 position:relative;
-min-height:260px;
+min-height:0;
 }
 
 .chartBox canvas{
 width:100% !important;
-max-width:280px;
-max-height:280px;
+height:100% !important;
+max-width:260px;
+max-height:260px;
 }
 
 .noData{
@@ -223,17 +224,20 @@ font-weight:500;
 flex:1;
 overflow-y:auto;
 margin-top:8px;
+padding-right:4px;
+scroll-behavior:smooth;
 }
 
 .class{
-padding:16px 4;
-border-bottom:2px solid #e6e6e6;
+padding:16px 4px;
+border-bottom:1px solid #ececec;
 transition:.25s;
+border-radius:10px;
 }
 
 .class:hover{
 background:#fafafa;
-padding-left:6px;
+padding-left:8px;
 }
 
 .class-top{
@@ -265,9 +269,9 @@ animation:blink 1.4s infinite;
 }
 
 .buttons{
-margin-top:8px;
+margin-top:12px;
 display:flex;
-gap:8px;
+gap:10px;
 flex-wrap:wrap;
 }
 
@@ -279,6 +283,7 @@ font-size:12px;
 cursor:pointer;
 font-weight:500;
 transition:.2s;
+margin-bottom:4px;
 }
 
 button:hover{
@@ -460,14 +465,12 @@ font-weight:600;
 
 <div class="card">
 
-<h3>รายการห้องเรียนทั้งหมด</h3>
+<h3 style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;">
+  <span>รายการห้องเรียนทั้งหมด</span>
+  <span id="roomCount" style="font-size:12px;color:#9ca3af;"></span>
+</h3>
 
-<div id="roomCount" style="
-text-align:center;
-font-size:13px;
-color:#888;
-margin-bottom:6px;
-"></div>
+<hr style="border:none;height:1px;background:#e5e7eb;margin:8px 0 10px;">
 
 <div id="classList"></div>
 </div>
@@ -842,19 +845,20 @@ if(!r.lastUpdateTime){
   return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`
 }
 
-let source = (r.updatedBy || "").toLowerCase()
+// 👉 เพิ่มตรงนี้
+let dateText = r.lastUpdateDate ? r.lastUpdateDate : ""
 
+let source = (r.updatedBy || "").toLowerCase()
 let isAuto = source.includes("ระบบ Autofill")
 
 let color = isAuto ? "#9ca3af" : "#22c55e"
-let text = isAuto ? "ระบบ Autofill" : "คุณครู"
+let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึก"
 
 return `
 <span style="color:${color};font-size:12px;font-weight:500">
-อัปเดตล่าสุด ${r.lastUpdateTime} (${text})
+อัปเดตล่าสุด ${dateText} ${r.lastUpdateTime} (${text})
 </span>
 `
-
 }
   
 </script>
