@@ -188,7 +188,13 @@ padding:16px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
 display:flex;
 flex-direction:column;
-height:420px;
+gap:12px;
+transition:.25s ease;
+}
+
+.card:hover{
+transform:translateY(-2px);
+box-shadow:0 14px 30px rgba(0,0,0,.12);
 }
 
 .card h3{
@@ -230,10 +236,10 @@ scroll-behavior:smooth;
 }
 
 .class{
-padding:16px 4px;
-border-bottom:1px solid #ececec;
+padding:14px 10px;
+border-bottom:1px solid #f1f5f9;
 transition:.25s;
-border-radius:10px;
+border-radius:14px;
 }
 
 .class:hover{
@@ -293,7 +299,12 @@ box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
 .btn-edit{background:#ffd166;}
-.btn-main{background:#e63946;color:white;}
+  
+.btn-main{
+background:linear-gradient(135deg,#e63946,#ff6b6b);
+color:white;
+}
+  
 .btn-sub{background:#eef1f6;}
 
 footer{
@@ -453,35 +464,34 @@ font-weight:600;
 
 <div class="grid">
 
-<div class="card">
+  <!-- การ์ดกราฟ -->
+  <div class="card">
 
-<h3>แผนภูมิสรุปสถิติวันนี้</h3>
+    <div class="card-header">
+      <span>แผนภูมิสรุปสถิติวันนี้</span>
+    </div>
 
-<div class="chartBox">
+    <hr class="divider">
 
-<canvas id="chart"></canvas>
-  
-<div id="noData" class="noData">
-ยังไม่มีการบันทึกสถิติในวันนี้
+    <div class="chartBox">
+      <canvas id="chart"></canvas>
+      <div id="noData" class="noData"></div>
+    </div>
+
+  </div>
+
+  <!-- การ์ดห้อง -->
+  <div class="card">
+
+    <div class="card-header">
+      <span>รายการห้องเรียนทั้งหมด</span>
+      <span id="roomCount"></span>
+    </div>
+
+    <hr class="divider">
+    <div id="classList"></div>
+  </div>
 </div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3 style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;">
-  <span>รายการห้องเรียนทั้งหมด</span>
-  <span id="roomCount" style="font-size:12px;color:#9ca3af;"></span>
-</h3>
-
-<hr style="border:none;height:1px;background:#e5e7eb;margin:8px 0 10px;">
-
-<div id="classList"></div>
-</div>
-</div>
-
 </main>
   
 <footer>
