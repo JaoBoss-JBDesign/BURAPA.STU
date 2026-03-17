@@ -869,8 +869,8 @@ let time = (r.lastUpdateTime || "").replace("น.","").trim()
 let source = (r.updatedBy || "").toLowerCase()
 let isAuto = source.includes("autofill")
 
-let color = isAuto ? "#9ca3af" : "#6366f1"
-let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึกเอง"
+let color = isAuto ? "#9ca3af" : "#ea580c"
+let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึก"
 
 return `
 <span class="updateText" style="color:${color};font-size:12px;font-weight:500">
