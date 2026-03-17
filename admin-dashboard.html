@@ -331,8 +331,8 @@ to{transform:rotate(360deg)}
 }
 
 .updateBy{
-display:block;
-margin-top:2px;
+display:inline;
+margin-left:4px;
 }
   
 @media (max-width:768px){
@@ -870,11 +870,11 @@ let source = (r.updatedBy || "").toLowerCase()
 let isAuto = source.includes("autofill")
 
 let color = isAuto ? "#9ca3af" : "#ea580c"
-let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึก"
+let text = isAuto ? "(⚙️)" : "(👤)"
 
 return `
 <span class="updateText" style="color:${color};font-size:12px;font-weight:500">
-รายงานสถิติล่าสุด ${dateText} เวลา ${time} น. 
+สถิติล่าสุด ${dateText} เวลา ${time} น. 
 <span class="updateBy">(${text})</span>
 </span>
 `
