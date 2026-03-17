@@ -143,9 +143,10 @@ width:100%;
 }
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:12px;
+margin-bottom:16px;
 }
 
 .stat{
@@ -185,14 +186,14 @@ background:white;
 border-radius:18px;
 padding:16px;
 box-shadow:0 10px 25px rgba(0,0,0,.08);
-height:420px;
 display:flex;
 flex-direction:column;
+min-height:420px;
 }
 
 .card h3{
 text-align:center;
-margin-bottom:10px;
+margin-bottom:12px;
 }
   
 .chartBox{
@@ -201,7 +202,7 @@ align-items:center;
 justify-content:center;
 flex:1;
 position:relative;
-padding-bottom:10px;
+min-height:260px;
 }
 
 .chartBox canvas{
@@ -225,7 +226,7 @@ margin-top:8px;
 }
 
 .class{
-padding:14px 0;
+padding:16px 4;
 border-bottom:2px solid #e6e6e6;
 transition:.25s;
 }
@@ -264,9 +265,9 @@ animation:blink 1.4s infinite;
 }
 
 .buttons{
-margin-top:6px;
+margin-top:8px;
 display:flex;
-gap:6px;
+gap:8px;
 flex-wrap:wrap;
 }
 
@@ -326,15 +327,13 @@ to{transform:rotate(360deg)}
 @media (max-width:768px){
 
 .stats{
-  grid-template-columns:1fr 1fr;
+grid-template-columns:1fr 1fr;
 }
 
 .stat:first-child{
-  grid-column:1/3;
+grid-column:1/3;
 }
 
-}
-  
 .grid{
 grid-template-columns:1fr;
 }
@@ -473,32 +472,8 @@ margin-bottom:6px;
 <div id="classList"></div>
 </div>
 </div>
+
 </main>
-
-<div style="margin-top:30px">
-
-<h3 style="margin-bottom:10px">เมนูผู้ดูแลระบบ</h3>
-
-<div style="display:flex;gap:10px;flex-wrap:wrap">
-
-<button class="btn-sub" onclick="location.href='rooms.html'">
-จัดการห้องเรียน
-</button>
-
-<button class="btn-sub" onclick="location.href='students.html'">
-จัดการนักเรียน
-</button>
-
-<button class="btn-sub" onclick="location.href='reports.html'">
-รายงานย้อนหลัง
-</button>
-
-<button class="btn-sub" onclick="location.href='settings.html'">
-ตั้งค่าระบบ
-</button>
-
-</div>
-</div>
   
 <footer>
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
