@@ -847,7 +847,7 @@ if(!r.lastUpdateTime){
   return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`
 }
 
-let dateText = r.lastUpdateDate || ""
+let dateText = r.lastUpdateDate || r.date || r.updateDate || ""
 
 if(dateText){
   let d = new Date(dateText)
@@ -859,6 +859,8 @@ if(dateText){
   }
 }
 
+let time = (r.lastUpdateTime || "").replace("น.","").trim()
+
 let source = (r.updatedBy || "").toLowerCase()
 let isAuto = source.includes("autofill")
 
@@ -867,7 +869,7 @@ let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึ
 
 return `
 <span style="color:${color};font-size:12px;font-weight:500">
-รายงานสถิติล่าสุด ${dateText} เวลา ${r.lastUpdateTime} น. (${text})
+รายงานสถิติล่าสุด ${dateText} เวลา ${time} น. (${text})
 </span>
 `
 }
