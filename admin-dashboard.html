@@ -330,6 +330,11 @@ animation:spin 1s linear infinite;
 to{transform:rotate(360deg)}
 }
 
+.updateBy{
+display:block;
+margin-top:2px;
+}
+  
 @media (max-width:768px){
 
 .stats{
@@ -864,12 +869,13 @@ let time = (r.lastUpdateTime || "").replace("น.","").trim()
 let source = (r.updatedBy || "").toLowerCase()
 let isAuto = source.includes("autofill")
 
-let color = isAuto ? "#9ca3af" : "#22c55e"
+let color = isAuto ? "#9ca3af" : "#6366f1"
 let text = isAuto ? "ระบบ Autofill" : "คุณครูบันทึกเอง"
 
 return `
-<span style="color:${color};font-size:12px;font-weight:500">
-รายงานสถิติล่าสุด ${dateText} เวลา ${time} น. (${text})
+<span class="updateText" style="color:${color};font-size:12px;font-weight:500">
+รายงานสถิติล่าสุด ${dateText} เวลา ${time} น. 
+<span class="updateBy">(${text})</span>
 </span>
 `
 }
