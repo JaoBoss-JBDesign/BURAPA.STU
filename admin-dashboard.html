@@ -8,6 +8,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="session.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"></script>
 
 <style>
   
@@ -450,8 +453,6 @@ flex:1 1 auto;
 </head>
   
 <body>                  
-
-<script src="session.js"></script>
   
 <div id="loading">
 <div class="loader"></div>
@@ -905,20 +906,6 @@ load()
 
 let refreshTimer
 
-function getActivityLog() {
-const ss = SpreadsheetApp.openById(SPREADSHEET_ID)
-const sheet = ss.getSheetByName("activity_log")
-if(sheet.getLastRow() <= 1) return []
-
-const data = sheet.getRange(2,1,sheet.getLastRow()-1,sheet.getLastColumn()).getValues()
-return data.map(r => ({
-date: Utilities.formatDate(new Date(r[0]),"Asia/Bangkok","yyyy-MM-dd HH:mm:ss"),
-room: r[1],
-action: r[2],
-by: r[3]
-}))
-}
-
 async function checkSystemStatus() {
   try {
     const res = await fetch(API + "?mode=statusCheck")
@@ -992,46 +979,44 @@ function formatThaiDate(dateText){
 }
   
 function renderUpdateInfo(r){
+  if(!r.lastUpdateTime){
+    return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`;
+  }
 
-if(!r.lastUpdateTime){
-  return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`
-}
+  let dateText = r.lastUpdateDate || r.date || r.updateDate || "";
+  dateText = formatThaiDate(dateText);
 
-let dateText = r.lastUpdateDate || r.date || r.updateDate || ""
+  let time = (r.lastUpdateTime || "").replace("น.","").trim();
+  let source = (r.updatedBy || "").toLowerCase();
+  let isAuto = source.includes("autofill");
 
-dateText = formatThaiDate(dateText)
+  let color = isAuto ? "#9ca3af" : "#ea580c";
+  let text = isAuto ? "A" : "T";
 
-let time = (r.lastUpdateTime || "").replace("น.","").trim()
-
-let source = (r.updatedBy || "").toLowerCase()
-let isAuto = source.includes("autofill")
-
-let color = isAuto ? "#9ca3af" : "#ea580c"
-let text = isAuto ? "A" : "T"
-
-return `
+  return `
 <span class="updateText" style="color:${color};font-size:12px;font-weight:500">
 สถิติล่าสุด ${dateText} เวลา ${time} น. 
 <span class="updateBy">(${text})</span>
 </span>
-`
+  `;
 }
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script>
-  const el = document.getElementById("classList")
-  Sortable.create(el, {
-    animation: 150,
-    onEnd: function(evt){
-      const newOrder = Array.from(el.children).map(c => c.dataset.room)
-      fetch(API+"?mode=updateRoomOrder", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({order: newOrder})
-      })
-    }
-  })
-</script>
+document.addEventListener("DOMContentLoaded", function() {
+  const el = document.getElementById("classList");
+  if(el){
+    Sortable.create(el, {
+      animation: 150,
+      onEnd: function(evt){
+        const newOrder = Array.from(el.children).map(c => c.dataset.room);
+        fetch(API + "?mode=updateRoomOrder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({order: newOrder})
+        });
+      }
+    });
+  }
+});
   
 async function resetRoom(e, room){
 
