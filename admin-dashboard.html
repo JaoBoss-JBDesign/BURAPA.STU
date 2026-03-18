@@ -537,30 +537,23 @@ font-weight:600;
 <span id="roomCount"></span>
 </div>
 
+<div class="card system-status">
+  <h3>สถานะระบบ</h3>
+  <div id="statusAPI">API: กำลังตรวจสอบ...</div>
+  <div id="statusDB">Database: กำลังตรวจสอบ...</div>
+</div>
+  
 <div class="card reset-card">
-
 <h3 style="text-align:center;">⚙️ จัดการข้อมูลสถิติ</h3>
-
 <div class="reset-grid">
-
-<button class="btn-reset-soft" onclick="resetTodayAll()">
-รีเซ็ตวันนี้ทั้งหมด
-</button>
-
+<button class="btn-reset-soft" onclick="resetTodayAll()">รีเซ็ตวันนี้ทั้งหมด</button>
 <div class="date-range">
 <input type="date" id="startDate">
 <input type="date" id="endDate">
-<button class="btn-reset-soft" onclick="resetRange()">
-รีเซ็ตตามช่วงเวลา
-</button>
+<button class="btn-reset-soft" onclick="resetRange()">รีเซ็ตตามช่วงเวลา</button>
 </div>
-
-<button class="btn-reset-danger" onclick="resetAll()">
-ล้างข้อมูลทั้งหมด
-</button>
-
+<button class="btn-reset-danger" onclick="resetAll()">ล้างข้อมูลทั้งหมด</button>
 </div>
-
 </div>
   
 <hr class="divider">
@@ -919,6 +912,35 @@ load()
 
 let refreshTimer
 
+function getActivityLog() {
+const ss = SpreadsheetApp.openById(SPREADSHEET_ID)
+const sheet = ss.getSheetByName("activity_log") // ต้องสร้าง sheet ชื่อ activity_log
+if(sheet.getLastRow() <= 1) return []
+
+const data = sheet.getRange(2,1,sheet.getLastRow()-1,sheet.getLastColumn()).getValues()
+return data.map(r => ({
+date: Utilities.formatDate(new Date(r[0]),"Asia/Bangkok","yyyy-MM-dd HH:mm:ss"),
+room: r[1],
+action: r[2],
+by: r[3]
+}))
+}
+
+async function checkSystemStatus() {
+try{
+const res = await fetch(API + "?mode=statusCheck")
+const data = await res.json()
+document.getElementById("statusAPI").innerText = "API: " + (data.apiOk ? "ปกติ ✅" : "มีปัญหา ❌")
+document.getElementById("statusDB").innerText = "Database: " + (data.dbOk ? "ปกติ ✅" : "มีปัญหา ❌")
+}catch(e){
+document.getElementById("statusAPI").innerText="API: ❌ ไม่สามารถเชื่อมต่อ"
+document.getElementById("statusDB").innerText="Database: ❌ ไม่สามารถเชื่อมต่อ"
+}
+}
+
+checkSystemStatus()
+setInterval(checkSystemStatus,15000)
+  
 function startAutoRefresh(){
 clearInterval(refreshTimer)
 refreshTimer=setInterval(()=>{
@@ -1000,6 +1022,15 @@ return `
 `
 }
 
+const el = document.getElementById("classList")
+Sortable.create(el, {
+  animation: 150,
+  onEnd: function(evt){
+    const newOrder = Array.from(el.children).map(c => c.dataset.room)
+    fetch(API+"?mode=updateRoomOrder",{method:"POST",body:JSON.stringify({order:newOrder})})
+  }
+})
+  
 async function resetRoom(e, room){
 
 room = decodeURIComponent(room)
@@ -1131,6 +1162,18 @@ alert("เกิดข้อผิดพลาด ลองใหม่อีก
 }
 
 loadingNow = false
+}
+
+function changeTermYear(){
+  const term = document.getElementById("termInput").value
+  const year = document.getElementById("yearInput").value
+  if(!term || !year) return alert("กรุณากรอกให้ครบ")
+  fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
+    .then(r=>r.json())
+    .then(d=>{
+      alert("เปลี่ยนภาคเรียนและปีการศึกษาเรียบร้อยแล้ว")
+      loadTerm()
+    })
 }
   
 </script>
