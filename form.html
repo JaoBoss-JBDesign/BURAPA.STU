@@ -312,7 +312,7 @@ grid-template-columns:1fr;
   
 <header>
 
-<a class="back" onclick="location.href='teacher-dashboard.html'">← กลับ Dashboard</a>
+<a class="back" onclick="goBack()">← กลับ Dashboard</a>
 
 <img src="burapa-logo.png" class="logo">
 
@@ -503,8 +503,22 @@ const params=new URLSearchParams(location.search)
 
 const room=params.get("room")
 
+const from = params.get("from")
+  
+function goBack(){
+  if(from === "admin"){
+    location.href = "admin-dashboard.html"
+  } else {
+    location.href = "teacher-dashboard.html"
+  }
+}
+  
 if(!room){
-location.href="teacher-dashboard.html"
+if(from === "admin"){
+  location.href = "admin-dashboard.html"
+} else {
+  location.href = "teacher-dashboard.html"
+}
 throw new Error("room not found")
 }
   
