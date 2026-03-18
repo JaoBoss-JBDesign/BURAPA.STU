@@ -262,6 +262,11 @@ font-weight:700;
 color:#333;
 }
 
+.btn-reset{
+background:#f87171;
+color:white;
+}
+  
 .status{
 font-size:13px;
 font-weight:700;
@@ -308,6 +313,11 @@ color:white;
   
 .btn-sub{background:#eef1f6;}
 
+button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+  
 footer{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 color:white;
@@ -419,7 +429,6 @@ width:100%;
 
 <div class="term" id="termDisplay"></div>
 <div class="time" id="clock"></div>
-
 </header>
 
 <div id="alertBar" style="
@@ -465,33 +474,54 @@ font-weight:600;
 
 <div class="grid">
 
-  <!-- การ์ดกราฟ -->
-  <div class="card">
+<div class="card">
 
-    <div class="card-header">
-      <span>แผนภูมิสรุปสถิติวันนี้</span>
-    </div>
+<div class="card-header">
+<span>แผนภูมิสรุปสถิติวันนี้</span>
+</div>
 
-    <hr class="divider">
+<hr class="divider">
 
-    <div class="chartBox">
-      <canvas id="chart"></canvas>
-      <div id="noData" class="noData"></div>
-    </div>
+<div class="chartBox">
+<canvas id="chart"></canvas>
+<div id="noData" class="noData"></div>
+</div>
+</div>
 
-  </div>
+<div class="card">
 
-  <!-- การ์ดห้อง -->
-  <div class="card">
+<div class="card-header">
+<span>รายการห้องเรียนทั้งหมด</span>
+<span id="roomCount"></span>
+</div>
 
-    <div class="card-header">
-      <span>รายการห้องเรียนทั้งหมด</span>
-      <span id="roomCount"></span>
-    </div>
+<hr class="divider">
+<div id="classList"></div>
+<div style="margin-top:12px;text-align:center;">
+<button class="btn-reset" onclick="resetTodayAll()">
+รีเซ็ตสถิติวันนี้ทั้งหมด
+</button>
+</div>
 
-    <hr class="divider">
-    <div id="classList"></div>
-  </div>
+<div style="margin-top:10px;text-align:center;">
+
+<input type="date" id="startDate">
+<input type="date" id="endDate">
+
+<br><br>
+
+<button class="btn-reset" onclick="resetRange()">
+รีเซ็ตตามช่วงวันที่
+</button>
+</div>
+
+<div style="margin-top:16px;text-align:center;">
+<button class="btn-reset" onclick="resetAll()" style="background:#b91c1c;">
+ล้างข้อมูลสถิติทั้งหมด
+</button>
+</div>
+    
+</div>
 </div>
 </main>
   
@@ -807,6 +837,12 @@ ${r.submitted
 แก้ไขสถิติย้อนหลัง
 </button>
 
+<button class="btn-reset" onclick="resetRoom(event,'${encodeURIComponent(r.room)}')">
+รีเซ็ตสถิติวันนี้
+</button>
+
+</div>
+
 </div>
 
 </div>
@@ -889,6 +925,123 @@ return `
 <span class="updateBy">(${text})</span>
 </span>
 `
+}
+
+async function resetRoom(e, room){
+
+room = decodeURIComponent(room)
+
+if(!confirm("คุณต้องการรีเซ็ตสถิตวันนี้ของห้อง "+room+" ใช่ไหม?")) return
+
+if(loadingNow) return
+loadingNow = true
+
+const btn = e.target
+btn.disabled = true
+btn.innerText = "กำลังรีเซ็ต..."
+
+try{
+
+await fetch(API+"?mode=resetRoom&room="+encodeURIComponent(room))
+
+alert("ทำการรีเซ็ตสถิติ "+room+" วันนี้สำเร็จ")
+load()
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
+
+btn.innerText = "รีเซ็ตสถิติวันนี้"
+btn.disabled = false
+
+loadingNow = false
+}
+  
+async function resetTodayAll(){
+
+if(loadingNow) return
+
+if(!confirm("คุณต้องการรีเซ็ตสถิติทุกห้องในวันนี้ใช่ไหม?")) return
+
+loadingNow = true
+
+try{
+
+await fetch(API+"?mode=resetTodayAll")
+
+alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
+load()
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
+
+loadingNow = false
+}
+
+async function resetRange(){
+
+if(loadingNow) return
+
+let start=document.getElementById("startDate").value
+let end=document.getElementById("endDate").value
+
+if(!start || !end){
+alert("กรุณาเลือกวันที่")
+return
+}
+
+if(!confirm("รีเซ็ตข้อมูลช่วง "+start+" ถึง "+end+" ?")) return
+
+if(new Date(start) > new Date(end)){
+alert("วันที่เริ่มต้องไม่มากกว่าวันที่สิ้นสุด")
+return
+}
+  
+loadingNow = true
+
+try{
+
+await fetch(API+`?mode=resetRange&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+
+alert("รีเซ็ตสถิติแบบเลือกช่วงวันสำเร็จ")
+load()
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
+
+loadingNow = false
+}
+
+async function resetAll(){
+
+if(loadingNow) return
+
+if(!confirm("⚠ คุณต้องการล้างข้อมูลสถิติในระบบทั้งหมดใช่หรือไม่")) return
+if(!confirm("❗ ข้อมูลสถิติจะหายทั้งหมด ยืนยันอีกครั้ง")) return
+  
+let confirmText = prompt("พิมพ์ 'RESET' เพื่อยืนยัน")
+
+if(confirmText !== "RESET"){
+alert("ยกเลิกการล้างข้อมูล")
+return
+}
+  
+loadingNow = true
+
+try{
+
+await fetch(API+"?mode=resetAll")
+
+alert("ล้างข้อมูลสถิติในระบบทั้งหมดแล้ว")
+load()
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
+
+loadingNow = false
 }
   
 </script>
