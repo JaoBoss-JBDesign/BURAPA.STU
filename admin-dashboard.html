@@ -241,6 +241,7 @@ padding:14px 10px;
 border-bottom:1px solid #f1f5f9;
 transition:.25s;
 border-radius:14px;
+margin-bottom:8px;
 }
 
 .class:hover{
@@ -317,6 +318,44 @@ button:disabled{
 opacity:.6;
 cursor:not-allowed;
 }
+
+.reset-card{
+height:auto;
+}
+
+.reset-grid{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:10px;
+}
+
+.btn-reset-soft{
+background:#fde68a;
+color:#92400e;
+}
+
+.btn-reset-soft:hover{
+background:#fcd34d;
+}
+
+.btn-reset-danger{
+background:#ef4444;
+color:white;
+}
+
+.date-range{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.date-range input{
+padding:6px;
+border-radius:8px;
+border:1px solid #ddd;
+}
   
 footer{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
@@ -390,10 +429,13 @@ text-align:center;
 
 .buttons{
 flex-direction:column;
+flex-wrap:wrap;
+gap:6px;
 }
 
 button{
 width:100%;
+flex:1 1 auto;
 }
 
 }
@@ -495,31 +537,34 @@ font-weight:600;
 <span id="roomCount"></span>
 </div>
 
-<hr class="divider">
-<div id="classList"></div>
-<div style="margin-top:12px;text-align:center;">
-<button class="btn-reset" onclick="resetTodayAll()">
-รีเซ็ตสถิติวันนี้ทั้งหมด
+<div class="card reset-card">
+
+<h3 style="text-align:center;">⚙️ จัดการข้อมูลสถิติ</h3>
+
+<div class="reset-grid">
+
+<button class="btn-reset-soft" onclick="resetTodayAll()">
+รีเซ็ตวันนี้ทั้งหมด
 </button>
-</div>
 
-<div style="margin-top:10px;text-align:center;">
-
+<div class="date-range">
 <input type="date" id="startDate">
 <input type="date" id="endDate">
-
-<br><br>
-
-<button class="btn-reset" onclick="resetRange()">
-รีเซ็ตตามช่วงวันที่
+<button class="btn-reset-soft" onclick="resetRange()">
+รีเซ็ตตามช่วงเวลา
 </button>
 </div>
 
-<div style="margin-top:16px;text-align:center;">
-<button class="btn-reset" onclick="resetAll()" style="background:#b91c1c;">
-ล้างข้อมูลสถิติทั้งหมด
+<button class="btn-reset-danger" onclick="resetAll()">
+ล้างข้อมูลทั้งหมด
 </button>
+
 </div>
+
+</div>
+  
+<hr class="divider">
+<div id="classList"></div>
     
 </div>
 </div>
@@ -853,7 +898,7 @@ ${r.submitted
 แก้ไขสถิติย้อนหลัง
 </button>
 
-<button class="btn-reset" onclick="resetRoom(event,'${encodeURIComponent(r.room)}')">
+<button class="btn-reset-soft" onclick="resetRoom(event,'${encodeURIComponent(r.room)}')">
 รีเซ็ตสถิติวันนี้
 </button>
 
