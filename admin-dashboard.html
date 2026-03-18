@@ -516,48 +516,41 @@ font-weight:600;
 
 <div class="grid">
 
-<div class="card">
+  <div class="card">
+    <div class="card-header">แผนภูมิสรุปสถิติวันนี้</div>
+    <div class="chartBox">
+      <canvas id="chart"></canvas>
+      <div id="noData" class="noData"></div>
+    </div>
+  </div>
 
-<div class="card-header">
-<span>แผนภูมิสรุปสถิติวันนี้</span>
-</div>
+  <div class="card">
+    <div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
+    <div id="classList"></div>
+  </div>
 
-<hr class="divider">
+  <div class="card system-status">
+    <h3>สถานะระบบ</h3>
+    <div id="statusAPI">API: กำลังตรวจสอบ...</div>
+    <div id="statusDB">Database: กำลังตรวจสอบ...</div>
+  </div>
 
-<div class="chartBox">
-<canvas id="chart"></canvas>
-<div id="noData" class="noData"></div>
-</div>
-</div>
+  <div class="card reset-card">
+    <h3 style="text-align:center;">⚙️ จัดการข้อมูลสถิติ</h3>
+    <div class="reset-grid">
+      <button class="btn-reset-soft" onclick="resetTodayAll()">รีเซ็ตวันนี้ทั้งหมด</button>
+      <div class="date-range">
+        <input type="date" id="startDate">
+        <input type="date" id="endDate">
+        <button class="btn-reset-soft" onclick="resetRange()">รีเซ็ตตามช่วงเวลา</button>
+      </div>
+      <button class="btn-reset-danger" onclick="resetAll()">ล้างข้อมูลทั้งหมด</button>
+    </div>
+  </div>
 
-<div class="card">
-
-<div class="card-header">
-<span>รายการห้องเรียนทั้งหมด</span>
-<span id="roomCount"></span>
-</div>
-
-<div class="card system-status">
-  <h3>สถานะระบบ</h3>
-  <div id="statusAPI">API: กำลังตรวจสอบ...</div>
-  <div id="statusDB">Database: กำลังตรวจสอบ...</div>
-</div>
-  
-<div class="card reset-card">
-<h3 style="text-align:center;">⚙️ จัดการข้อมูลสถิติ</h3>
-<div class="reset-grid">
-<button class="btn-reset-soft" onclick="resetTodayAll()">รีเซ็ตวันนี้ทั้งหมด</button>
-<div class="date-range">
-<input type="date" id="startDate">
-<input type="date" id="endDate">
-<button class="btn-reset-soft" onclick="resetRange()">รีเซ็ตตามช่วงเวลา</button>
-</div>
-<button class="btn-reset-danger" onclick="resetAll()">ล้างข้อมูลทั้งหมด</button>
-</div>
 </div>
   
 <hr class="divider">
-<div id="classList"></div>
     
 </div>
 </div>
@@ -862,7 +855,7 @@ let status=r.submitted
 :'<span class="status red">ยังไม่ได้ทำการบันทึกสถิติในวันนี้</span>'
 
 html+=`
-<div class="class">
+<div class="class" data-room="${r.room}">
 
 <div class="class-top">
 
@@ -914,7 +907,7 @@ let refreshTimer
 
 function getActivityLog() {
 const ss = SpreadsheetApp.openById(SPREADSHEET_ID)
-const sheet = ss.getSheetByName("activity_log") // ต้องสร้าง sheet ชื่อ activity_log
+const sheet = ss.getSheetByName("activity_log")
 if(sheet.getLastRow() <= 1) return []
 
 const data = sheet.getRange(2,1,sheet.getLastRow()-1,sheet.getLastColumn()).getValues()
@@ -927,15 +920,17 @@ by: r[3]
 }
 
 async function checkSystemStatus() {
-try{
-const res = await fetch(API + "?mode=statusCheck")
-const data = await res.json()
-document.getElementById("statusAPI").innerText = "API: " + (data.apiOk ? "ปกติ ✅" : "มีปัญหา ❌")
-document.getElementById("statusDB").innerText = "Database: " + (data.dbOk ? "ปกติ ✅" : "มีปัญหา ❌")
-}catch(e){
-document.getElementById("statusAPI").innerText="API: ❌ ไม่สามารถเชื่อมต่อ"
-document.getElementById("statusDB").innerText="Database: ❌ ไม่สามารถเชื่อมต่อ"
-}
+  try {
+    const res = await fetch(API + "?mode=statusCheck")
+    const data = await res.json()
+    console.log("System status:", data)
+    document.getElementById("statusAPI").innerText = "API: " + (data.apiOk ? "ปกติ ✅" : "มีปัญหา ❌")
+    document.getElementById("statusDB").innerText = "Database: " + (data.dbOk ? "ปกติ ✅" : "มีปัญหา ❌")
+  } catch(e) {
+    console.error(e)
+    document.getElementById("statusAPI").innerText="API: ❌ ไม่สามารถเชื่อมต่อ"
+    document.getElementById("statusDB").innerText="Database: ❌ ไม่สามารถเชื่อมต่อ"
+  }
 }
 
 checkSystemStatus()
@@ -1022,14 +1017,21 @@ return `
 `
 }
 
-const el = document.getElementById("classList")
-Sortable.create(el, {
-  animation: 150,
-  onEnd: function(evt){
-    const newOrder = Array.from(el.children).map(c => c.dataset.room)
-    fetch(API+"?mode=updateRoomOrder",{method:"POST",body:JSON.stringify({order:newOrder})})
-  }
-})
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+  const el = document.getElementById("classList")
+  Sortable.create(el, {
+    animation: 150,
+    onEnd: function(evt){
+      const newOrder = Array.from(el.children).map(c => c.dataset.room)
+      fetch(API+"?mode=updateRoomOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({order: newOrder})
+      })
+    }
+  })
+</script>
   
 async function resetRoom(e, room){
 
