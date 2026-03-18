@@ -789,11 +789,11 @@ ${status}
 <div class="buttons">
 
 ${r.submitted
-?`<button class="btn-edit" onclick="location.href='form.html?room=${r.room}&edit=1'">แก้ไขสถิติวันนี้</button>`
-:`<button class="btn-main" onclick="location.href='form.html?room=${r.room}'">เริ่มบันทึกสถิติวันนี้</button>`
+?`<button class="btn-edit" onclick="location.href='form.html?room=${r.room}&edit=1&from=teacher'">แก้ไขสถิติวันนี้</button>`
+:`<button class="btn-main" onclick="location.href='form.html?room=${r.room}&from=teacher'">เริ่มบันทึกสถิติวันนี้</button>`
 }
 
-<button class="btn-sub" onclick="location.href='form.html?room=${r.room}&backdate=1'">
+<button class="btn-sub" onclick="location.href='form.html?room=${r.room}&backdate=1&from=teacher'">
 แก้ไขสถิติย้อนหลัง
 </button>
 
