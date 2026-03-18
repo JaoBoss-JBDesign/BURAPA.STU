@@ -543,6 +543,15 @@ if(!token){
 alert("กรุณาเข้าสู่ระบบก่อน")
 location.replace("admin-login.html")
 }
+
+function fetchWithTimeout(url, options = {}, timeout = 10000){
+return Promise.race([
+fetch(url, options),
+new Promise((_, reject) =>
+setTimeout(() => reject(new Error("timeout")), timeout)
+)
+])
+}
   
 function logout(){
 
@@ -582,19 +591,31 @@ loadingNow=true
 
 try{
 
-const res=await fetch(API+"?mode=getdashboard&t="+Date.now(),{cache:"no-store"})
+const res = await fetchWithTimeout(
+API+"?mode=getdashboard&t="+Date.now(),
+{cache:"no-store"},
+10000
+)
 
-if(!res.ok)throw new Error()
+if(!res.ok){
+throw new Error()
+}
 
-const dash=await res.json()
+const dash = await res.json()
 
 renderDash(dash)
-renderRooms(dash.rooms||[])
+renderRooms(dash.rooms || [])
 hideLoading()
 
-}catch(e){
+} catch(e){
 
 console.error(e)
+
+if(e.message === "timeout"){
+  alert("ระบบโหลดข้อมูลนานเกินไป กรุณาลองใหม่")
+}else{
+  alert("โหลดข้อมูลไม่สำเร็จ")
+}
 
 renderDash({present:0,sick:0,leave:0,absent:0})
 renderRooms([])
@@ -614,7 +635,7 @@ loading.style.opacity="0"
 
 setTimeout(()=>{
 loading.style.display="none"
-},300)
+},600)
 
 }
 
@@ -701,15 +722,10 @@ if(!canvas) return
 let ctx=canvas.getContext("2d")
 
 if(chartInstance){
+  chartInstance.destroy()
+}
 
-chartInstance.data.labels = labels
-chartInstance.data.datasets[0].data = data
-chartInstance.data.datasets[0].backgroundColor = colors
-chartInstance.update()
-
-}else{
-
-chartInstance=new Chart(ctx,{
+chartInstance = new Chart(ctx,{
 type:"pie",
 data:{
 labels:labels,
@@ -758,7 +774,7 @@ return percent+"%"
 }
 }
 }
-});
+})
 
 }
 
@@ -861,7 +877,7 @@ let refreshTimer
 function startAutoRefresh(){
 clearInterval(refreshTimer)
 refreshTimer=setInterval(()=>{
-if(!loadingNow){
+if(!loadingNow && document.visibilityState === "visible"){
 load()
 }
 },15000)
@@ -893,6 +909,26 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 setInterval(updateClock,1000)
 updateClock()
 
+function formatThaiDate(dateText){
+  if(!dateText) return ""
+
+  let parts = dateText.includes("-") 
+    ? dateText.split("-") 
+    : dateText.split("/")
+
+  if(parts.length !== 3) return dateText
+
+  let year = parseInt(parts[0])
+  let month = parts[1]
+  let day = parts[2]
+
+  if(isNaN(year)) return dateText
+
+  year += 543
+
+  return `${day.padStart(2,"0")}/${month.padStart(2,"0")}/${year}`
+}
+  
 function renderUpdateInfo(r){
 
 if(!r.lastUpdateTime){
@@ -901,15 +937,7 @@ if(!r.lastUpdateTime){
 
 let dateText = r.lastUpdateDate || r.date || r.updateDate || ""
 
-if(dateText){
-  let d = new Date(dateText)
-  if(!isNaN(d)){
-    let day = String(d.getDate()).padStart(2,"0")
-    let month = String(d.getMonth()+1).padStart(2,"0")
-    let year = d.getFullYear() + 543
-    dateText = `${day}/${month}/${year}`
-  }
-}
+dateText = formatThaiDate(dateText)
 
 let time = (r.lastUpdateTime || "").replace("น.","").trim()
 
@@ -931,7 +959,7 @@ async function resetRoom(e, room){
 
 room = decodeURIComponent(room)
 
-if(!confirm("คุณต้องการรีเซ็ตสถิตวันนี้ของห้อง "+room+" ใช่ไหม?")) return
+if(!confirm("คุณต้องการรีเซ็ตสถิตวันนี้ของ "+room+" ใช่ไหม?")) return
 
 if(loadingNow) return
 loadingNow = true
@@ -942,13 +970,17 @@ btn.innerText = "กำลังรีเซ็ต..."
 
 try{
 
-await fetch(API+"?mode=resetRoom&room="+encodeURIComponent(room))
+const res = await fetch(API+"?mode=resetRoom&room="+encodeURIComponent(room))
+
+if(!res.ok){
+throw new Error()
+}
 
 alert("ทำการรีเซ็ตสถิติ "+room+" วันนี้สำเร็จ")
 load()
 
-}catch(e){
-alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+} catch(e){
+alert("รีเซ็ตไม่สำเร็จ กรุณาลองอีกครั้ง")
 }
 
 btn.innerText = "รีเซ็ตสถิติวันนี้"
@@ -967,7 +999,11 @@ loadingNow = true
 
 try{
 
-await fetch(API+"?mode=resetTodayAll")
+const res = await fetch(API+"?mode=resetTodayAll")
+
+if(!res.ok){
+throw new Error()
+}
 
 alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
 load()
@@ -1002,7 +1038,11 @@ loadingNow = true
 
 try{
 
-await fetch(API+`?mode=resetRange&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+const res = await fetch(API+`?mode=resetRange&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+
+if(!res.ok){
+  throw new Error()
+}
 
 alert("รีเซ็ตสถิติแบบเลือกช่วงวันสำเร็จ")
 load()
@@ -1032,7 +1072,11 @@ loadingNow = true
 
 try{
 
-await fetch(API+"?mode=resetAll")
+const res = await fetch(API+"?mode=resetAll")
+
+if(!res.ok){
+  throw new Error()
+}
 
 alert("ล้างข้อมูลสถิติในระบบทั้งหมดแล้ว")
 load()
