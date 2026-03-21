@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", ()=>{
 
-document.querySelectorAll("button, .card, .back").forEach(el=>{
+document.querySelectorAll("button, .card").forEach(el=>{
   el.style.transition = "transform 0.1s ease";
 
   el.addEventListener("mousedown", ()=>{
@@ -16,8 +16,6 @@ document.querySelectorAll("button, .card, .back").forEach(el=>{
   });
 });
 
-
-// ===== เอฟเฟค ripple =====
 document.querySelectorAll("button, .card, .back").forEach(el=>{
 
   el.style.position = "relative";
