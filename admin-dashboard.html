@@ -10,7 +10,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script src="session.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"></script>
 
 <style>
   
@@ -27,7 +26,7 @@ display:flex;
 flex-direction:column;
 background:linear-gradient(180deg,#f6f7fb,#eef1f8);
 }
-
+ 
 header{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
 background-size:200% 200%;
@@ -448,7 +447,20 @@ flex:1 1 auto;
 50%{opacity:.4}
 100%{opacity:1}
 }
-  
+
+.system-status{
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  min-height:160px;
+  height:auto;
+  padding:20px;
+}
+
+.system-status div{
+  margin:6px 0;
+  font-size:15px;
+}
 </style>
 </head>
   
@@ -907,21 +919,46 @@ load()
 let refreshTimer
 
 async function checkSystemStatus() {
+
+  document.getElementById("statusAPI").innerText = "API: กำลังตรวจสอบ..."
+  document.getElementById("statusDB").innerText = "Database: กำลังตรวจสอบ..."
+
+  const start = performance.now()
+
   try {
-    const res = await fetch(API + "?mode=statusCheck")
+
+    const res = await Promise.race([
+      fetch(API + "?mode=statuscheck&t="+Date.now(), {cache:"no-store"}),
+      new Promise((_, reject)=>setTimeout(()=>reject(new Error("timeout")), 5000))
+    ])
+
+    const ms = Math.round(performance.now() - start)
     const data = await res.json()
-    console.log("System status:", data)
-    document.getElementById("statusAPI").innerText = "API: " + (data.apiOk ? "ปกติ ✅" : "มีปัญหา ❌")
-    document.getElementById("statusDB").innerText = "Database: " + (data.dbOk ? "ปกติ ✅" : "มีปัญหา ❌")
+
+    document.getElementById("statusAPI").innerHTML =
+      data.apiOk
+      ? `API: <span style="color:#22c55e">ปกติ ✅ (${ms} ms)</span>`
+      : `API: <span style="color:#ef4444">มีปัญหา ❌</span>`
+
+    document.getElementById("statusDB").innerHTML =
+      data.dbOk
+      ? `Database: <span style="color:#22c55e">ปกติ ✅</span>`
+      : `Database: <span style="color:#ef4444">มีปัญหา ❌</span>`
+
   } catch(e) {
-    console.error(e)
-    document.getElementById("statusAPI").innerText="API: ❌ ไม่สามารถเชื่อมต่อ"
-    document.getElementById("statusDB").innerText="Database: ❌ ไม่สามารถเชื่อมต่อ"
+
+    if(e.message === "timeout"){
+      document.getElementById("statusAPI").innerHTML =
+        "API: <span style='color:#f59e0b'>ช้า / Timeout ⚠️</span>"
+    }else{
+      document.getElementById("statusAPI").innerHTML =
+        "API: <span style='color:#ef4444'>ล่ม ❌</span>"
+    }
+
+    document.getElementById("statusDB").innerHTML =
+      "Database: <span style='color:#ef4444'>ไม่สามารถเชื่อมต่อ ❌</span>"
   }
 }
-
-checkSystemStatus()
-setInterval(checkSystemStatus,15000)
   
 function startAutoRefresh(){
 clearInterval(refreshTimer)
@@ -1009,10 +1046,19 @@ document.addEventListener("DOMContentLoaded", function() {
       onEnd: function(evt){
         const newOrder = Array.from(el.children).map(c => c.dataset.room);
         fetch(API + "?mode=updateRoomOrder", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({order: newOrder})
-        });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({order: newOrder})
+})
+.then(res => res.json())
+.then(d => {
+  if(d.status !== "success"){
+    alert("บันทึกลำดับไม่สำเร็จ")
+  }
+})
+.catch(()=>{
+  alert("เชื่อมต่อไม่ได้ (จัดเรียงห้อง)")
+})
       }
     });
   }
