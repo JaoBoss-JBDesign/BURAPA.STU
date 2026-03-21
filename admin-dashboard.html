@@ -567,9 +567,6 @@ font-weight:600;
 </div>
   
 <hr class="divider">
-    
-</div>
-</div>
 </main>
   
 <footer>
@@ -922,7 +919,7 @@ load()
 let refreshTimer
 
 async function checkSystemStatus() {
-
+  
   document.getElementById("statusAPI").innerText = "API: กำลังตรวจสอบ..."
   document.getElementById("statusDB").innerText = "Database: กำลังตรวจสอบ..."
 
@@ -964,10 +961,13 @@ async function checkSystemStatus() {
 }
   
 function startAutoRefresh(){
-clearInterval(refreshTimer)
+load()
+checkSystemStatus()
+
 refreshTimer=setInterval(()=>{
 if(!loadingNow && document.visibilityState === "visible"){
 load()
+checkSystemStatus()
 }
 },15000)
 }
@@ -1048,11 +1048,7 @@ document.addEventListener("DOMContentLoaded", function() {
       animation: 150,
       onEnd: function(evt){
         const newOrder = Array.from(el.children).map(c => c.dataset.room);
-        fetch(API + "?mode=updateRoomOrder", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({order: newOrder})
-})
+        fetch(API + "?mode=updateRoomOrder&order=" + encodeURIComponent(JSON.stringify(newOrder)))
 .then(res => res.json())
 .then(d => {
   if(d.status !== "success"){
@@ -1082,7 +1078,7 @@ btn.innerText = "กำลังรีเซ็ต..."
 
 try{
 
-const res = await fetch(API+"?mode=resetRoom&room="+encodeURIComponent(room))
+const res = await fetch(API + "?mode=resetRoom&room=" + encodeURIComponent(room))
 
 if(!res.ok){
 throw new Error()
@@ -1211,7 +1207,6 @@ function changeTermYear(){
       loadTerm()
     })
 }
-  
 </script>
 </body>
 </html>
