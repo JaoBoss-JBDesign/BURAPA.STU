@@ -236,25 +236,32 @@ overflow-y:auto;
 margin-top:8px;
 padding-right:4px;
 scroll-behavior:smooth;
+height:100%;
 }
 
+.card-rooms{
+justify-content:flex-start;
+height:420px;
+}
+  
 .class{
 padding:14px 10px;
 border-bottom:1px solid #f1f5f9;
 transition:.25s;
 border-radius:14px;
 margin-bottom:8px;
+cursor:pointer;
 }
 
 .class:hover{
 background:#fafafa;
-padding-left:8px;
+transform:scale(1.01);
 }
 
 .class-top{
 display:flex;
 justify-content:space-between;
-align-items:center;
+align-items:flex-start;
 font-size:16px;
 font-weight:600;
 }
@@ -287,7 +294,7 @@ animation:blink 1.4s infinite;
 .buttons{
 margin-top:12px;
 display:flex;
-gap:10px;
+gap:8px;
 flex-wrap:wrap;
 }
 
@@ -321,15 +328,78 @@ opacity:.6;
 cursor:not-allowed;
 }
 
+/* ===== CONTROL PANEL ===== */
+
 .reset-card{
-height:auto;
+  gap:14px;
 }
 
-.reset-grid{
-display:flex;
-flex-direction:column;
-gap:12px;
-margin-top:10px;
+.control-section{
+  background:#f8fafc;
+  padding:12px;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  border:1px solid #e5e7eb;
+}
+
+.control-section:hover{
+  background:#f1f5f9;
+}
+  
+.control-title{
+  font-size:13px;
+  font-weight:600;
+  color:#374151;
+}
+
+/* input */
+.date-row{
+  display:flex;
+  gap:8px;
+}
+
+.date-row input{
+  flex:1;
+  padding:6px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+/* ปุ่มใหม่ */
+.btn-control{
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  font-size:13px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+
+.btn-control.warn{
+  background:#fde68a;
+  color:#92400e;
+}
+
+.btn-control.warn:hover{
+  background:#fcd34d;
+}
+
+.btn-control.danger{
+  background:#ef4444;
+  color:white;
+}
+
+.btn-control.danger:hover{
+  background:#dc2626;
+}
+
+/* กล่องอันตราย */
+.danger-box{
+  border:1px solid #fecaca;
+  background:#fff1f2;
 }
 
 .btn-reset-soft{
@@ -393,6 +463,24 @@ animation:spin 1s linear infinite;
 to{transform:rotate(360deg)}
 }
 
+.status-badge{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.status-badge.ok{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status-badge.pending{
+  background:#fee2e2;
+  color:#991b1b;
+}
+  
 .updateBy{
 display:inline;
 margin-left:4px;
@@ -554,7 +642,7 @@ font-weight:600;
     </div>
   </div>
 
-  <div class="card">
+<div class="card card-rooms">
     <div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
     <div id="classList"></div>
   </div>
@@ -567,19 +655,34 @@ font-weight:600;
   <div id="sttREC" class="status-box">Records: -</div>
 </div>
 
-  <div class="card reset-card">
-    <h3 style="text-align:center;">⚙️ เมนูจัดการข้อมูลสถิติ</h3>
-    <div class="reset-grid">
-      <button class="btn-reset-soft" onclick="resetTodayAll()">รีเซ็ตวันนี้ทั้งหมด</button>
-      <div class="date-range">
-        <input type="date" id="startDate">
-        <input type="date" id="endDate">
-        <button class="btn-reset-soft" onclick="resetRange()">รีเซ็ตตามช่วงเวลา</button>
-      </div>
-      <button class="btn-reset-danger" onclick="resetAll()">ล้างข้อมูลสถิติทั้งหมด</button>
-    </div>
+<div class="card reset-card">
+  <h3>⚙️ จัดการข้อมูลสถิติ</h3>
+
+  <div class="control-section">
+    <div class="control-title">รีเซ็ตข้อมูลวันนี้</div>
+    <button class="btn-control warn" onclick="resetTodayAll()">
+      รีเซ็ตข้อมูลวันนี้ทั้งหมด
+    </button>
   </div>
 
+  <div class="control-section">
+    <div class="control-title">รีเซ็ตตามช่วงเวลา</div>
+    <div class="date-row">
+      <input type="date" id="startDate">
+      <input type="date" id="endDate">
+    </div>
+    <button class="btn-control warn" onclick="resetRange()">
+      รีเซ็ตตามช่วงวันที่
+    </button>
+  </div>
+
+  <div class="control-section danger-box">
+    <div class="control-title">ล้างข้อมูลทั้งหมด</div>
+    <button class="btn-control danger" onclick="resetAll()">
+      ล้างข้อมูลทั้งระบบ
+    </button>
+  </div>
+</div>
 </div>
   
 <hr class="divider">
@@ -879,9 +982,9 @@ if(done === 0){
 
 rooms.forEach(r=>{
 
-let status=r.submitted
-?'<span class="status green">บันทึกสถิติวันนี้เรียบร้อยแล้ว</span>'
-:'<span class="status red">ยังไม่ได้ทำการบันทึกสถิติในวันนี้</span>'
+let status = r.submitted
+?'<span class="status-badge ok">✔ บันทึกแล้ว</span>'
+:'<span class="status-badge pending">⚠ ยังไม่บันทึกสถิติ</span>'
 
 html+=`
 <div class="class" data-room="${r.room}">
