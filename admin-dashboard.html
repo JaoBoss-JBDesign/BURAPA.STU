@@ -545,11 +545,12 @@ font-weight:600;
     <div id="classList"></div>
   </div>
 
-  <div class="card system-status">
-    <h3>สถานะระบบ</h3>
-    <div id="statusAPI">API: กำลังตรวจสอบ...</div>
-    <div id="statusDB">Database: กำลังตรวจสอบ...</div>
-  </div>
+<div class="card system-status">
+  <h3>สถานะระบบ</h3>
+  <div id="statusAPI">API: กำลังตรวจสอบ...</div>
+  <div id="statusDB">Database: กำลังตรวจสอบ...</div>
+  <div id="statusRecords">Records: กำลังตรวจสอบ...</div>
+</div>
 
   <div class="card reset-card">
     <h3 style="text-align:center;">⚙️ เมนูจัดการข้อมูลสถิติ</h3>
@@ -933,31 +934,66 @@ async function checkSystemStatus() {
     ])
 
     const ms = Math.round(performance.now() - start)
-    const data = await res.json()
+    let speedText = "Good"
+let color = "#22c55e"
 
-    document.getElementById("statusAPI").innerHTML =
-      data.apiOk
-      ? `API: <span style="color:#22c55e">ปกติ ✅ (${ms} ms)</span>`
-      : `API: <span style="color:#ef4444">มีปัญหา ❌</span>`
+if(ms > 2000){
+  speedText = "OK"
+  color = "#f59e0b"
+}
+if(ms > 4000){
+  speedText = "Low ⚠️"
+  color = "#ef4444"
+}
+
+const data = await res.json()
+
+document.getElementById("statusAPI").innerHTML =
+  data.apiOk
+  ? `API: <span style="color:${color}">ปกติ ✅ (${ms} ms - ${speedText})</span>`
+  : `API: <span style="color:#ef4444">มีปัญหา ❌</span>`
 
     document.getElementById("statusDB").innerHTML =
       data.dbOk
       ? `Database: <span style="color:#22c55e">ปกติ ✅</span>`
       : `Database: <span style="color:#ef4444">มีปัญหา ❌</span>`
 
+const elRecords = document.getElementById("statusRecords")
+
+if(elRecords){
+  if(data.totalRecords !== undefined){
+
+    let recordColor = "#22c55e"
+
+    if(data.totalRecords < 10){
+      recordColor = "#ef4444"
+    }
+
+    elRecords.innerHTML =
+      `Records: <span style="color:${recordColor}">${data.totalRecords} รายการ</span>`
+
+  }else{
+    elRecords.innerHTML = "Records: -"
+  }
+}  
+
   } catch(e) {
 
     if(e.message === "timeout"){
       document.getElementById("statusAPI").innerHTML =
-        "API: <span style='color:#f59e0b'>ช้า / Timeout ⚠️</span>"
+        "API: <span style='color:#f59e0b'>ช้า ⚠️</span>"
     }else{
       document.getElementById("statusAPI").innerHTML =
-        "API: <span style='color:#ef4444'>ล่ม ❌</span>"
+        "API: <span style='color:#ef4444'>มีปัญหา ❌</span>"
     }
 
     document.getElementById("statusDB").innerHTML =
       "Database: <span style='color:#ef4444'>ไม่สามารถเชื่อมต่อ ❌</span>"
-  }
+  
+const elRecords = document.getElementById("statusRecords")
+if(elRecords){
+  elRecords.innerHTML =
+    "Records: <span style='color:#ef4444'>โหลดข้อมูลไม่ได้ ❌</span>"
 }
   
 function startAutoRefresh(){
