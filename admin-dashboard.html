@@ -195,6 +195,20 @@ height:420px;
 min-height:0;
 }
 
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 4px;
+  margin-bottom:6px;
+  flex-shrink:0;
+}
+
+.card-header span:first-child{
+  font-size:16px;
+  font-weight:600;
+}
+  
 .card:hover{
 transform:translateY(-2px);
 box-shadow:0 14px 30px rgba(0,0,0,.12);
@@ -236,7 +250,7 @@ font-weight:500;
   margin-top:8px;
   padding-right:4px;
   scroll-behavior:smooth;
-  min-height:0;
+  -webkit-overflow-scrolling:touch;
 }
 
 #classList::-webkit-scrollbar{
@@ -244,7 +258,7 @@ font-weight:500;
 }
 
 #classList::-webkit-scrollbar-thumb{
-  background:#ccc;
+  background:#e5e7eb;
   border-radius:10px;
 }
   
