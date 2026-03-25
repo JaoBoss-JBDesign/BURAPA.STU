@@ -176,10 +176,9 @@ transform:scale(1.1);
 .absent{color:#f28482}
 
 .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  align-items:stretch;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
 }
 
 .card{
@@ -192,23 +191,20 @@ flex-direction:column;
 gap:12px;
 transition:.25s ease;
 height:420px;
-min-height:0;
-align-items:stretch;
-width:100%;
 }
 
 .card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 4px;
-  margin-bottom:6px;
-  flex-shrink:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 4px;
+margin-bottom:6px;
+flex-shrink:0;
 }
 
 .card-header span:first-child{
-  font-size:16px;
-  font-weight:600;
+font-size:16px;
+font-weight:600;
 }
   
 .card:hover{
@@ -227,6 +223,7 @@ display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
+padding:16px 0 12px;
 position:relative;
 min-height:0;
 }
@@ -247,25 +244,23 @@ font-weight:500;
 }
   
 #classList{
-  flex:1;
-  overflow-y:auto;
-  margin-top:8px;
-  padding-right:4px;
-  scroll-behavior:smooth;
-  -webkit-overflow-scrolling:touch;
-  width:100%;
-  align-self:stretch;
+flex:1;
+overflow-y:auto;
+margin-top:8px;
+padding-right:4px;
+scroll-behavior:smooth;
+-webkit-overflow-scrolling:touch;
 }
 
 #classList::-webkit-scrollbar{
-  width:6px;
+width:6px;
 }
 
 #classList::-webkit-scrollbar-thumb{
-  background:#e5e7eb;
-  border-radius:10px;
+background:#e5e7eb;
+border-radius:10px;
 }
-  
+
 .card-rooms{
   display:flex;
   flex-direction:column;
@@ -276,24 +271,19 @@ font-weight:500;
 .class{
 padding:14px 10px;
 border-bottom:1px solid #f1f5f9;
-transition:.25s;
 border-radius:14px;
-margin-bottom:8px;
-cursor:pointer;
-flex-shrink:0;
- width:100%;
+transition:.2s ease;
 }
 
 .class:hover{
-background:#fafafa;
+background:#f9fafb;
 }
 
 .class-top{
 display:flex;
 justify-content:space-between;
 align-items:flex-start;
-font-size:16px;
-font-weight:600;
+gap:10px;
 }
 
 .class-top div{
@@ -382,7 +372,6 @@ cursor:not-allowed;
   color:#374151;
 }
 
-/* input */
 .date-row{
   display:flex;
   gap:8px;
@@ -395,7 +384,6 @@ cursor:not-allowed;
   border:1px solid #ddd;
 }
 
-/* ปุ่มใหม่ */
 .btn-control{
   border:none;
   padding:10px;
@@ -424,7 +412,6 @@ cursor:not-allowed;
   background:#dc2626;
 }
 
-/* กล่องอันตราย */
 .danger-box{
   border:1px solid #fecaca;
   background:#fff1f2;
@@ -516,15 +503,6 @@ margin-left:4px;
   
 @media (max-width:768px){
 
-.card-rooms{
-  height:auto;
-}
-
-#classList{
-  max-height:none;
-  overflow:visible;
-}
-  
 .stats{
 grid-template-columns:1fr 1fr;
 }
@@ -556,13 +534,10 @@ text-align:center;
 
 .buttons{
 flex-direction:column;
-flex-wrap:wrap;
-gap:6px;
 }
 
 button{
 width:100%;
-flex:1 1 auto;
 }
 
 }
