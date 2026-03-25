@@ -788,20 +788,28 @@ location.replace("index.html")
 
 }
 
-function loadTerm(){
+async function loadTerm(){
 
-let term=localStorage.getItem("term")||"2"
-let year=localStorage.getItem("year")||"2568"
+  try{
+    const res = await fetch(API + "?mode=getTerm")
+    const data = await res.json()
 
-document.getElementById("termDisplay").innerHTML=
-"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+    const term = data.term
+    const year = data.year
 
-document.getElementById("termFooter").innerHTML=
-term+"/"+year
+    document.getElementById("termDisplay").innerHTML =
+      "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
 
+    document.getElementById("termFooter").innerHTML =
+      term + "/" + year
+
+document.getElementById("termInput").value = term
+document.getElementById("yearInput").value = year
+    
+  }catch(e){
+    console.error("โหลดเทอมไม่สำเร็จ")
+  }
 }
-
-loadTerm()
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
@@ -839,7 +847,6 @@ if(!dash || typeof dash !== "object"){
 
     console.error(e)
 
-    // ❗ ไม่แจ้ง error ตอนเปิดครั้งแรก
     if(!firstLoad){
       if(e.message === "timeout"){
         alert("การเชื่อมต่อช้า กรุณารีเฟรช")
@@ -1105,7 +1112,8 @@ document.getElementById("classList").innerHTML=html
 }
 
 load()
-
+loadTerm()
+  
 let refreshTimer
 
 async function checkSystemStatusOnce(){
@@ -1407,36 +1415,39 @@ alert("เกิดข้อผิดพลาด ลองใหม่อีก
 loadingNow = false
 }
 
-function changeTermYear(){
-  const term = document.getElementById("termInput").value
-  const year = document.getElementById("yearInput").value
-  if(!term || !year) return alert("กรุณากรอกให้ครบ")
-  fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
-    .then(r=>r.json())
-    .then(d=>{
-      alert("เปลี่ยนภาคเรียนและปีการศึกษาเรียบร้อยแล้ว")
-      loadTerm()
-    })
-}
-
-function changeTermYear(){
+async function changeTermYear(){
 
   const term = document.getElementById("termInput").value
   const year = document.getElementById("yearInput").value
 
-  if(!term || !year) return alert("กรุณาเลือกให้ครบ")
+  if(!term || !year){
+    alert("กรุณาเลือกให้ครบ")
+    return
+  }
 
-  localStorage.setItem("term", term)
-  localStorage.setItem("year", year)
+  try{
 
-  fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
-    .then(r=>r.json())
-    .then(()=>{
-      alert("เปลี่ยนภาคเรียน / ปีการศึกษาเรียบร้อยแล้ว")
-      loadTerm()
-    })
+    const res = await fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
+
+    if(!res.ok) throw new Error()
+
+    const data = await res.json()
+
+    if(data.status !== "success"){
+      throw new Error()
+    }
+
+    alert("เปลี่ยนภาคเรียน / ปีการศึกษาเรียบร้อยแล้ว")
+
+    loadTerm()
+
+  }catch(e){
+
+    alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
+
+  }
 }
-
+  
 function renderWeeklyChart(data){
 
   const ctx = document.getElementById("weeklyChart").getContext("2d")
@@ -1444,7 +1455,7 @@ function renderWeeklyChart(data){
   new Chart(ctx,{
     type:"line",
     data:{
-      labels:data.labels, // เช่น จันทร์-ศุกร์
+      labels:data.labels,
       datasets:[
         {
           label:"มาเรียน",
