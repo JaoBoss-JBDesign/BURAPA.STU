@@ -349,11 +349,11 @@ cursor:not-allowed;
 
 .control-section{
   background:#f8fafc;
-  padding:12px;
+  padding:8px;
   border-radius:12px;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:6px;
   border:1px solid #e5e7eb;
 }
 
@@ -762,46 +762,57 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 
 let chartInstance=null
 let loadingNow=false
+let firstLoad = true
 
 async function load(){
 
-if(loadingNow)return
-loadingNow=true
+  if(loadingNow) return
+  loadingNow = true
 
-try{
+  try{
 
-const res = await fetchWithTimeout(
-API+"?mode=getdashboard&t="+Date.now(),
-{cache:"no-store"},
-10000
-)
+    const res = await fetchWithTimeout(
+      API+"?mode=getdashboard&t="+Date.now(),
+      {cache:"no-store"},
+      20000
+    )
 
-if(!res.ok){
-throw new Error()
+    if(!res.ok){
+      throw new Error("api")
+    }
+
+    const dash = await res.json()
+
+if(!dash || typeof dash !== "object"){
+  throw new Error("invalid data")
 }
+    
+    renderDash(dash)
+    renderRooms(dash.rooms || [])
 
-const dash = await res.json()
+  }catch(e){
 
-renderDash(dash)
-renderRooms(dash.rooms || [])
-hideLoading()
+    console.error(e)
 
-} catch(e){
+    // ❗ ไม่แจ้ง error ตอนเปิดครั้งแรก
+    if(!firstLoad){
+      if(e.message === "timeout"){
+        alert("การเชื่อมต่อช้า กรุณารีเฟรช")
+      }else{
+        alert("โหลดข้อมูลไม่สำเร็จ")
+      }
+    }
 
-console.error(e)
+    renderDash({present:0,sick:0,leave:0,absent:0})
+    renderRooms([])
 
-if(e.message === "timeout"){
-  alert("ระบบเปิดไว้นานเกินไป กรุณารีเฟรชใหม่")
-}else{
-  alert("โหลดข้อมูลไม่สำเร็จ")
-}
+  }finally{
 
-renderDash({present:0,sick:0,leave:0,absent:0})
-renderRooms([])
-hideLoading()
-}
+    hideLoading()
+    loadingNow = false
+    firstLoad = false
 
-loadingNow=false
+  }
 }
 
 function hideLoading(){
@@ -1116,8 +1127,9 @@ async function checkSystemStatusOnce(){
 }
   
 function startAutoRefresh(){
+  
 load()
-
+  
 refreshTimer=setInterval(()=>{
 if(!loadingNow && document.visibilityState === "visible"){
 load()
@@ -1289,7 +1301,7 @@ alert("กรุณาเลือกวันที่")
 return
 }
 
-if(!confirm("รีเซ็ตข้อมูลช่วง "+start+" ถึง "+end+" ใช่หรือไม้")) return
+if(!confirm("รีเซ็ตข้อมูลช่วง "+start+" ถึง "+end+" ใช่หรือไม่")) return
 
 if(new Date(start) > new Date(end)){
 alert("วันที่เริ่มต้องไม่มากกว่าวันที่สิ้นสุด")
