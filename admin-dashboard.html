@@ -658,6 +658,20 @@ font-weight:600;
     </div>
   </div>
 
+  <div class="card">
+  <div class="card-header">แผนภูมิสรุปสถิติรายสัปดาห์</div>
+  <div class="chartBox">
+    <canvas id="weeklyChart"></canvas>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">แผนภูมิสรุปสถิติรายเดือน</div>
+  <div class="chartBox">
+    <canvas id="monthlyChart"></canvas>
+  </div>
+</div>
+
 <div class="card card-rooms">
     <div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
     <div id="classList"></div>
@@ -700,8 +714,37 @@ font-weight:600;
   </div>
 </div>
 </div>
-  
-<hr class="divider">
+
+  <div class="card">
+  <h3>ตั้งค่าภาคเรียน / ปีการศึกษา</h3>
+
+  <div class="field">
+    <label>ภาคเรียน</label>
+    <input type="number" id="termInput" min="1" max="3">
+  </div>
+
+  <div class="field">
+    <label>ปีการศึกษา (พ.ศ.)</label>
+    <input type="number" id="yearInput">
+  </div>
+
+  <button class="btn-main" onclick="changeTermYear()">
+    บันทึกการตั้งค่า
+  </button>
+</div>
+
+  <div class="card">
+  <h3>พิมพ์แบบรายงานสถิติ</h3>
+
+  <div class="date-row">
+    <input type="date" id="reportStart">
+    <input type="date" id="reportEnd">
+  </div>
+
+  <button class="btn-main" onclick="printReport()">
+    พิมพ์เอกสาร
+  </button>
+</div>
 </main>
   
 <footer>
@@ -1372,6 +1415,62 @@ function changeTermYear(){
       alert("เปลี่ยนภาคเรียนและปีการศึกษาเรียบร้อยแล้ว")
       loadTerm()
     })
+}
+
+function changeTermYear(){
+
+  const term = document.getElementById("termInput").value
+  const year = document.getElementById("yearInput").value
+
+  if(!term || !year) return alert("กรุณาเลือกให้ครบ")
+
+  localStorage.setItem("term", term)
+  localStorage.setItem("year", year)
+
+  fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
+    .then(r=>r.json())
+    .then(()=>{
+      alert("เปลี่ยนภาคเรียน / ปีการศึกษาเรียบร้อยแล้ว")
+      loadTerm()
+    })
+}
+
+function renderWeeklyChart(data){
+
+  const ctx = document.getElementById("weeklyChart").getContext("2d")
+
+  new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:data.labels, // เช่น จันทร์-ศุกร์
+      datasets:[
+        {
+          label:"มาเรียน",
+          data:data.present
+        },
+        {
+          label:"ขาด",
+          data:data.absent
+        }
+      ]
+    }
+  })
+}
+
+function printReport(){
+
+  const start = document.getElementById("reportStart").value
+  const end = document.getElementById("reportEnd").value
+
+  if(!start || !end){
+    alert("เลือกวันที่ก่อน")
+    return
+  }
+
+  window.open(
+    `report.html?start=${start}&end=${end}`,
+    "_blank"
+  )
 }
 </script>
 </body>
