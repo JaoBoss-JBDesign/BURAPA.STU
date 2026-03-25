@@ -277,7 +277,7 @@ background:#f9fafb;
 .class-top{
 display:flex;
 justify-content:space-between;
-align-items:flex-start;
+align-items:center;
 gap:10px;
 }
 
@@ -1006,13 +1006,15 @@ ${r.room}
 <br>
 <small style="color:#888">
 มีนักเรียนทั้งหมด ${r.total || 0} คน
-<br>
-${renderUpdateInfo(r)}
 </small>
 </div>
 
 ${status}
 
+</div>
+
+<div style="margin-top:6px;font-size:12px;color:#9ca3af">
+${renderUpdateInfo(r)}
 </div>
 
 <div class="buttons">
@@ -1029,6 +1031,8 @@ ${r.submitted
 <button class="btn-reset-soft" onclick="resetRoom(event,'${encodeURIComponent(r.room)}')">
 รีเซ็ตสถิติวันนี้
 </button>
+
+</div>
 
 </div>
 `
