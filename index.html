@@ -331,6 +331,8 @@ onclick="window.open('https://jaoboss-jbdesign.github.io/BURAPA.STU/','_blank')"
   
 <script>
 
+const API = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+  
 function openTeacherDashboard(){
 
 localStorage.setItem("last_active", Date.now())
@@ -357,7 +359,33 @@ document.getElementById("termFooter").innerHTML=
 term+"/"+year
 }
 
+loadTermFromAPI()
+
+async function loadTermFromAPI(){
+
+try{
+
+const res = await fetch(API + "?mode=getterm&t=" + Date.now())
+const data = await res.json()
+
+if(data.term && data.year){
+
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
+
+document.getElementById("termFooter").innerHTML =
+data.term + "/" + data.year
+
+}
+
+}catch(e){
+
+console.error("ไม่สามารถโหลดข้อมูลภาคเรียนได้")
 loadTerm()
+
+}
+
+}
 
 function updateClock(){
 
