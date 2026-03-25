@@ -392,16 +392,29 @@ loginAdmin()
 }
 })
   
-function loadTerm(){
+async function loadTerm(){
 
-let term=localStorage.getItem("term") || "2"
-let year=localStorage.getItem("year") || "2568"
+  try{
 
-document.getElementById("termDisplay").innerHTML=
-"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+    const res = await fetch(API_URL + "?mode=getTerm")
+    const data = await res.json()
 
-document.getElementById("termFooter").innerHTML=
-term+"/"+year
+    const term = data.term || "-"
+    const year = data.year || "-"
+
+    document.getElementById("termDisplay").innerHTML =
+      "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+
+    document.getElementById("termFooter").innerHTML =
+      term + "/" + year
+
+  }catch(e){
+
+    document.getElementById("termDisplay").innerHTML =
+      "ไม่สามารถโหลดข้อมูลภาคเรียนได้"
+
+    document.getElementById("termFooter").innerHTML = "-"
+  }
 }
 
 loadTerm()
