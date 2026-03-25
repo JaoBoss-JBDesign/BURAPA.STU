@@ -459,9 +459,6 @@ loading.style.display="none"
   
 function loadTerm(){
 
-let term=localStorage.getItem("term")||"2"
-let year=localStorage.getItem("year")||"2568"
-
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
 
@@ -478,6 +475,32 @@ if(!localStorage.getItem("year")){
 localStorage.setItem("year","2568")
 }
 
+async function loadTermFromAPI(){
+
+try{
+
+const res = await fetch(API + "?mode=getterm&t=" + Date.now())
+const data = await res.json()
+
+if(data.term && data.year){
+
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
+
+document.getElementById("termFooter").innerHTML =
+data.term + "/" + data.year
+
+}
+
+}catch(e){
+
+console.error("ไม่สามารถโหลดข้อมูลภาคเรียนได้")
+loadTermFromAPI()
+
+}
+
+}
+  
 function updateClock(){
 
 let now=new Date()
