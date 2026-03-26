@@ -306,8 +306,6 @@ to{transform:rotate(360deg)}
 <footer>
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
 <br>
-<span id="termFooter"></span>
-<br>
 โรงเรียนเทศบาลบูรพาอุบล
 <br>
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
@@ -404,9 +402,6 @@ const year = data.year || "-"
 
 document.getElementById("termDisplay").innerHTML =
 "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
-
-document.getElementById("termFooter").innerHTML =
-"ภาคเรียนที่ " + term + "/" + year
 
 }catch(e){
 
