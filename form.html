@@ -385,7 +385,7 @@ grid-template-columns:1fr;
 
 <div class="card">
 
-<div class="section">สถานะอื่น</div>
+<div class="section">สถานะอื่นๆ</div>
 
 <div class="field">
 <label>ป่วย</label>
@@ -403,7 +403,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="msg" id="errorMsg">
-จำนวนไม่สัมพันธ์กับจำนวนนักเรียนทั้งหมด
+จำนวนที่กรอกไม่สัมพันธ์กับจำนวนนักเรียนทั้งหมด
 </div>
 
 <button id="saveBtn" disabled onclick="save()">
@@ -457,25 +457,7 @@ loading.style.display="none"
 
 }
   
-function loadTerm(){
-
-document.getElementById("termDisplay").innerHTML=
-"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
-
-document.getElementById("termFooter").innerHTML=
-term+"/"+year
-
-}
-
-if(!localStorage.getItem("term")){
-localStorage.setItem("term","2")
-}
-
-if(!localStorage.getItem("year")){
-localStorage.setItem("year","2568")
-}
-
-async function loadTermFromAPI(){
+async function loadTerm(){
 
 try{
 
@@ -490,14 +472,25 @@ document.getElementById("termDisplay").innerHTML =
 document.getElementById("termFooter").innerHTML =
 data.term + "/" + data.year
 
+localStorage.setItem("term", data.term)
+localStorage.setItem("year", data.year)
+
+return
 }
 
 }catch(e){
-
-console.error("ไม่สามารถโหลดข้อมูลภาคเรียนได้")
-loadTermFromAPI()
-
+console.warn("ระบบไม่ได้ซิงค์ข้อมูลภาคเรียน")
 }
+
+// fallback
+let term = localStorage.getItem("term") || "2"
+let year = localStorage.getItem("year") || "2568"
+
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+
+document.getElementById("termFooter").innerHTML =
+term + "/" + year
 
 }
   
