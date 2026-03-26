@@ -708,7 +708,13 @@ font-weight:600;
 </div>
 
 <div class="card card-rooms">
-<div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
+<div class="card-header">
+<span>รายการห้องเรียนทั้งหมด <span id="roomCount"></span></span>
+<div style="display:flex;gap:6px;">
+<button onclick="addRoom()" class="btn-main">+ เพิ่มห้อง</button>
+<button onclick="toggleSort()" class="btn-sub" id="sortBtn">จัดลำดับห้อง</button>
+</div>
+</div>
 <div id="classList"></div>
 </div>
 
@@ -811,6 +817,8 @@ setTimeout(() => reject(new Error("timeout")), timeout)
 ])
 }
   
+const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+  
 function logout(){
 
 if(!confirm("คุณต้องการออกจากระบบหรือไม่")) return
@@ -842,13 +850,14 @@ console.error("โหลดเทอมไม่สำเร็จ")
 }
 }
 
-const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 let chartInstance=null
 let controller;
 let loadingNow=false
 let firstLoad = true
-
+let sortableInstance;
+let sortMode = false;
+  
 async function load(){
 
 if(loadingNow) return
@@ -862,12 +871,13 @@ controller = new AbortController()
 
 try{
 
-const res = await fetch(
-API+"?mode=getdashboard&t="+Date.now(),
+const res = await fetchWithTimeout(
+API + "?mode=getdashboard&t=" + Date.now(),
 {
-cache:"no-store",
+cache: "no-store",
 signal: controller.signal
-}
+},
+10000
 )
 
 if(!res.ok){
@@ -1213,10 +1223,17 @@ ${renderUpdateInfo(r)}
 </div>
 
 <div class="buttons">
+<button onclick="editRoom('${encodeURIComponent(r.room)}')" class="btn-edit">
+แก้ไขชื่อห้อง
+</button>
+
+<button onclick="deleteRoom('${encodeURIComponent(r.room)}')" class="btn-reset-danger">
+- ลบห้อง
+</button>
 
 ${r.submitted
 ?`<button class="btn-edit" onclick="location.href='form.html?room=${r.room}&edit=1&from=admin'">แก้ไขสถิติวันนี้</button>`
-:`<button class="btn-main" onclick="location.href='form.html?room=${r.room}&from=admin'">เริ่มบันทึกสถิติวันนี้</button>`
+:`<button class="btn-main" onclick="location.href='form.html?room=${encodeURIComponent(r.room)}&from=admin'">เริ่มบันทึกสถิติวันนี้</button>`
 }
 
 <button class="btn-sub" onclick="location.href='form.html?room=${r.room}&backdate=1&from=admin'">
@@ -1243,16 +1260,56 @@ loadTerm()
   
 let refreshTimer
 
+async function editRoom(oldRoom){
+
+oldRoom = decodeURIComponent(oldRoom)
+
+let newName = prompt("แก้ไขชื่อห้อง", oldRoom)
+
+if(!newName || newName === oldRoom) return
+
+const res = await fetch(API + `?mode=editRoom&old=${encodeURIComponent(oldRoom)}&new=${encodeURIComponent(newName)}`)
+const data = await res.json()
+
+if(data.status === "success"){
+alert("แก้ไขชื่อห้องสำเร็จ")
+load()
+}else{
+alert("แก้ไขชื่อห้องไม่สำเร็จ")
+}
+
+}
+
+async function deleteRoom(room){
+
+room = decodeURIComponent(room)
+
+if(!confirm("ต้องการลบ "+room+" ใช่หรือไม่?")) return
+
+const res = await fetch(API + "?mode=deleteRoom&room=" + encodeURIComponent(room))
+if(!res.ok) throw new Error("network")
+const data = await res.json()
+
+if(data.status === "success"){
+alert("ลบห้องเรียบร้อยแล้ว")
+load()
+}else{
+alert("ทำการลบห้องไม่สำเร็จ")
+}
+
+}
+  
 async function checkSystemStatusOnce(){
 
 try{
 
 const start = performance.now()
 
-const res = await Promise.race([
-fetch(API + "?mode=statuscheck&t=" + Date.now()),
-new Promise((_, reject)=>setTimeout(()=>reject(new Error("timeout")), 5000))
-])
+const res = await fetchWithTimeout(
+API + "?mode=statuscheck&t=" + Date.now(),
+{ cache: "no-store" },
+5000
+)
 
 if(!res.ok) throw new Error("api error")
 
@@ -1386,8 +1443,9 @@ return `
 document.addEventListener("DOMContentLoaded", function() {
 const el = document.getElementById("classList");
 if(el){
-Sortable.create(el, {
+sortableInstance = Sortable.create(el, {
 animation: 150,
+disabled:true,
 onEnd: function(evt){
 const newOrder = Array.from(el.children).map(c => c.dataset.room);
 fetch(API + "?mode=updateRoomOrder&order=" + encodeURIComponent(JSON.stringify(newOrder)))
@@ -1398,12 +1456,65 @@ alert("บันทึกลำดับไม่สำเร็จ")
 }
 })
 .catch(()=>{
-alert("เชื่อมต่อไม่ได้ (จัดเรียงห้อง)")
+alert("ระบบจัดเรียงห้องไม่ได้")
 })
 }
 });
 }
 });
+
+function toggleSort(){
+
+sortMode = !sortMode
+
+sortableInstance.option("disabled", !sortMode)
+
+const btn = document.getElementById("sortBtn")
+
+if(sortMode){
+btn.innerText = "บันทึกลำดับห้อง"
+btn.classList.remove("btn-sub")
+btn.classList.add("btn-main")
+alert("โหมดลากจัดลำดับห้อง")
+}else{
+btn.innerText = "จัดลำดับห้อง"
+btn.classList.remove("btn-main")
+btn.classList.add("btn-sub")
+alert("บันทึกลำดับห้องเรียบร้อยแล้ว")
+load()
+}
+
+}
+
+async function addRoom(){
+
+if(loadingNow) return
+
+let name = prompt("ชื่อห้อง เช่น ชั้นประถมศึกษาปีที่ 1")
+if(!name) return
+
+loadingNow = true
+
+try{
+const res = await fetch(API + "?mode=addRoom&room=" + encodeURIComponent(name))
+
+if(!res.ok) throw new Error()
+
+const data = await res.json()
+
+if(data.status === "success"){
+alert("ระบบเพิ่มห้องสำเร็จ")
+load()
+}else{
+alert("ทำการเพิ่มห้องไม่สำเร็จ")
+}
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
+
+loadingNow = false
+}
   
 async function resetRoom(e, room){
 
