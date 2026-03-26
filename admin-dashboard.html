@@ -318,8 +318,8 @@ animation:blink 1.4s infinite;
 margin-top:12px;
 display:grid;
 grid-template-columns: repeat(3, 1fr);
-gap:6px;
-flex-wrap:wrap;
+gap:8px;
+justify-content: center;
 }
 
 button{
@@ -333,6 +333,18 @@ transition:.2s;
 margin-bottom:4px;
 }
 
+.buttons button:nth-child(4){
+grid-column: 1 / 2;
+grid-column-start: 1;
+margin-left: 50%;
+}
+
+.buttons button {
+flex: 0 1 calc(33.33% - 8px);
+min-width: 120px;
+margin-bottom: 0; 
+}
+  
 button:hover{
 transform:translateY(-1px);
 box-shadow:0 4px 10px rgba(0,0,0,.15);
