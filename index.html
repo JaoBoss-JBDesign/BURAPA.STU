@@ -322,8 +322,6 @@ onclick="window.open('https://jaoboss-jbdesign.github.io/BURAPA.STU/','_blank')"
 <footer>
 ระบบบริหารจัดการสถิตินักเรียน (BURAPA STUDENT SYSTEM)
 <br>
-<span id="termFooter"></span>
-<br>
 โรงเรียนเทศบาลบูรพาอุบล
 <br>
 สำนักการศึกษา เทศบาลนครอุบลราชธานี
@@ -354,9 +352,6 @@ let year=localStorage.getItem("year") || "2568"
 
 document.getElementById("termDisplay").innerHTML=
 "ภาคเรียนที่ "+term+" ปีการศึกษา "+year
-
-document.getElementById("termFooter").innerHTML=
-"ภาคเรียนที่ " + term + "/" + year
 }
 
 loadTermFromAPI()
