@@ -1292,10 +1292,10 @@ const res = await fetch(API + `?mode=editRoom&old=${encodeURIComponent(oldRoom)}
 const data = await res.json()
 
 if(data.status === "success"){
-alert("แก้ไขชื่อห้องสำเร็จ")
+alert("แก้ไขชื่อห้องสำเร็จ กรุณาทำการรีเฟรช")
 load()
 }else{
-alert("แก้ไขชื่อห้องไม่สำเร็จ")
+alert("แก้ไขชื่อห้องไม่สำเร็จ ลองใหม่อีกครั้ง")
 }
 
 }
@@ -1311,10 +1311,10 @@ if(!res.ok) throw new Error("network")
 const data = await res.json()
 
 if(data.status === "success"){
-alert("ลบห้องเรียบร้อยแล้ว")
+alert("ลบห้องเรียบร้อยแล้ว กรุณาทำการรีเฟรช")
 load()
 }else{
-alert("ทำการลบห้องไม่สำเร็จ")
+alert("ทำการลบห้องไม่สำเร็จ ลองใหม่อีกครั้ง")
 }
 
 }
@@ -1482,11 +1482,11 @@ fetch(API + "?mode=updateRoomOrder&order=" + encodeURIComponent(JSON.stringify(n
 .then(res => res.json())
 .then(d => {
 if(d.status !== "success"){
-alert("บันทึกลำดับไม่สำเร็จ")
+alert("บันทึกลำดับไม่สำเร็จ กรุณาลองใหม่")
 }
 })
 .catch(()=>{
-alert("ระบบจัดเรียงห้องไม่ได้")
+alert("ระบบจัดเรียงห้องไม่ได้ ลองใหม่อีกครั้ง")
 })
 }
 });
@@ -1533,10 +1533,10 @@ if(!res.ok) throw new Error()
 const data = await res.json()
 
 if(data.status === "success"){
-alert("ระบบเพิ่มห้องสำเร็จ")
+alert("ระบบเพิ่มห้องสำเร็จ กรุณาทำการรีเฟรช")
 load()
 }else{
-alert("ทำการเพิ่มห้องไม่สำเร็จ")
+alert("ทำการเพิ่มห้องไม่สำเร็จ ลองใหม่อีกครั้ง")
 }
 
 }catch(e){
@@ -1571,7 +1571,7 @@ alert("ทำการรีเซ็ตสถิติ "+room+" วันนี
 load()
 
 } catch(e){
-alert("รีเซ็ตไม่สำเร็จ กรุณาลองอีกครั้ง")
+alert("รีเซ็ตไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
 }
 
 btn.innerText = "รีเซ็ตสถิติวันนี้"
@@ -1720,7 +1720,7 @@ loadTerm()
 
 }catch(e){
 
-alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
+alert("เกิดข้อผิดพลาดในการบันทึก กรุณาลองใหม่อีกครั้ง")
 
 }
 
