@@ -346,54 +346,54 @@ cursor:not-allowed;
 }
 
 .reset-card{
-  gap:14px;
+gap:14px;
 }
 
 .control-section{
-  background:#f8fafc;
-  padding:8px;
-  border-radius:12px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  border:1px solid #e5e7eb;
+background:#f8fafc;
+padding:8px;
+border-radius:12px;
+display:flex;
+flex-direction:column;
+gap:6px;
+border:1px solid #e5e7eb;
 }
 
 .control-section:hover{
-  background:#f1f5f9;
+background:#f1f5f9;
 }
   
 .control-title{
-  font-size:13px;
-  font-weight:600;
-  color:#374151;
+font-size:13px;
+font-weight:600;
+color:#374151;
 }
 
 .date-row{
-  display:flex;
-  gap:8px;
+display:flex;
+gap:8px;
 }
 
 .date-row input{
-  flex:1;
-  padding:6px;
-  border-radius:8px;
-  border:1px solid #ddd;
+flex:1;
+padding:6px;
+border-radius:8px;
+border:1px solid #ddd;
 }
 
 .btn-control{
-  border:none;
-  padding:10px;
-  border-radius:10px;
-  font-size:13px;
-  cursor:pointer;
-  font-weight:600;
-  transition:.2s;
+border:none;
+padding:10px;
+border-radius:10px;
+font-size:13px;
+cursor:pointer;
+font-weight:600;
+transition:.2s;
 }
 
 .btn-control.warn{
-  background:#fde68a;
-  color:#92400e;
+background:#fde68a;
+color:#92400e;
 }
 
 .btn-control.warn:hover{
@@ -401,17 +401,17 @@ cursor:not-allowed;
 }
 
 .btn-control.danger{
-  background:#ef4444;
-  color:white;
+background:#ef4444;
+color:white;
 }
 
 .btn-control.danger:hover{
-  background:#dc2626;
+background:#dc2626;
 }
 
 .danger-box{
-  border:1px solid #fecaca;
-  background:#fff1f2;
+border:1px solid #fecaca;
+background:#fff1f2;
 }
 
 .btn-reset-soft{
@@ -442,36 +442,36 @@ border:1px solid #ddd;
 }
 
 .field{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  margin-bottom:10px;
+display:flex;
+flex-direction:column;
+gap:4px;
+margin-bottom:10px;
 }
 
 .field label{
-  font-size:13px;
-  color:#555;
-  font-weight:500;
+font-size:13px;
+color:#555;
+font-weight:500;
 }
 
 .select-modern{
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid #e5e7eb;
-  font-size:14px;
-  background:#fff;
-  cursor:pointer;
-  transition:.25s;
-  outline:none;
+padding:10px 12px;
+border-radius:12px;
+border:1px solid #e5e7eb;
+font-size:14px;
+background:#fff;
+cursor:pointer;
+transition:.25s;
+outline:none;
 }
 
 .select-modern:hover{
-  border-color:#e63946;
+border-color:#e63946;
 }
 
 .select-modern:focus{
-  border-color:#e63946;
-  box-shadow:0 0 0 3px rgba(230,57,70,0.15);
+border-color:#e63946;
+box-shadow:0 0 0 3px rgba(230,57,70,0.15);
 }
   
 footer{
@@ -509,21 +509,21 @@ to{transform:rotate(360deg)}
 }
 
 .status-badge{
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:600;
-  white-space:nowrap;
+font-size:12px;
+padding:6px 10px;
+border-radius:999px;
+font-weight:600;
+white-space:nowrap;
 }
 
 .status-badge.ok{
-  background:#dcfce7;
-  color:#166534;
+background:#dcfce7;
+color:#166534;
 }
 
 .status-badge.pending{
-  background:#fee2e2;
-  color:#991b1b;
+background:#fee2e2;
+color:#991b1b;
 }
   
 .updateBy{
@@ -585,15 +585,15 @@ width:100%;
 }
 
 .status-box{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 14px;
-  border-radius:12px;
-  font-size:14px;
-  background:#f8fafc;
-  box-shadow:0 2px 6px rgba(0,0,0,.05);
-  transition:.2s;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 14px;
+border-radius:12px;
+font-size:14px;
+background:#f8fafc;
+box-shadow:0 2px 6px rgba(0,0,0,.05);
+transition:.2s;
 }
 
 .ok{ border-left:5px solid #22c55e; }
@@ -601,18 +601,18 @@ width:100%;
 .err{ border-left:5px solid #ef4444; }
   
 .system-status{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 .status-box:hover{
-  transform:translateY(-1px);
+transform:translateY(-1px);
 }
   
 .system-status div{
-  margin:6px 0;
-  font-size:15px;
+margin:6px 0;
+font-size:15px;
 }
 </style>
 </head>
@@ -685,104 +685,104 @@ font-weight:600;
 
 <div class="grid">
 
-  <div class="card">
-    <div class="card-header">แผนภูมิสรุปสถิติวันนี้</div>
-    <div class="chartBox">
-      <canvas id="chart"></canvas>
-      <div id="noData" class="noData"></div>
-    </div>
-  </div>
-
-  <div class="card">
-  <div class="card-header">แผนภูมิสรุปสถิติรายสัปดาห์</div>
-  <div class="chartBox">
-    <canvas id="weeklyChart"></canvas>
-  </div>
+<div class="card">
+<div class="card-header">แผนภูมิสรุปสถิติวันนี้</div>
+<div class="chartBox">
+<canvas id="chart"></canvas>
+<div id="noData" class="noData"></div>
+</div>
 </div>
 
 <div class="card">
-  <div class="card-header">แผนภูมิสรุปสถิติรายเดือน</div>
-  <div class="chartBox">
-    <canvas id="monthlyChart"></canvas>
-  </div>
+<div class="card-header">แผนภูมิสรุปสถิติรายสัปดาห์</div>
+<div class="chartBox">
+<canvas id="weeklyChart"></canvas>
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">แผนภูมิสรุปสถิติรายเดือน</div>
+<div class="chartBox">
+<canvas id="monthlyChart"></canvas>
+</div>
 </div>
 
 <div class="card card-rooms">
-    <div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
-    <div id="classList"></div>
-  </div>
+<div class="card-header">รายการห้องเรียนทั้งหมด <span id="roomCount"></span></div>
+<div id="classList"></div>
+</div>
 
 <div class="card system-status">
-  <h3>สถานะระบบ</h3>
-  <div id="sttAPI" class="status-box">API: -</div>
-  <div id="sttDB" class="status-box">Database: -</div>
-  <div id="sttMSG" class="status-box">Messaging API: -</div>
-  <div id="sttREC" class="status-box">Records: -</div>
+<h3>สถานะระบบ</h3>
+<div id="sttAPI" class="status-box">API: -</div>
+<div id="sttDB" class="status-box">Database: -</div>
+<div id="sttMSG" class="status-box">Messaging API: -</div>
+<div id="sttREC" class="status-box">Records: -</div>
 </div>
 
 <div class="card reset-card">
-  <h3>⚙️ จัดการข้อมูลสถิติ</h3>
+<h3>จัดการข้อมูลสถิติ</h3>
 
-  <div class="control-section">
-    <div class="control-title">รีเซ็ตข้อมูลวันนี้</div>
-    <button class="btn-control warn" onclick="resetTodayAll(event)">
-      รีเซ็ตข้อมูลวันนี้ทั้งหมด
-    </button>
-  </div>
+<div class="control-section">
+<div class="control-title">รีเซ็ตข้อมูลวันนี้</div>
+<button class="btn-control warn" onclick="resetTodayAll(event)">
+รีเซ็ตข้อมูลวันนี้ทั้งหมด
+</button>
+</div>
 
-  <div class="control-section">
-    <div class="control-title">รีเซ็ตตามช่วงเวลา</div>
-    <div class="date-row">
-      <input type="date" id="startDate">
-      <input type="date" id="endDate">
-    </div>
-    <button class="btn-control warn" onclick="resetRange()">
-      รีเซ็ตตามช่วงวันที่
-    </button>
-  </div>
+<div class="control-section">
+<div class="control-title">รีเซ็ตตามช่วงเวลา</div>
+<div class="date-row">
+<input type="date" id="startDate">
+<input type="date" id="endDate">
+</div>
+<button class="btn-control warn" onclick="resetRange()">
+รีเซ็ตตามช่วงวันที่
+</button>
+</div>
 
-  <div class="control-section danger-box">
-    <div class="control-title">ล้างข้อมูลทั้งหมด</div>
-    <button class="btn-control danger" onclick="resetAll()">
-      ล้างข้อมูลทั้งระบบ
-    </button>
-  </div>
+<div class="control-section danger-box">
+<div class="control-title">ล้างข้อมูลทั้งหมด</div>
+<button class="btn-control danger" onclick="resetAll()">
+ล้างข้อมูลทั้งระบบ
+</button>
+</div>
 </div>
 </div>
 
 <div class="card">
-  <h3>ตั้งค่าภาคเรียน / ปีการศึกษา</h3>
+<h3>ตั้งค่าภาคเรียน / ปีการศึกษา</h3>
 
-  <div class="field">
-    <label>ภาคเรียน</label>
-    <select id="termInput" class="select-modern">
-      <option value="">-- เลือกภาคเรียน --</option>
-      <option value="1">ภาคเรียนที่ 1</option>
-      <option value="2">ภาคเรียนที่ 2</option>
-    </select>
-  </div>
-
-  <div class="field">
-    <label>ปีการศึกษา (พ.ศ.)</label>
-    <select id="yearInput" class="select-modern"></select>
-  </div>
-
-  <button class="btn-main" onclick="changeTermYear(event)">
-    บันทึกการตั้งค่า
-  </button>
+<div class="field">
+<label>ภาคเรียน</label>
+<select id="termInput" class="select-modern">
+<option value="">-- เลือกภาคเรียน --</option>
+<option value="1">1</option>
+<option value="2">2</option>
+</select>
 </div>
 
-  <div class="card">
-  <h3>พิมพ์แบบรายงานสถิติ</h3>
+<div class="field">
+<label>ปีการศึกษา (พ.ศ.)</label>
+<select id="yearInput" class="select-modern"></select>
+</div>
 
-  <div class="date-row">
-    <input type="date" id="reportStart">
-    <input type="date" id="reportEnd">
-  </div>
+<button class="btn-main" onclick="changeTermYear(event)">
+บันทึกการตั้งค่า
+</button>
+</div>
 
-  <button class="btn-main" onclick="printReport()">
-    พิมพ์เอกสาร
-  </button>
+<div class="card">
+<h3>พิมพ์แบบรายงานสถิติ</h3>
+
+<div class="date-row">
+<input type="date" id="reportStart">
+<input type="date" id="reportEnd">
+</div>
+
+<button class="btn-main" onclick="printReport()">
+พิมพ์เอกสาร
+</button>
 </div>
 </main>
   
@@ -827,25 +827,25 @@ location.replace("index.html")
 
 async function loadTerm(){
 
-  try{
-    const res = await fetchWithTimeout(API + "?mode=getTerm")
-    const data = await res.json()
+try{
+const res = await fetchWithTimeout(API + "?mode=getTerm")
+const data = await res.json()
 
-    const term = data.term
-    const year = data.year
+const term = data.term
+const year = data.year
 
-    document.getElementById("termDisplay").innerHTML =
-      "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
 
-    document.getElementById("termFooter").innerHTML =
-      term + "/" + year
+document.getElementById("termFooter").innerHTML =
+term + "/" + year
 
 document.getElementById("termInput").value = term
 document.getElementById("yearInput").value = year
     
-  }catch(e){
-    console.error("โหลดเทอมไม่สำเร็จ")
-  }
+}catch(e){
+console.error("โหลดเทอมไม่สำเร็จ")
+}
 }
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
@@ -857,62 +857,62 @@ let firstLoad = true
 
 async function load(){
 
-  if(loadingNow) return
-  loadingNow = true
+if(loadingNow) return
+loadingNow = true
 
-  if(controller){
-    controller.abort()
-  }
+if(controller){
+controller.abort()
+}
 
-  controller = new AbortController()
+controller = new AbortController()
 
-  try{
+try{
 
-    const res = await fetch(
-      API+"?mode=getdashboard&t="+Date.now(),
-      {
-        cache:"no-store",
-        signal: controller.signal
-      }
-    )
+const res = await fetch(
+API+"?mode=getdashboard&t="+Date.now(),
+{
+cache:"no-store",
+signal: controller.signal
+}
+)
 
-    if(!res.ok){
-      throw new Error("api")
-    }
+if(!res.ok){
+throw new Error("api")
+}
 
-    const dash = await res.json()
+const dash = await res.json()
 
 if(!dash || typeof dash !== "object"){
-  throw new Error("invalid data")
+throw new Error("invalid data")
 }
     
-    renderDash(dash)
-    renderRooms(dash.rooms || [])
-    renderWeeklyChart(dash.weekly)
+renderDash(dash)
+renderRooms(dash.rooms || [])
+renderWeeklyChart(dash.weekly)
 renderMonthlyChart(dash.monthly)
 
-  }catch(e){
+}catch(e){
 
-    console.error(e)
+console.error(e)
 
-    if(!firstLoad){
-      if(e.message === "timeout"){
-        alert("เกิดข้อผิดพลาด รีเฟรชใหม่อีกครั้ง")
-      }else{
-        alert("โหลดข้อมูลไม่สำเร็จ")
-      }
-    }
+if(!firstLoad){
+if(e.message === "timeout"){
+alert("เกิดข้อผิดพลาด รีเฟรชใหม่อีกครั้ง")
+}else{
+alert("โหลดข้อมูลไม่สำเร็จ")
+}
+}
 
-    renderDash({present:0,sick:0,leave:0,absent:0})
-    renderRooms([])
+renderDash({present:0,sick:0,leave:0,absent:0})
+renderRooms([])
 
-  }finally{
+}finally{
 
-    hideLoading()
-    loadingNow = false
-    firstLoad = false
+hideLoading()
+loadingNow = false
+firstLoad = false
 
-  }
+}
 }
 
 function hideLoading(){
@@ -1076,82 +1076,82 @@ let monthlyChartInstance = null
   
 function renderWeeklyChart(data){
 
-  const canvas = document.getElementById("weeklyChart")
+const canvas = document.getElementById("weeklyChart")
 
-  if(!data || !data.labels || data.labels.length === 0){
-    canvas.style.display = "none"
-    return
-  }
+if(!data || !data.labels || data.labels.length === 0){
+canvas.style.display = "none"
+return
+}
 
-  if(weeklyChartInstance){
-    weeklyChartInstance.destroy()
-  }
+if(weeklyChartInstance){
+weeklyChartInstance.destroy()
+}
 
-  const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext("2d")
 
-  weeklyChartInstance = new Chart(ctx,{
-    type:"line",
-    data:{
-      labels:data.labels,
-      datasets:[
-        {
-          label:"มาเรียน",
-          data:data.present,
-          tension:0.4
-        },
-        {
-          label:"ขาด",
-          data:data.absent,
-          tension:0.4
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{
-        legend:{position:"bottom"}
-      }
-    }
-  })
+weeklyChartInstance = new Chart(ctx,{
+type:"line",
+data:{
+labels:data.labels,
+datasets:[
+{
+label:"มาเรียน",
+data:data.present,
+tension:0.4
+},
+{
+label:"ขาด",
+data:data.absent,
+tension:0.4
+}
+]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{position:"bottom"}
+}
+}
+})
 }
 
 function renderMonthlyChart(data){
 
-  const canvas = document.getElementById("monthlyChart")
+const canvas = document.getElementById("monthlyChart")
 
-  if(!data || !data.labels || data.labels.length === 0){
-    canvas.style.display = "none"
-    return
-  }
+if(!data || !data.labels || data.labels.length === 0){
+canvas.style.display = "none"
+return
+}
 
-  if(monthlyChartInstance){
-    monthlyChartInstance.destroy()
-  }
+if(monthlyChartInstance){
+monthlyChartInstance.destroy()
+}
 
-  const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext("2d")
 
-  monthlyChartInstance = new Chart(ctx,{
-    type:"bar",
-    data:{
-      labels:data.labels,
-      datasets:[
-        {
-          label:"มาเรียน",
-          data:data.present
-        },
-        {
-          label:"ขาด",
-          data:data.absent
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{
-        legend:{position:"bottom"}
-      }
-    }
-  })
+monthlyChartInstance = new Chart(ctx,{
+type:"bar",
+data:{
+labels:data.labels,
+datasets:[
+{
+label:"มาเรียน",
+data:data.present
+},
+{
+label:"ขาด",
+data:data.absent
+}
+]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{position:"bottom"}
+}
+}
+})
 }
   
 function renderRooms(rooms){
@@ -1177,25 +1177,25 @@ let alertBar = document.getElementById("alertBar")
 
 if(done === 0){
 
-  alertBar.style.display="block"
-  alertBar.innerHTML="⚠ ยังไม่มีการบันทึกสถิติในวันนี้"
+alertBar.style.display="block"
+alertBar.innerHTML="⚠ ยังไม่มีการบันทึกสถิติในวันนี้"
 
 }else if(pending > 0){
 
-  alertBar.style.display="block"
-  alertBar.innerHTML="⚠ ยังมี "+pending+" ห้องที่ยังไม่ได้บันทึกสถิติวันนี้"
+alertBar.style.display="block"
+alertBar.innerHTML="⚠ ยังมี "+pending+" ห้องที่ยังไม่ได้บันทึกสถิติวันนี้"
 
 }else{
 
-  alertBar.style.display="none"
+alertBar.style.display="none"
 
 }
 
 rooms.forEach(r=>{
 
 let status = r.submitted
-?'<span class="status-badge ok">✔ บันทึกแล้ว</span>'
-:'<span class="status-badge pending">⚠ ยังไม่บันทึกสถิติ</span>'
+?'<span class="status-badge ok">✔ บันทึกสถิติแล้ว</span>'
+:'<span class="status-badge pending">⚠ ยังไม่ได้บันทึกสถิติ</span>'
 
 html+=`
 <div class="class" data-room="${r.room}">
@@ -1251,64 +1251,60 @@ let refreshTimer
 
 async function checkSystemStatusOnce(){
 
-  try{
+try{
 
-    const start = performance.now()
+const start = performance.now()
 
-    const res = await Promise.race([
-      fetch(API + "?mode=statuscheck&t=" + Date.now()),
-      new Promise((_, reject)=>setTimeout(()=>reject(new Error("timeout")), 5000))
-    ])
+const res = await Promise.race([
+fetch(API + "?mode=statuscheck&t=" + Date.now()),
+new Promise((_, reject)=>setTimeout(()=>reject(new Error("timeout")), 5000))
+])
 
-    if(!res.ok) throw new Error("api error")
+if(!res.ok) throw new Error("api error")
 
-    const data = await res.json()
-    const ms = Math.round(performance.now() - start)
+const data = await res.json()
+const ms = Math.round(performance.now() - start)
 
-    // ===== API =====
-    let apiEl = document.getElementById("sttAPI")
+let apiEl = document.getElementById("sttAPI")
 
-    let apiStatus = "ok"
-    if(!data.apiOk) apiStatus = "err"
-    else if(ms > 2000) apiStatus = "warn"
+let apiStatus = "ok"
+if(!data.apiOk) apiStatus = "err"
+else if(ms > 2000) apiStatus = "warn"
 
-    apiEl.className = "status-box " + apiStatus
-    apiEl.innerHTML = `API <b>${ms} ms</b>`
+apiEl.className = "status-box " + apiStatus
+apiEl.innerHTML = `API <b>${ms} ms</b>`
 
-    // ===== Database =====
-    let dbEl = document.getElementById("sttDB")
-    dbEl.className = "status-box " + (data.dbOk ? "ok" : "err")
-    dbEl.innerHTML = `Database <b>${data.dbOk ? "Online" : "Error"}</b>`
+let dbEl = document.getElementById("sttDB")
+dbEl.className = "status-box " + (data.dbOk ? "ok" : "err")
+dbEl.innerHTML = `Database <b>${data.dbOk ? "Online" : "Error"}</b>`
 
-    // ===== Messaging =====
-    let msgEl = document.getElementById("sttMSG")
-    msgEl.className = "status-box " + (data.msgOk ? "ok" : "err")
-    msgEl.innerHTML = `Messaging <b>${data.msgOk ? "Connected" : "Fail"}</b>`
+let msgEl = document.getElementById("sttMSG")
+msgEl.className = "status-box " + (data.msgOk ? "ok" : "err")
+msgEl.innerHTML = `Messaging <b>${data.msgOk ? "Connected" : "Fail"}</b>`
 
-    // ===== Records =====
-    let recEl = document.getElementById("sttREC")
-    let rec = data.totalRecords || 0
+let recEl = document.getElementById("sttREC")
+let rec = data.totalRecords || 0
 
-    let recStatus = "ok"
-    if(rec < 10) recStatus = "warn"
+let recStatus = "ok"
+if(rec < 10) recStatus = "warn"
 
-    recEl.className = "status-box " + recStatus
-    recEl.innerHTML = `Records <b>${rec}</b>`
+recEl.className = "status-box " + recStatus
+recEl.innerHTML = `Records <b>${rec}</b>`
 
-  }catch(e){
+}catch(e){
 
-    document.getElementById("sttAPI").className = "status-box err"
-    document.getElementById("sttAPI").innerHTML = "API ERROR"
+document.getElementById("sttAPI").className = "status-box err"
+document.getElementById("sttAPI").innerHTML = "API ERROR"
 
-    document.getElementById("sttDB").className = "status-box err"
-    document.getElementById("sttDB").innerHTML = "Database ERROR"
+document.getElementById("sttDB").className = "status-box err"
+document.getElementById("sttDB").innerHTML = "Database ERROR"
 
-    document.getElementById("sttMSG").className = "status-box err"
-    document.getElementById("sttMSG").innerHTML = "Messaging ERROR"
+document.getElementById("sttMSG").className = "status-box err"
+document.getElementById("sttMSG").innerHTML = "Messaging ERROR"
 
-    document.getElementById("sttREC").className = "status-box err"
-    document.getElementById("sttREC").innerHTML = "Records ERROR"
-  }
+document.getElementById("sttREC").className = "status-box err"
+document.getElementById("sttREC").innerHTML = "Records ERROR"
+}
   
 }
   
@@ -1351,41 +1347,41 @@ setInterval(updateClock,1000)
 updateClock()
 
 function formatThaiDate(dateText){
-  if(!dateText) return ""
+if(!dateText) return ""
 
-  let parts = dateText.includes("-") 
-    ? dateText.split("-") 
-    : dateText.split("/")
+let parts = dateText.includes("-") 
+? dateText.split("-") 
+: dateText.split("/")
 
-  if(parts.length !== 3) return dateText
+if(parts.length !== 3) return dateText
 
-  let year = parseInt(parts[0])
-  let month = parts[1]
-  let day = parts[2]
+let year = parseInt(parts[0])
+let month = parts[1]
+let day = parts[2]
 
-  if(isNaN(year)) return dateText
+if(isNaN(year)) return dateText
 
-  year += 543
+year += 543
 
-  return `${day.padStart(2,"0")}/${month.padStart(2,"0")}/${year}`
+return `${day.padStart(2,"0")}/${month.padStart(2,"0")}/${year}`
 }
   
 function renderUpdateInfo(r){
-  if(!r.lastUpdateTime){
-    return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`;
-  }
+if(!r.lastUpdateTime){
+return `<span style="color:#9ca3af;font-size:12px">ยังไม่มีข้อมูล</span>`;
+}
 
-  let dateText = r.lastUpdateDate || r.date || r.updateDate || "";
-  dateText = formatThaiDate(dateText);
+let dateText = r.lastUpdateDate || r.date || r.updateDate || "";
+dateText = formatThaiDate(dateText);
 
-  let time = (r.lastUpdateTime || "").replace("น.","").trim();
-  let source = (r.updatedBy || "").toLowerCase();
-  let isAuto = source.includes("autofill");
+let time = (r.lastUpdateTime || "").replace("น.","").trim();
+let source = (r.updatedBy || "").toLowerCase();
+let isAuto = source.includes("autofill");
 
-  let color = isAuto ? "#9ca3af" : "#ea580c";
-  let text = isAuto ? "A" : "T";
+let color = isAuto ? "#9ca3af" : "#ea580c";
+let text = isAuto ? "A" : "T";
 
-  return `
+return `
 <span class="updateText" style="color:${color};font-size:12px;font-weight:500">
 สถิติล่าสุด ${dateText} เวลา ${time} น. 
 <span class="updateBy">(${text})</span>
@@ -1394,25 +1390,25 @@ function renderUpdateInfo(r){
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  const el = document.getElementById("classList");
-  if(el){
-    Sortable.create(el, {
-      animation: 150,
-      onEnd: function(evt){
-        const newOrder = Array.from(el.children).map(c => c.dataset.room);
-        fetch(API + "?mode=updateRoomOrder&order=" + encodeURIComponent(JSON.stringify(newOrder)))
+const el = document.getElementById("classList");
+if(el){
+Sortable.create(el, {
+animation: 150,
+onEnd: function(evt){
+const newOrder = Array.from(el.children).map(c => c.dataset.room);
+fetch(API + "?mode=updateRoomOrder&order=" + encodeURIComponent(JSON.stringify(newOrder)))
 .then(res => res.json())
 .then(d => {
-  if(d.status !== "success"){
-    alert("บันทึกลำดับไม่สำเร็จ")
-  }
+if(d.status !== "success"){
+alert("บันทึกลำดับไม่สำเร็จ")
+}
 })
 .catch(()=>{
-  alert("เชื่อมต่อไม่ได้ (จัดเรียงห้อง)")
+alert("เชื่อมต่อไม่ได้ (จัดเรียงห้อง)")
 })
-      }
-    });
-  }
+}
+});
+}
 });
   
 async function resetRoom(e, room){
@@ -1451,36 +1447,36 @@ loadingNow = false
 
 async function resetTodayAll(e){
 
-  if(loadingNow) return
+if(loadingNow) return
 
-  const btn = e.target
-  if(btn.disabled) return
+const btn = e.target
+if(btn.disabled) return
 
-  if(!confirm("คุณต้องการรีเซ็ตสถิติทุกห้องในวันนี้ใช่ไหม?")) return
+if(!confirm("คุณต้องการรีเซ็ตสถิติทุกห้องในวันนี้ใช่ไหม?")) return
 
-  btn.disabled = true
-  btn.innerText = "กำลังรีเซ็ต..."
+btn.disabled = true
+btn.innerText = "กำลังรีเซ็ต..."
 
-  loadingNow = true
+loadingNow = true
 
-  try{
+try{
 
-    const res = await fetch(API+"?mode=resetTodayAll")
+const res = await fetch(API+"?mode=resetTodayAll")
 
-    if(!res.ok){
-      throw new Error()
-    }
+if(!res.ok){
+throw new Error()
+}
 
-    alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
-    load()
+alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
+load()
 
-  }catch(e){
-    alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
-  }
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+}
 
-  btn.disabled = false
-  btn.innerText = "รีเซ็ตข้อมูลวันนี้ทั้งหมด"
-  loadingNow = false
+btn.disabled = false
+btn.innerText = "รีเซ็ตข้อมูลวันนี้ทั้งหมด"
+loadingNow = false
 }
   
 async function resetRange(){
@@ -1509,7 +1505,7 @@ try{
 const res = await fetch(API+`?mode=resetRange&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
 
 if(!res.ok){
-  throw new Error()
+throw new Error()
 }
 
 alert("รีเซ็ตสถิติแบบเลือกช่วงวันสำเร็จ")
@@ -1557,75 +1553,75 @@ loadingNow = false
 }
 
 async function changeTermYear(e){
-  const btn = e.target
-  btn.disabled = true
-  btn.innerText = "กำลังบันทึก..."
+const btn = e.target
+btn.disabled = true
+btn.innerText = "กำลังบันทึก..."
 
-  const term = document.getElementById("termInput").value
-  const year = document.getElementById("yearInput").value
+const term = document.getElementById("termInput").value
+const year = document.getElementById("yearInput").value
 
-  if(!term || !year){
-    alert("กรุณาเลือกให้ครบ")
-    btn.disabled = false
-    btn.innerText = "บันทึกการตั้งค่า"
-    return
-  }
+if(!term || !year){
+alert("กรุณาเลือกให้ครบ")
+btn.disabled = false
+btn.innerText = "บันทึกการตั้งค่า"
+return
+}
 
-  try{
+try{
 
-    const res = await fetch(API+`?mode=updateTerm&term=${encodeURIComponent(term)}&year=${encodeURIComponent(year)}`)
+const res = await fetch(API+`?mode=updateTerm&term=${encodeURIComponent(term)}&year=${encodeURIComponent(year)}`)
 
-    if(!res.ok) throw new Error()
+if(!res.ok) throw new Error()
 
-    const data = await res.json()
+const data = await res.json()
 
-    if(data.status !== "success"){
-      throw new Error()
-    }
+if(data.status !== "success"){
+throw new Error()
+}
 
-    alert("เปลี่ยนภาคเรียน / ปีการศึกษาเรียบร้อยแล้ว")
+alert("เปลี่ยนภาคเรียน / ปีการศึกษาเรียบร้อยแล้ว")
 
-    loadTerm()
+loadTerm()
 
-  }catch(e){
+}catch(e){
 
-    alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
+alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
 
-  }
+}
 
-  btn.disabled = false
-  btn.innerText = "บันทึกการตั้งค่า"
+btn.disabled = false
+btn.innerText = "บันทึกการตั้งค่า"
 }
 
 function generateYearOptions(){
 
-  const select = document.getElementById("yearInput")
-  const currentYear = new Date().getFullYear() + 543
+const select = document.getElementById("yearInput")
+const currentYear = new Date().getFullYear() + 543
 
-  select.innerHTML = ""
+select.innerHTML = ""
 
-  for(let i = currentYear + 1; i >= currentYear - 5; i--){
-    const opt = document.createElement("option")
-    opt.value = i
-    opt.textContent = i
-    select.appendChild(opt)
-  }
+for(let i = currentYear + 1; i >= currentYear - 5; i--){
+const opt = document.createElement("option")
+opt.value = i
+opt.textContent = i
+select.appendChild(opt)
+}
 }
 
 function printReport(){
 
-  const start = document.getElementById("reportStart").value
-  const end = document.getElementById("reportEnd").value
+const start = document.getElementById("reportStart").value
+const end = document.getElementById("reportEnd").value
 
-  if(!start || !end){
-    alert("เลือกวันที่ก่อน")
-    return
-  }
+if(!start || !end){
+alert("กรณาเลือกวันที่ก่อน")
+return
+}
 
-  window.open(
-    `report.html?start=${start}&end=${end}`,
-    "_blank"
-  )
+window.open(
+`report.html?start=${start}&end=${end}`,
+"_blank"
+)
 }
 </script>
 </body>
