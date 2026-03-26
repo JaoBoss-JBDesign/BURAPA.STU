@@ -315,40 +315,24 @@ animation:blink 1.4s infinite;
 }
 
 .buttons{
-margin-top:12px;
-display:flex;
-flex-wrap: wrap;
-gap:8px;
-justify-content: center;
-}
-
-button{
-border:none;
-padding:8px 12px;
-border-radius:10px;
-font-size:12px;
-cursor:pointer;
-font-weight:500;
-transition:.2s;
-margin-bottom:4px;
-}
-
-.buttons button:nth-child(4){
-grid-column: 1 / 2;
-grid-column-start: 1;
-margin-left: 50%;
+  margin-top:12px;
+  display:flex;
+  flex-wrap: wrap;
+  gap:8px;
+  justify-content: center;
 }
 
 .buttons button {
-flex: 0 1 calc(33.33% - 8px); 
-min-width: 110px;
-padding: 10px 6px;
-margin-bottom: 0;
-border-radius: 10px;
-font-size: 12px;
-cursor: pointer;
-font-weight: 500;
-transition: .2s;
+  flex: 0 1 calc(33.33% - 8px);
+  min-width: 110px;
+  padding: 10px 6px;
+  margin-bottom: 0;
+  border:none;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: .2s;
 }
   
 button:hover{
@@ -595,7 +579,6 @@ text-align:center;
 
 .buttons{
 flex-direction:column;
-grid-template-columns:1fr;
 }
 
 .buttons button {
