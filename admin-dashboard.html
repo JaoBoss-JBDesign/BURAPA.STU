@@ -315,7 +315,7 @@ animation:blink 1.4s infinite;
 }
 
 .p {
-text-align:center;
+align-items: center;
 }
   
 .buttons{
@@ -326,6 +326,18 @@ gap:8px;
 justify-content: center;
 }
 
+button {
+border: none; 
+outline: none;
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 6px;
+}
+  
 .buttons button {
 flex: 0 1 calc(33.33% - 8px);
 min-width: 110px;
