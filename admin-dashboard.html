@@ -775,8 +775,7 @@ font-weight:600;
 <h3>พิมพ์แบบรายงานสถิติ</h3>
 
 <div class="date-row">
-<input type="date" id="reportStart">
-<input type="date" id="reportEnd">
+<input type="date" id="reportDate">
 </div>
 
 <button class="btn-main" onclick="printReport()">
@@ -1605,16 +1604,15 @@ select.appendChild(opt)
 
 function printReport(){
 
-const start = document.getElementById("reportStart").value
-const end = document.getElementById("reportEnd").value
+const date = document.getElementById("reportDate").value
 
-if(!start || !end){
-alert("กรณาเลือกวันที่ก่อน")
+if(!date){
+alert("กรุณาเลือกวันที่ก่อน")
 return
 }
 
 window.open(
-`report.html?start=${start}&end=${end}`,
+`report.html?date=${date}`,
 "_blank"
 )
 }
