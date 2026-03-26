@@ -376,17 +376,21 @@ document.getElementById("termDisplay").innerHTML =
 document.getElementById("termFooter").innerHTML =
 data.term + "/" + data.year
 
+localStorage.setItem("term", data.term)
+localStorage.setItem("year", data.year)
+
+}else{
+throw new Error("no data")
 }
 
 }catch(e){
 
-console.error("ไม่สามารถโหลดข้อมูลภาคเรียนได้")
+console.error("ระบบไม่ได้ซิงค์ข้อมูลภาคเรียน")
 loadTerm()
 
 }
 
 }
-
 function updateClock(){
 
 let now=new Date()
