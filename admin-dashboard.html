@@ -804,20 +804,21 @@ font-weight:600;
 <select id="yearInput" class="select-modern"></select>
 </div>
 
-<button class="btn-main" onclick="changeTermYear(event)">
+<button class="btn-main" onclick="changeTermYear(event)" style="width: 100%; padding: 14px; font-size: 16px;">
 บันทึกการตั้งค่า
 </button>
 </div>
 
 <div class="card">
 <h3>พิมพ์แบบรายงานสถิติ</h3>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;">
 <p>เลือกวันที่ต้องการพิมพ์รายงานเป็น PDF</p>
 
 <div class="date-row">
 <input type="date" id="reportDate">
 </div>
 
-<button class="btn-main" onclick="printReport()">
+<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
 พิมพ์เอกสาร
 </button>
 </div>
