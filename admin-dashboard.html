@@ -804,25 +804,16 @@ font-weight:600;
 <select id="yearInput" class="select-modern"></select>
 </div>
 
-<button class="btn-main" onclick="changeTermYear(event)" style="width: 100%; padding: 14px; font-size: 16px;">
-บันทึกการตั้งค่า
-</button>
+<div class="card">
+<h3>พิมพ์แบบรายงานสถิติ</h3>
+
+<div class="field">
+<label>เลือกวันที่ต้องการรายงาน</label>
+<input type="date" id="reportDate" class="select-modern">
 </div>
 
-<div class="card" style="justify-content: center; align-items: center; gap: 25px; padding: 20px;"> 
-<h3 style="margin: 0; text-align: center;">พิมพ์แบบรายงานสถิติ</h3>
-
-<div style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px;">
-<p style="text-align: center; margin: 0; color: #555; font-size: 14px;">
-เลือกวันที่ต้องการพิมพ์รายงานเป็น PDF
-</p>
-
-<div class="field" style="margin: 0;">
-<input type="date" id="reportDate" class="select-modern" style="width: 100%; text-align: center;">
-</div>
-
-<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px; font-weight: 600;">
-พิมพ์เอกสาร
+<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
+พิมพ์เอกสาร PDF
 </button>
 </div>
 </div>
