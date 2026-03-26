@@ -440,6 +440,39 @@ padding:6px;
 border-radius:8px;
 border:1px solid #ddd;
 }
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-bottom:10px;
+}
+
+.field label{
+  font-size:13px;
+  color:#555;
+  font-weight:500;
+}
+
+.select-modern{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  font-size:14px;
+  background:#fff;
+  cursor:pointer;
+  transition:.25s;
+  outline:none;
+}
+
+.select-modern:hover{
+  border-color:#e63946;
+}
+
+.select-modern:focus{
+  border-color:#e63946;
+  box-shadow:0 0 0 3px rgba(230,57,70,0.15);
+}
   
 footer{
 background:linear-gradient(135deg,#c1121f,#e63946,#ff6b6b);
@@ -692,7 +725,7 @@ font-weight:600;
 
   <div class="control-section">
     <div class="control-title">รีเซ็ตข้อมูลวันนี้</div>
-    <button class="btn-control warn" onclick="resetTodayAll()">
+    <button class="btn-control warn" onclick="resetTodayAll(event)">
       รีเซ็ตข้อมูลวันนี้ทั้งหมด
     </button>
   </div>
@@ -717,20 +750,24 @@ font-weight:600;
 </div>
 </div>
 
-  <div class="card">
+<div class="card">
   <h3>ตั้งค่าภาคเรียน / ปีการศึกษา</h3>
 
   <div class="field">
     <label>ภาคเรียน</label>
-    <input type="number" id="termInput" min="1" max="3">
+    <select id="termInput" class="select-modern">
+      <option value="">-- เลือกภาคเรียน --</option>
+      <option value="1">ภาคเรียนที่ 1</option>
+      <option value="2">ภาคเรียนที่ 2</option>
+    </select>
   </div>
 
   <div class="field">
     <label>ปีการศึกษา (พ.ศ.)</label>
-    <input type="number" id="yearInput">
+    <select id="yearInput" class="select-modern"></select>
   </div>
 
-  <button class="btn-main" onclick="changeTermYear()">
+  <button class="btn-main" onclick="changeTermYear(event)">
     บันทึกการตั้งค่า
   </button>
 </div>
@@ -791,7 +828,7 @@ location.replace("index.html")
 async function loadTerm(){
 
   try{
-    const res = await fetch(API + "?mode=getTerm")
+    const res = await fetchWithTimeout(API + "?mode=getTerm")
     const data = await res.json()
 
     const term = data.term
@@ -814,6 +851,7 @@ document.getElementById("yearInput").value = year
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 let chartInstance=null
+let controller;
 let loadingNow=false
 let firstLoad = true
 
@@ -822,12 +860,20 @@ async function load(){
   if(loadingNow) return
   loadingNow = true
 
+  if(controller){
+    controller.abort()
+  }
+
+  controller = new AbortController()
+
   try{
 
-    const res = await fetchWithTimeout(
+    const res = await fetch(
       API+"?mode=getdashboard&t="+Date.now(),
-      {cache:"no-store"},
-      20000
+      {
+        cache:"no-store",
+        signal: controller.signal
+      }
     )
 
     if(!res.ok){
@@ -842,6 +888,8 @@ if(!dash || typeof dash !== "object"){
     
     renderDash(dash)
     renderRooms(dash.rooms || [])
+    renderWeeklyChart(dash.weekly)
+renderMonthlyChart(dash.monthly)
 
   }catch(e){
 
@@ -849,7 +897,7 @@ if(!dash || typeof dash !== "object"){
 
     if(!firstLoad){
       if(e.message === "timeout"){
-        alert("การเชื่อมต่อช้า กรุณารีเฟรช")
+        alert("เกิดข้อผิดพลาด รีเฟรชใหม่อีกครั้ง")
       }else{
         alert("โหลดข้อมูลไม่สำเร็จ")
       }
@@ -921,7 +969,8 @@ let present = d.present || 0
 let sick = d.sick || 0
 let leave = d.leave || 0
 let absent = d.absent || 0
-let unknown = total - (present + sick + leave + absent)
+let used = present + sick + leave + absent
+let unknown = Math.max(0, total - used)
 if(unknown < 0) unknown = 0
 
 let sum = present + sick + leave + absent + unknown
@@ -1021,6 +1070,89 @@ return percent+"%"
 }
 
 }
+
+let weeklyChartInstance = null
+let monthlyChartInstance = null
+  
+function renderWeeklyChart(data){
+
+  const canvas = document.getElementById("weeklyChart")
+
+  if(!data || !data.labels || data.labels.length === 0){
+    canvas.style.display = "none"
+    return
+  }
+
+  if(weeklyChartInstance){
+    weeklyChartInstance.destroy()
+  }
+
+  const ctx = canvas.getContext("2d")
+
+  weeklyChartInstance = new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:data.labels,
+      datasets:[
+        {
+          label:"มาเรียน",
+          data:data.present,
+          tension:0.4
+        },
+        {
+          label:"ขาด",
+          data:data.absent,
+          tension:0.4
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:"bottom"}
+      }
+    }
+  })
+}
+
+function renderMonthlyChart(data){
+
+  const canvas = document.getElementById("monthlyChart")
+
+  if(!data || !data.labels || data.labels.length === 0){
+    canvas.style.display = "none"
+    return
+  }
+
+  if(monthlyChartInstance){
+    monthlyChartInstance.destroy()
+  }
+
+  const ctx = canvas.getContext("2d")
+
+  monthlyChartInstance = new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:data.labels,
+      datasets:[
+        {
+          label:"มาเรียน",
+          data:data.present
+        },
+        {
+          label:"ขาด",
+          data:data.absent
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:"bottom"}
+      }
+    }
+  })
+}
   
 function renderRooms(rooms){
 
@@ -1111,6 +1243,7 @@ document.getElementById("classList").innerHTML=html
 
 }
 
+generateYearOptions()
 load()
 loadTerm()
   
@@ -1187,7 +1320,7 @@ refreshTimer=setInterval(()=>{
 if(!loadingNow && document.visibilityState === "visible"){
 load()
 }
-},15000)
+},30000)
 }
 
 startAutoRefresh()
@@ -1315,33 +1448,41 @@ btn.disabled = false
 
 loadingNow = false
 }
+
+async function resetTodayAll(e){
+
+  if(loadingNow) return
+
+  const btn = e.target
+  if(btn.disabled) return
+
+  if(!confirm("คุณต้องการรีเซ็ตสถิติทุกห้องในวันนี้ใช่ไหม?")) return
+
+  btn.disabled = true
+  btn.innerText = "กำลังรีเซ็ต..."
+
+  loadingNow = true
+
+  try{
+
+    const res = await fetch(API+"?mode=resetTodayAll")
+
+    if(!res.ok){
+      throw new Error()
+    }
+
+    alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
+    load()
+
+  }catch(e){
+    alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
+  }
+
+  btn.disabled = false
+  btn.innerText = "รีเซ็ตข้อมูลวันนี้ทั้งหมด"
+  loadingNow = false
+}
   
-async function resetTodayAll(){
-
-if(loadingNow) return
-
-if(!confirm("คุณต้องการรีเซ็ตสถิติทุกห้องในวันนี้ใช่ไหม?")) return
-
-loadingNow = true
-
-try{
-
-const res = await fetch(API+"?mode=resetTodayAll")
-
-if(!res.ok){
-throw new Error()
-}
-
-alert("ทำการรีเซ็ตสถิติทุกห้องในวันนี้สำเร็จ")
-load()
-
-}catch(e){
-alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
-}
-
-loadingNow = false
-}
-
 async function resetRange(){
 
 if(loadingNow) return
@@ -1415,19 +1556,24 @@ alert("เกิดข้อผิดพลาด ลองใหม่อีก
 loadingNow = false
 }
 
-async function changeTermYear(){
+async function changeTermYear(e){
+  const btn = e.target
+  btn.disabled = true
+  btn.innerText = "กำลังบันทึก..."
 
   const term = document.getElementById("termInput").value
   const year = document.getElementById("yearInput").value
 
   if(!term || !year){
     alert("กรุณาเลือกให้ครบ")
+    btn.disabled = false
+    btn.innerText = "บันทึกการตั้งค่า"
     return
   }
 
   try{
 
-    const res = await fetch(API+`?mode=updateTerm&term=${term}&year=${year}`)
+    const res = await fetch(API+`?mode=updateTerm&term=${encodeURIComponent(term)}&year=${encodeURIComponent(year)}`)
 
     if(!res.ok) throw new Error()
 
@@ -1446,28 +1592,24 @@ async function changeTermYear(){
     alert("เกิดข้อผิดพลาดในการบันทึก ลองใหม่อีกครั้ง")
 
   }
+
+  btn.disabled = false
+  btn.innerText = "บันทึกการตั้งค่า"
 }
-  
-function renderWeeklyChart(data){
 
-  const ctx = document.getElementById("weeklyChart").getContext("2d")
+function generateYearOptions(){
 
-  new Chart(ctx,{
-    type:"line",
-    data:{
-      labels:data.labels,
-      datasets:[
-        {
-          label:"มาเรียน",
-          data:data.present
-        },
-        {
-          label:"ขาด",
-          data:data.absent
-        }
-      ]
-    }
-  })
+  const select = document.getElementById("yearInput")
+  const currentYear = new Date().getFullYear() + 543
+
+  select.innerHTML = ""
+
+  for(let i = currentYear + 1; i >= currentYear - 5; i--){
+    const opt = document.createElement("option")
+    opt.value = i
+    opt.textContent = i
+    select.appendChild(opt)
+  }
 }
 
 function printReport(){
