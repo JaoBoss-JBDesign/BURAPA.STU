@@ -206,6 +206,12 @@ margin-bottom:6px;
 flex-shrink:0;
 }
 
+.card-header button{
+padding:6px 10px;
+font-size:11px;
+border-radius:8px;
+}
+  
 .card-header span:first-child{
 font-size:16px;
 font-weight:600;
@@ -310,8 +316,9 @@ animation:blink 1.4s infinite;
 
 .buttons{
 margin-top:12px;
-display:flex;
-gap:8px;
+display:grid;
+grid-template-columns: repeat(3, 1fr);
+gap:6px;
 flex-wrap:wrap;
 }
 
@@ -331,14 +338,14 @@ transform:translateY(-1px);
 box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
-.btn-edit{background:#ffd166;}
+.btn-edit{background:#fbbf24; color:#78350f;}
   
 .btn-main{
 background:linear-gradient(135deg,#e63946,#ff6b6b);
 color:white;
 }
   
-.btn-sub{background:#eef1f6;}
+.btn-sub{background:#e5e7eb; color:#374151;}
 
 button:disabled{
 opacity:.6;
@@ -415,8 +422,8 @@ background:#fff1f2;
 }
 
 .btn-reset-soft{
-background:#fde68a;
-color:#92400e;
+background:#fb923c;
+color:white;
 }
 
 .btn-reset-soft:hover{
@@ -570,6 +577,7 @@ text-align:center;
 
 .buttons{
 flex-direction:column;
+grid-template-columns:1fr;
 }
 
 button{
@@ -892,8 +900,8 @@ throw new Error("invalid data")
     
 renderDash(dash)
 renderRooms(dash.rooms || [])
-renderWeeklyChart(dash.weekly)
-renderMonthlyChart(dash.monthly)
+renderWeeklyChart(dash.weekly || {})
+renderMonthlyChart(dash.monthly || {})
 
 }catch(e){
 
@@ -1054,7 +1062,7 @@ datalabels:{
 color:"#fff",
 font:{weight:"bold"},
 formatter:(v,ctx)=>{
-let sum=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0)
+let sum=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+(b||0),0)
 
 if(sum===0) return ""
 if(ctx.chart.data.labels.length===1) return ""
@@ -1083,16 +1091,22 @@ function renderWeeklyChart(data){
 const canvas = document.getElementById("weeklyChart")
 
 if(!data || !data.labels || data.labels.length === 0){
-canvas.style.display = "none"
-return
-}
 
 if(weeklyChartInstance){
 weeklyChartInstance.destroy()
 }
 
+canvas.style.display = "none"
+return
+}
+
+canvas.style.display = "block"
+  
 const ctx = canvas.getContext("2d")
 
+if(weeklyChartInstance){
+  weeklyChartInstance.destroy()
+}
 weeklyChartInstance = new Chart(ctx,{
 type:"line",
 data:{
@@ -1124,16 +1138,22 @@ function renderMonthlyChart(data){
 const canvas = document.getElementById("monthlyChart")
 
 if(!data || !data.labels || data.labels.length === 0){
-canvas.style.display = "none"
-return
-}
 
 if(monthlyChartInstance){
 monthlyChartInstance.destroy()
 }
 
+canvas.style.display = "none"
+return
+}
+
+canvas.style.display = "block"
+  
 const ctx = canvas.getContext("2d")
 
+if(monthlyChartInstance){
+  monthlyChartInstance.destroy()
+}
 monthlyChartInstance = new Chart(ctx,{
 type:"bar",
 data:{
@@ -1232,11 +1252,11 @@ ${renderUpdateInfo(r)}
 </button>
 
 ${r.submitted
-?`<button class="btn-edit" onclick="location.href='form.html?room=${r.room}&edit=1&from=admin'">แก้ไขสถิติวันนี้</button>`
+?`<button class="btn-edit" onclick="location.href='form.html?room=${encodeURIComponent(r.room}&edit=1&from=admin'">แก้ไขสถิติวันนี้</button>`
 :`<button class="btn-main" onclick="location.href='form.html?room=${encodeURIComponent(r.room)}&from=admin'">เริ่มบันทึกสถิติวันนี้</button>`
 }
 
-<button class="btn-sub" onclick="location.href='form.html?room=${r.room}&backdate=1&from=admin'">
+<button class="btn-sub" onclick="location.href='form.html?room=${encodeURIComponent(r.room}&backdate=1&from=admin'">
 แก้ไขสถิติย้อนหลัง
 </button>
 
@@ -1313,28 +1333,39 @@ API + "?mode=statuscheck&t=" + Date.now(),
 
 if(!res.ok) throw new Error("api error")
 
-const data = await res.json()
+let data
+
+try{
+data = await res.json()
+}catch{
+throw new Error("not json")
+}
+
 const ms = Math.round(performance.now() - start)
 
-let apiEl = document.getElementById("sttAPI")
+const apiOk = data.apiOk ?? false
+const dbOk = data.dbOk ?? false
+const msgOk = data.msgOk ?? false
+const rec = data.totalRecords ?? 0
 
+let apiEl = document.getElementById("sttAPI")
 let apiStatus = "ok"
-if(!data.apiOk) apiStatus = "err"
+
+if(!apiOk) apiStatus = "err"
 else if(ms > 2000) apiStatus = "warn"
 
 apiEl.className = "status-box " + apiStatus
 apiEl.innerHTML = `API <b>${ms} ms</b>`
 
 let dbEl = document.getElementById("sttDB")
-dbEl.className = "status-box " + (data.dbOk ? "ok" : "err")
-dbEl.innerHTML = `Database <b>${data.dbOk ? "Online" : "Error"}</b>`
+dbEl.className = "status-box " + (dbOk ? "ok" : "err")
+dbEl.innerHTML = `Database <b>${dbOk ? "Online" : "Error"}</b>`
 
 let msgEl = document.getElementById("sttMSG")
-msgEl.className = "status-box " + (data.msgOk ? "ok" : "err")
-msgEl.innerHTML = `Messaging <b>${data.msgOk ? "Connected" : "Fail"}</b>`
+msgEl.className = "status-box " + (msgOk ? "ok" : "err")
+msgEl.innerHTML = `Messaging <b>${msgOk ? "Connected" : "Fail"}</b>`
 
 let recEl = document.getElementById("sttREC")
-let rec = data.totalRecords || 0
 
 let recStatus = "ok"
 if(rec < 10) recStatus = "warn"
@@ -1344,19 +1375,18 @@ recEl.innerHTML = `Records <b>${rec}</b>`
 
 }catch(e){
 
-document.getElementById("sttAPI").className = "status-box err"
+console.error("STATUS ERROR:", e)
+
 document.getElementById("sttAPI").innerHTML = "API ERROR"
+document.getElementById("sttDB").innerHTML = "DB ERROR"
+document.getElementById("sttMSG").innerHTML = "MSG ERROR"
+document.getElementById("sttREC").innerHTML = "REC ERROR"
 
+document.getElementById("sttAPI").className = "status-box err"
 document.getElementById("sttDB").className = "status-box err"
-document.getElementById("sttDB").innerHTML = "Database ERROR"
-
 document.getElementById("sttMSG").className = "status-box err"
-document.getElementById("sttMSG").innerHTML = "Messaging ERROR"
-
 document.getElementById("sttREC").className = "status-box err"
-document.getElementById("sttREC").innerHTML = "Records ERROR"
 }
-  
 }
   
 function startAutoRefresh(){
@@ -1727,6 +1757,10 @@ window.open(
 "_blank"
 )
 }
+
+window.addEventListener("error", () => {
+loadingNow = false
+})
 </script>
 </body>
 </html>
