@@ -809,17 +809,19 @@ font-weight:600;
 </button>
 </div>
 
-<div class="card" style="justify-content: flex-start; gap: 20px;"> 
-<h3 style="text-align: center; margin-bottom: 5px;">พิมพ์แบบรายงานสถิติ</h3>
-    
-<div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-<p style="text-align: center; margin: 0; color: #555;">เลือกวันที่ต้องการพิมพ์รายงานเป็น PDF</p>
+<div class="card" style="justify-content: center; align-items: center; gap: 25px; padding: 20px;"> 
+<h3 style="margin: 0; text-align: center;">พิมพ์แบบรายงานสถิติ</h3>
 
-<div class="field" style="margin-bottom: 0;">
-<input type="date" id="reportDate" class="select-modern" style="width: 100%;">
+<div style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px;">
+<p style="text-align: center; margin: 0; color: #555; font-size: 14px;">
+เลือกวันที่ต้องการพิมพ์รายงานเป็น PDF
+</p>
+
+<div class="field" style="margin: 0;">
+<input type="date" id="reportDate" class="select-modern" style="width: 100%; text-align: center;">
 </div>
 
-<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px; margin-top: 5px;">
+<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px; font-weight: 600;">
 พิมพ์เอกสาร
 </button>
 </div>
