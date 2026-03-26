@@ -305,21 +305,21 @@ gap:10px;
 }
 
 .status-badge{
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:600;
-  white-space:nowrap;
+font-size:12px;
+padding:6px 10px;
+border-radius:999px;
+font-weight:600;
+white-space:nowrap;
 }
 
 .status-badge.ok{
-  background:#dcfce7;
-  color:#166534;
+background:#dcfce7;
+color:#166534;
 }
 
 .status-badge.pending{
-  background:#fee2e2;
-  color:#991b1b;
+background:#fee2e2;
+color:#991b1b;
 }
   
 .class-top div{
@@ -535,8 +535,8 @@ width:100%;
 <div class="card">
 
 <div class="card-header">
-  <span>รายการห้องเรียนทั้งหมด</span>
-  <span id="roomCount"></span>
+<span>รายการห้องเรียนทั้งหมด</span>
+<span id="roomCount"></span>
 </div>
 
 <hr class="divider">
@@ -556,22 +556,39 @@ width:100%;
 </footer>
 
 <script>
-  
-function loadTerm(){
 
-let term=localStorage.getItem("term")||"2"
-let year=localStorage.getItem("year")||"2568"
+loadTermFromAPI()
 
-document.getElementById("termDisplay").innerHTML=
-"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
+async function loadTermFromAPI(){
 
-document.getElementById("termFooter").innerHTML=
-term+"/"+year
+try{
+
+const res = await fetch(API + "?mode=getterm&t=" + Date.now())
+const data = await res.json()
+
+if(data.term && data.year){
+
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
+
+document.getElementById("termFooter").innerHTML =
+data.term + "/" + data.year
 
 }
 
-loadTerm()
+}catch(e){
 
+console.error("โหลดเทอมไม่สำเร็จ")
+
+document.getElementById("termDisplay").innerHTML =
+"ไม่สามารถโหลดภาคเรียนได้"
+
+document.getElementById("termFooter").innerHTML = "-"
+
+}
+
+}
+  
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 let chartInstance=null
@@ -788,8 +805,8 @@ return
 rooms.forEach(r=>{
 
 let status = r.submitted
-?'<span class="status-badge ok">✔ บันทึกแล้ว</span>'
-:'<span class="status-badge pending">⚠ ยังไม่บันทึก</span>'
+?'<span class="status-badge ok">✔ บันทึกสถิติแล้ว</span>'
+:'<span class="status-badge pending">⚠ ยังไม่บันทึกสถิติ</span>'
 
 html+=`
 <div class="class">
