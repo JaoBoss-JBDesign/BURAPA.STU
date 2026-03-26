@@ -1308,7 +1308,7 @@ const start = performance.now()
 const res = await fetchWithTimeout(
 API + "?mode=statuscheck&t=" + Date.now(),
 { cache: "no-store" },
-5000
+15000
 )
 
 if(!res.ok) throw new Error("api error")
