@@ -366,7 +366,7 @@ box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 .btn-edit{background:#fbbf24; color:#78350f;}
   
 .btn-main{
-background:linear-gradient(135deg,#e63946,#ff6b6b);
+background:linear-gradient(135deg,#36f595,#10e379);
 color:white;
 }
   
@@ -856,7 +856,7 @@ alert("กรุณาเข้าสู่ระบบก่อน")
 location.replace("admin-login.html")
 }
 
-function fetchWithTimeout(url, options = {}, timeout = 10000){
+function fetchWithTimeout(url, options = {}, timeout = 20000){
 return Promise.race([
 fetch(url, options),
 new Promise((_, reject) =>
@@ -1368,7 +1368,7 @@ const start = performance.now()
 const res = await fetchWithTimeout(
 API + "?mode=statuscheck&t=" + Date.now(),
 { cache: "no-store" },
-15000
+20000
 )
 
 if(!res.ok) throw new Error("api error")
