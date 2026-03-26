@@ -334,8 +334,8 @@ const p=document.getElementById("pass").value.trim()
 
 if(!u || !p){
 alert("กรุณากรอก Username และ Password")
-btn.disabled=false
-btnText.innerHTML="เข้าสู่ระบบ"
+btn.disabled = true
+btnText.innerHTML = "กำลังเข้าสู่ระบบ..."
 return
 }
   
@@ -394,27 +394,27 @@ loginAdmin()
   
 async function loadTerm(){
 
-  try{
+try{
 
-    const res = await fetch(API_URL + "?mode=getTerm")
-    const data = await res.json()
+const res = await fetch(API_URL + "?mode=getterm&t=" + Date.now())
+const data = await res.json()
 
-    const term = data.term || "-"
-    const year = data.year || "-"
+const term = data.term || "-"
+const year = data.year || "-"
 
-    document.getElementById("termDisplay").innerHTML =
-      "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+document.getElementById("termDisplay").innerHTML =
+"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
 
-    document.getElementById("termFooter").innerHTML =
-      term + "/" + year
+document.getElementById("termFooter").innerHTML =
+term + "/" + year
 
-  }catch(e){
+}catch(e){
 
-    document.getElementById("termDisplay").innerHTML =
-      "ไม่สามารถโหลดข้อมูลภาคเรียนได้"
+document.getElementById("termDisplay").innerHTML =
+"ไม่สามารถโหลดข้อมูลภาคเรียนได้"
 
-    document.getElementById("termFooter").innerHTML = "-"
-  }
+document.getElementById("termFooter").innerHTML = "-"
+}
 }
 
 loadTerm()
