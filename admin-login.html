@@ -279,7 +279,7 @@ to{transform:rotate(360deg)}
 โรงเรียนเทศบาลบูรพาอุบล
 </div>
 
-<div class="term" id="termDisplay"></div>
+<div class="term" id="termDisplay" style="display:none;"></div>
 <div class="time" id="clock"></div>
 </header>
 
@@ -392,27 +392,47 @@ loginAdmin()
   
 async function loadTerm(){
 
+let el = document.getElementById("termDisplay")
+
 try{
 
 const res = await fetch(API_URL + "?mode=getterm&t=" + Date.now())
 const data = await res.json()
 
-const term = data.term || "-"
-const year = data.year || "-"
+if(data.term != null && data.year != null){
 
-document.getElementById("termDisplay").innerHTML =
-"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+el.innerHTML =
+"ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
+
+el.style.display = "block"
+
+localStorage.setItem("term", data.term)
+localStorage.setItem("year", data.year)
+
+return
+}
 
 }catch(e){
-
-document.getElementById("termDisplay").innerHTML =
-"ไม่สามารถโหลดข้อมูลภาคเรียนได้"
-
-document.getElementById("termFooter").innerHTML = "-"
-}
+console.warn("โหลดเทอมไม่สำเร็จ")
 }
 
-loadTerm()
+let term = localStorage.getItem("term")
+let year = localStorage.getItem("year")
+
+if(term && year){
+
+el.innerHTML =
+"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+
+el.style.display = "block"
+
+}else{
+
+el.style.display = "none"
+
+}
+
+}
 
 function updateClock(){
 
