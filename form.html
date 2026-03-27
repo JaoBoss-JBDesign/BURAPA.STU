@@ -321,7 +321,7 @@ grid-template-columns:1fr;
 <div class="school-name">โรงเรียนเทศบาลบูรพาอุบล</div>
 
 <div id="headerDateTime">
-<div class="term" id="termDisplay"></div>
+<div class="term" id="termDisplay" style="display:none;"></div>
 <div class="time" id="clock"></div>
 </div>
 
@@ -457,15 +457,19 @@ loading.style.display="none"
   
 async function loadTerm(){
 
+let el = document.getElementById("termDisplay")
+
 try{
 
 const res = await fetch(API + "?mode=getterm&t=" + Date.now())
 const data = await res.json()
 
-if(data.term && data.year){
+if(data.term != null && data.year != null){
 
-document.getElementById("termDisplay").innerHTML =
+el.innerHTML =
 "ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
+
+el.style.display = "block"
 
 localStorage.setItem("term", data.term)
 localStorage.setItem("year", data.year)
@@ -474,18 +478,24 @@ return
 }
 
 }catch(e){
-console.warn("ระบบไม่ได้ซิงค์ข้อมูลภาคเรียน")
+console.warn("โหลดเทอมไม่สำเร็จ")
 }
 
-// fallback
-let term = localStorage.getItem("term") || "2"
-let year = localStorage.getItem("year") || "2568"
+let term = localStorage.getItem("term")
+let year = localStorage.getItem("year")
 
-document.getElementById("termDisplay").innerHTML =
+if(term && year){
+
+el.innerHTML =
 "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
 
-document.getElementById("termFooter").innerHTML =
-term + "/" + year
+el.style.display = "block"
+
+}else{
+
+el.style.display = "none"
+
+}
 
 }
   
@@ -714,7 +724,8 @@ loadLastRoomData()
 })
 
 function num(id){
-return parseInt(document.getElementById(id).value)||0
+let v = parseInt(document.getElementById(id).value) || 0
+return v < 0 ? 0 : v
 }
 
 function calculate(){
@@ -831,15 +842,23 @@ source:"บันทึกโดยคุณครู"
 
 try{
   
-await fetch(API,{
+let res = await fetch(API,{
 method:"POST",
 body:new URLSearchParams(data)
 })
 
+if(!res.ok){
+throw new Error("save failed")
+}
+
 alert("ระบบทำการบันทึกสถิติเรียบร้อยแล้ว")
 
 window.onbeforeunload=null
-location.href="teacher-dashboard.html"
+if(from === "admin"){
+  location.href = "admin-dashboard.html"
+} else {
+  location.href = "teacher-dashboard.html"
+}
 
 }catch(e){
 
