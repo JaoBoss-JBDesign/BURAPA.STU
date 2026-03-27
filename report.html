@@ -29,9 +29,10 @@ h2{
 
 .date{
   text-align:center;
-  margin-bottom:20px;
-  font-size:14px;
+  margin-bottom:30px;
+  font-size:15px;
   color:#555;
+  letter-spacing:1px;
 }
 
 /* table */
@@ -48,10 +49,18 @@ th, td{
 }
 
 th{
-  background:#f3f4f6;
+  background:#e5e7eb;
   font-weight:600;
 }
 
+tr{
+  page-break-inside: avoid;
+}
+
+thead{
+  display: table-header-group;
+}  
+  
 tbody tr:hover{
   background:#f9fafb;
 }
@@ -62,13 +71,27 @@ tbody tr:hover{
   font-weight:bold;
 }
 
+.primary{
+  background:#fde68a; /* เหลือง */
+}
+
+.secondary{
+  background:#86efac;
+}
+  
 /* summary */
 .summary{
   margin-top:16px;
   font-size:14px;
   line-height:1.6;
+  padding-top:10px;
+  border-top:2px solid #000;
 }
 
+.sum-row{
+  font-weight:bold;
+}
+  
 /* footer */
 .footer{
   margin-top:40px;
@@ -77,6 +100,7 @@ tbody tr:hover{
   gap:40px;
   text-align:center;
   font-size:14px;
+  page-break-inside: avoid;
 }
 
 /* print */
@@ -91,7 +115,7 @@ tbody tr:hover{
   }
 
   button{
-    display:none;
+    display:none !important;
   }
 
   @page{
@@ -114,7 +138,11 @@ tbody tr:hover{
 <tr>
 <th>ชั้น</th>
 <th>นักเรียนทั้งหมด</th>
+<th>ชาย</th>
+<th>หญิง</th>
 <th>มาเรียน</th>
+<th>ชาย</th>
+<th>หญิง</th>
 <th>ป่วย</th>
 <th>ลา</th>
 <th>ขาด</th>
@@ -152,62 +180,185 @@ const date = params.get("date")
 
 function formatThaiDate(dateStr){
   const d = new Date(dateStr)
-  return d.toLocaleDateString('th-TH',{
-    weekday:'long',
-    year:'numeric',
-    month:'long',
-    day:'numeric'
-  })
-}
 
-document.getElementById("dateText").innerText = formatThaiDate(date)
+  const day = d.toLocaleDateString('th-TH',{ weekday:'long' }).replace("วัน","")
+  const date = d.getDate()
+  const month = d.toLocaleDateString('th-TH',{ month:'long' })
+  const year = d.getFullYear() + 543
+
+  return `
+  วัน&nbsp;&nbsp;&nbsp;&nbsp;${day}
+  &nbsp;&nbsp;&nbsp;&nbsp;ที่&nbsp;&nbsp;&nbsp;&nbsp;${date}
+  &nbsp;&nbsp;&nbsp;&nbsp;เดือน&nbsp;&nbsp;&nbsp;&nbsp;${month}
+  &nbsp;&nbsp;&nbsp;&nbsp;พ.ศ.&nbsp;&nbsp;&nbsp;&nbsp;${year}
+  `
+
+  if(!date){
+  document.getElementById("dateText").innerText = "-"
+}else{
+  document.getElementById("dateText").innerHTML = formatThaiDate(date)
+}
+}
 
 async function loadReport(){
 
-const res = await fetch(API + "?mode=report&date=" + date)
-const data = await res.json()
+let data = []
+
+try{
+  const res = await fetch(API + "?mode=report&date=" + date)
+  data = await res.json()
+}catch(e){
+  alert("โหลดข้อมูลไม่สำเร็จ")
+  return
+}
 
 let html=""
 
+// รวมระดับ
+let levels = {}
+
 let totalAll = 0
+let totalMale = 0
+let totalFemale = 0
+
 let totalPresent = 0
+let totalPresentMale = 0
+let totalPresentFemale = 0
 
 data.forEach(r=>{
 
-const total = Number(r.total) || 0
-const present = Number(r.present) || 0
-const sick = r.sick ? Number(r.sick) : ""
-const leave = r.leave ? Number(r.leave) : ""
-const absent = r.absent ? Number(r.absent) : ""
+const level = getLevel(r.room)
 
+// init level
+if(!levels[level]){
+  levels[level] = {
+    rows:[],
+    total:0,
+    male:0,
+    female:0,
+    present:0,
+    presentMale:0,
+    presentFemale:0
+  }
+}
+
+const total = Number(r.total)||0
+const male = Number(r.male)||0
+const female = Number(r.female)||0
+
+const present = Number(r.present)||0
+const presentMale = Number(r.presentMale)||0
+const presentFemale = Number(r.presentFemale)||0
+
+const sick = r.sick||""
+const leave = r.leave||""
+const absent = r.absent||""
+
+// push row
+levels[level].rows.push({
+  room:r.room,
+  total,male,female,
+  present,presentMale,presentFemale,
+  sick,leave,absent
+})
+
+// sum level
+levels[level].total += total
+levels[level].male += male
+levels[level].female += female
+
+levels[level].present += present
+levels[level].presentMale += presentMale
+levels[level].presentFemale += presentFemale
+
+// sum global
 totalAll += total
-totalPresent += present
+totalMale += male
+totalFemale += female
 
+totalPresent += present
+totalPresentMale += presentMale
+totalPresentFemale += presentFemale
+
+})
+
+
+// 🔥 เรียงลำดับ
+const order = ["ป.1","ป.2","ป.3","ป.4","ป.5","ป.6","ม.1","ม.2","ม.3","ม.4","ม.5","ม.6","ปวช"]
+
+order.forEach(level=>{
+
+if(!levels[level]) return
+  
+levels[level].rows.sort((a,b)=>{
+
+  const numA = a.room.match(/\d+/g)
+  const numB = b.room.match(/\d+/g)
+
+  if(!numA || !numB) return 0
+
+  // เทียบเลขหลักแรก (เช่น 6)
+  if(numA[0] != numB[0]){
+    return Number(numA[0]) - Number(numB[0])
+  }
+
+  // เทียบเลขหลัง / (เช่น /1 /2)
+  return (Number(numA[1]||0)) - (Number(numB[1]||0))
+})
+
+// แถวห้อง
+levels[level].rows.forEach(r=>{
 html += `
 <tr>
 <td>${r.room}</td>
-<td>${total}</td>
-<td>${present}</td>
-<td>${sick}</td>
-<td>${leave}</td>
-<td>${absent}</td>
+<td>${r.total}</td>
+<td>${r.male}</td>
+<td>${r.female}</td>
+<td>${r.present}</td>
+<td>${r.presentMale}</td>
+<td>${r.presentFemale}</td>
+<td>${r.sick}</td>
+<td>${r.leave}</td>
+<td>${r.absent}</td>
 </tr>
 `
 })
 
-const percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2) : 0
-
-document.getElementById("summary").innerHTML = `
-นักเรียนทั้งหมด ${totalAll} คน<br>
-มาเรียน ${totalPresent} คน<br>
-คิดเป็น ${percent}%
+// 🔥 แถวรวม
+html += `
+<tr class="sum-row ${level.startsWith('ป.') ? 'primary' : 'secondary'}">
+<td>รวม ${level}</td>
+<td>${levels[level].total}</td>
+<td>${levels[level].male}</td>
+<td>${levels[level].female}</td>
+<td>${levels[level].present}</td>
+<td>${levels[level].presentMale}</td>
+<td>${levels[level].presentFemale}</td>
+<td></td><td></td><td></td>
+</tr>
 `
 
-document.getElementById("dataBody").innerHTML = html
+})
+
+document.getElementById("dataBody").innerHTML = `
+<tr><td colspan="10">กำลังสร้าง Report...</td></tr>
+`
+
+
+// 🔥 summary ใหม่
+const percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2) : 0
+const malePercent = totalMale ? ((totalPresentMale/totalMale)*100).toFixed(2) : 0
+const femalePercent = totalFemale ? ((totalPresentFemale/totalFemale)*100).toFixed(2) : 0
+
+document.getElementById("summary").innerHTML = `
+<b>จำนวนนักเรียนทั้งหมด</b> ${totalAll} คน (ชาย ${totalMale} คน / หญิง ${totalFemale} คน)<br>
+<b>มาเรียนวันนี้</b> ${totalPresent} คน (ชาย ${totalPresentMale} คน / หญิง ${totalPresentFemale} คน)<br>
+<b>ชายมาเรียน</b> ${malePercent}% &nbsp;&nbsp; <b>หญิงมาเรียน</b> ${femalePercent}%<br>
+<b>อัตราการมาเรียนรวม</b> ${percent}%
+`
 }
 
-loadReport()
-
+  
 function exportPDF(){
 
 const element = document.getElementById("report")
@@ -223,6 +374,43 @@ html2pdf().set({
 
 }
 
+function getLevel(room){
+
+  if(!room) return "อื่นๆ"
+
+  room = room.trim()
+
+  // 🔥 ป.1 / ป.1/1 / ประถมศึกษาปีที่ 1
+  let match = room.match(/ป\.?\s*(\d+)/)
+  if(match) return "ป." + match[1]
+
+  if(room.includes("ประถม")){
+    match = room.match(/\d+/)
+    if(match) return "ป." + match[0]
+  }
+
+  // 🔥 ม.1 / ม.1/2 / มัธยมศึกษาปีที่ 1
+  match = room.match(/ม\.?\s*(\d+)/)
+  if(match) return "ม." + match[1]
+
+  if(room.includes("มัธยม")){
+    match = room.match(/\d+/)
+    if(match) return "ม." + match[0]
+  }
+
+  // 🔥 ปวช
+  match = room.match(/ปวช\.?\s*(\d+)/)
+  if(match) return "ปวช." + match[1]
+
+  if(room.includes("ชั้นประกาศนียบัตรวิชาชีพ")){
+    match = room.match(/\d+/)
+    if(match) return "ปวช." + match[0]
+  }
+
+  return "อื่นๆ"
+}
+
+loadReport()
 </script>
 </body>
 </html>
