@@ -6,32 +6,34 @@
 
 <style>
 body{
-  font-family:'Prompt',sans-serif;
-  background:#f9fafb;
+  font-family:'TH Sarabun New','Prompt',sans-serif;
   margin:0;
-  padding:0;
+  background:#f3f4f6;
 }
 
-/* 🔥 container สำคัญมาก แก้ปัญหา PDF ลอย */
+/* 📄 A4 */
 .report{
   width:210mm;
   min-height:297mm;
   margin:auto;
-  padding:20mm 15mm;
+  padding:15mm;
   background:white;
 }
 
 /* header */
-h2{
+.header{
   text-align:center;
-  margin-bottom:4px;
+  margin-bottom:10px;
 }
 
-.date{
-  text-align:center;
-  margin-bottom:20px;
-  font-size:14px;
-  color:#555;
+.header h2{
+  margin:0;
+  font-size:20px;
+}
+
+.header p{
+  margin:4px 0;
+  font-size:16px;
 }
 
 /* table */
@@ -43,17 +45,21 @@ table{
 
 th, td{
   border:1px solid #000;
-  padding:6px;
+  padding:5px;
   text-align:center;
 }
 
 th{
-  background:#f3f4f6;
+  background:#e5e7eb;
   font-weight:600;
 }
 
-tbody tr:hover{
-  background:#f9fafb;
+/* group row */
+.group{
+  background:#f1f5f9;
+  font-weight:bold;
+  text-align:left;
+  padding-left:8px;
 }
 
 /* total row */
@@ -64,7 +70,7 @@ tbody tr:hover{
 
 /* summary */
 .summary{
-  margin-top:16px;
+  margin-top:12px;
   font-size:14px;
   line-height:1.6;
 }
@@ -73,31 +79,15 @@ tbody tr:hover{
 .footer{
   margin-top:40px;
   display:grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   gap:40px;
   text-align:center;
-  font-size:14px;
 }
 
 /* print */
 @media print{
-  body{
-    background:white;
-  }
-
-  .report{
-    box-shadow:none;
-    margin:0;
-  }
-
-  button{
-    display:none;
-  }
-
-  @page{
-    size:A4;
-    margin:15mm;
-  }
+  button{display:none;}
+  @page{ size:A4; margin:10mm; }
 }
 </style>
 </head>
@@ -106,14 +96,16 @@ tbody tr:hover{
 
 <div class="report" id="report">
 
+<div class="header">
 <h2>รายงานสถิตินักเรียนประจำวัน</h2>
-<div class="date" id="dateText"></div>
+<p id="dateText"></p>
+</div>
 
 <table>
 <thead>
 <tr>
 <th>ชั้น</th>
-<th>นักเรียนทั้งหมด</th>
+<th>ทั้งหมด</th>
 <th>มาเรียน</th>
 <th>ป่วย</th>
 <th>ลา</th>
@@ -127,102 +119,90 @@ tbody tr:hover{
 <div class="summary" id="summary"></div>
 
 <div class="footer">
-<div>ลงชื่อ....................................ครูเวรประจำวัน</div>
-<div>ลงชื่อ............................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
-<div>ลงชื่อ............................รองผู้อำนวยการสถานศึกษา</div>
-<div>ลงชื่อ.............................ผู้อำนวยการสถานศึกษา</div>
+<div>ลงชื่อ....................................ครูเวร</div>
+<div>ลงชื่อ............................ฝ่ายบริหาร</div>
+<div>ลงชื่อ............................รองผอ.</div>
+<div>ลงชื่อ.............................ผอ.</div>
 </div>
 
 </div>
 
-<br>
-<div style="text-align:center">
+<div style="text-align:center;margin:20px;">
 <button onclick="exportPDF()">ดาวน์โหลด PDF</button>
-<button onclick="window.print()">พิมพ์เอกสาร</button>
+<button onclick="window.print()">พิมพ์</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
-const params = new URLSearchParams(location.search)
-const date = params.get("date")
+const date = new URLSearchParams(location.search).get("date")
 
-function formatThaiDate(dateStr){
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('th-TH',{
-    weekday:'long',
-    year:'numeric',
-    month:'long',
-    day:'numeric'
-  })
-}
-
-document.getElementById("dateText").innerText = formatThaiDate(date)
+document.getElementById("dateText").innerText =
+new Date(date).toLocaleDateString('th-TH',{dateStyle:'full'})
 
 async function loadReport(){
 
-const res = await fetch(API + "?mode=report&date=" + date)
+const res = await fetch(API+"?mode=report&date="+date)
 const data = await res.json()
 
 let html=""
-
-let totalAll = 0
-let totalPresent = 0
+let totalAll=0, totalPresent=0
 
 data.forEach(r=>{
 
-const total = Number(r.total) || 0
-const present = Number(r.present) || 0
-const sick = r.sick ? Number(r.sick) : ""
-const leave = r.leave ? Number(r.leave) : ""
-const absent = r.absent ? Number(r.absent) : ""
+let total = Number(r.total)||0
+let present = Number(r.present)||0
 
-totalAll += total
-totalPresent += present
+totalAll+=total
+totalPresent+=present
 
-html += `
+html+=`
 <tr>
 <td>${r.room}</td>
 <td>${total}</td>
 <td>${present}</td>
-<td>${sick}</td>
-<td>${leave}</td>
-<td>${absent}</td>
+<td>${r.sick || ""}</td>
+<td>${r.leave || ""}</td>
+<td>${r.absent || ""}</td>
 </tr>
 `
 })
 
-const percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2) : 0
-
-document.getElementById("summary").innerHTML = `
-นักเรียนทั้งหมด ${totalAll} คน<br>
-มาเรียน ${totalPresent} คน<br>
-คิดเป็น ${percent}%
+html+=`
+<tr class="total">
+<td>รวมทั้งหมด</td>
+<td>${totalAll}</td>
+<td>${totalPresent}</td>
+<td></td><td></td><td></td>
+</tr>
 `
 
-document.getElementById("dataBody").innerHTML = html
+document.getElementById("dataBody").innerHTML=html
+
+let percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2):0
+
+document.getElementById("summary").innerHTML=
+`นักเรียนทั้งหมด ${totalAll} คน<br>
+มาเรียน ${totalPresent} คน<br>
+คิดเป็น ${percent}%`
+
 }
 
 loadReport()
 
 function exportPDF(){
-
-const element = document.getElementById("report")
-
 html2pdf().set({
-  margin:0,
-  filename:'report-'+date+'.pdf',
-  html2canvas:{ scale:2 },
-  jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
+margin:0,
+filename:'report-'+date+'.pdf',
+html2canvas:{scale:2},
+jsPDF:{unit:'mm',format:'a4'}
 })
-.from(element)
+.from(document.getElementById("report"))
 .save()
-
 }
-
 </script>
+
 </body>
 </html>
