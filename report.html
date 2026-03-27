@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>แบบรายงานสถิตินักเรียน</title>
+<title>แบบรายงานสถิตินักเรียนประจำวัน</title>
 
 <style>
 body{
@@ -70,7 +70,7 @@ th{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
-<h2>สถิตินักเรียนประจำวัน</h2>
+<h2>รายงานสถิตินักเรียนประจำวัน</h2>
 <div class="date" id="dateText"></div>
 
 <table>
@@ -137,69 +137,37 @@ document.getElementById("dateText").innerText = formatThaiDate(date)
 
 async function loadReport(){
 
-  const res = await fetch(API + "?mode=report&date=" + date)
-  const data = await res.json()
+const res = await fetch(API + "?mode=report&date=" + date)
+const data = await res.json()
 
-  let html=""
-
-  data.forEach(r=>{
-    html += `
-      <tr>
-        <td>${r.room}</td>
-
-        <td>${r.male || ""}</td>
-        <td>${r.female || ""}</td>
-        <td>${r.total || ""}</td>
-
-        <td>${r.present_m || ""}</td>
-        <td>${r.present_f || ""}</td>
-        <td>${r.present || ""}</td>
-
-        <td></td><td></td><td>${r.sick || ""}</td>
-        <td></td><td></td><td>${r.leave || ""}</td>
-        <td></td><td></td><td>${r.absent || ""}</td>
-      </tr>
-    `
-  })
-
-  // ✅ รวมค่าทั้งหมด
-  let male=0, female=0, present_m=0, present_f=0
-
-  data.forEach(r=>{
-    male += Number(r.male) || 0
-    female += Number(r.female) || 0
-    present_m += Number(r.present_m) || 0
-    present_f += Number(r.present_f) || 0
-  })
-
-  const total = male + female
-  const presentTotal = present_m + present_f
-
-  const percentMale = male ? ((present_m/male)*100).toFixed(2) : 0
-  const percentFemale = female ? ((present_f/female)*100).toFixed(2) : 0
-  const percentAll = total ? ((presentTotal/total)*100).toFixed(2) : 0
-
-  document.getElementById("summary").innerHTML = `
-  <br>
-จำนวนนักเรียนทั้งหมด: ชาย ${male} คน หญิง ${female} คน<br>
-มาเรียนวันนี้: ชาย ${present_m} คน หญิง ${present_f} คน<br>
-ชาย มาเรียนคิดเป็น ${percentMale}%<br>
-หญิง มาเรียนคิดเป็น ${percentFemale}%<br>
-รวมมาเรียนคิดเป็น ${percentAll}%
-`
-
-document.getElementById("dataBody").innerHTML = html
-}
-  
-loadReport()
+let html=""
 
 let male=0, female=0, present_m=0, present_f=0
 
 data.forEach(r=>{
-  male += Number(r.male) || 0
-  female += Number(r.female) || 0
-  present_m += Number(r.present_m) || 0
-  present_f += Number(r.present_f) || 0
+
+male += Number(r.male) || 0
+female += Number(r.female) || 0
+present_m += Number(r.present_m) || 0
+present_f += Number(r.present_f) || 0
+
+html += `
+<tr>
+<td>${r.room}</td>
+
+<td>${r.male || ""}</td>
+<td>${r.female || ""}</td>
+<td>${r.total || ""}</td>
+
+<td>${r.present_m || ""}</td>
+<td>${r.present_f || ""}</td>
+<td>${r.present || ""}</td>
+
+<td></td><td></td><td>${r.sick || ""}</td>
+<td></td><td></td><td>${r.leave || ""}</td>
+<td></td><td></td><td>${r.absent || ""}</td>
+</tr>
+`
 })
 
 const total = male + female
@@ -217,6 +185,11 @@ document.getElementById("summary").innerHTML = `
 หญิง มาเรียนคิดเป็น ${percentFemale}%<br>
 รวมมาเรียนคิดเป็น ${percentAll}%
 `
+
+document.getElementById("dataBody").innerHTML = html
+}
+  
+loadReport()
   
 function exportPDF(){
 
