@@ -881,23 +881,35 @@ location.replace("index.html")
 async function loadTerm(){
 
 try{
-const res = await fetchWithTimeout(API + "?mode=getTerm")
+
+const res = await fetchWithTimeout(API + "?mode=getterm&t=" + Date.now())
 const data = await res.json()
 
 const term = data.term
 const year = data.year
 
-document.getElementById("termDisplay").innerHTML =
-"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+const termEl = document.getElementById("termDisplay")
+
+if(term && year){
+
+termEl.style.display = "block"
+termEl.innerHTML = "ภาคเรียนที่ " + term + " ปีการศึกษา " + year
 
 document.getElementById("termInput").value = term
 document.getElementById("yearInput").value = year
-    
-}catch(e){
-console.error("โหลดเทอมไม่สำเร็จ")
-}
+
+}else{
+
+termEl.style.display = "none"
+
 }
 
+}catch(e){
+
+document.getElementById("termDisplay").style.display = "none"
+
+}
+}
 
 let chartInstance=null
 let controller;
