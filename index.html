@@ -280,7 +280,7 @@ to{transform:rotate(360deg)}
 โรงเรียนเทศบาลบูรพาอุบล
 </div>
 
-<div class="term" id="termDisplay"></div>
+<div class="term" id="termDisplay" style="display:none;"></div>
 <div class="time" id="clock"></div>
 </header>
 
@@ -330,6 +330,8 @@ onclick="window.open('https://jaoboss-jbdesign.github.io/BURAPA.STU/','_blank')"
 <script>
 
 const API = "https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+
+loadTermFromAPI()
   
 function openTeacherDashboard(){
 
@@ -344,17 +346,6 @@ localStorage.setItem("last_active", Date.now())
 location.href="admin-login.html"
 
 }
-  
-function loadTerm(){
-
-let term=localStorage.getItem("term") || "2"
-let year=localStorage.getItem("year") || "2568"
-
-document.getElementById("termDisplay").innerHTML=
-"ภาคเรียนที่ "+term+" ปีการศึกษา "+year
-}
-
-loadTermFromAPI()
 
 async function loadTermFromAPI(){
 
