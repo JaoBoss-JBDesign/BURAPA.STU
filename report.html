@@ -178,26 +178,26 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 const params = new URLSearchParams(location.search)
 const date = params.get("date")
 
+if(!date){
+  document.getElementById("dateText").innerText = "-"
+}else{
+  document.getElementById("dateText").innerHTML = formatThaiDate(date)
+}
+  
 function formatThaiDate(dateStr){
   const d = new Date(dateStr)
 
   const day = d.toLocaleDateString('th-TH',{ weekday:'long' }).replace("วัน","")
-  const date = d.getDate()
+  const dNum = d.getDate()
   const month = d.toLocaleDateString('th-TH',{ month:'long' })
   const year = d.getFullYear() + 543
 
   return `
   วัน&nbsp;&nbsp;&nbsp;&nbsp;${day}
-  &nbsp;&nbsp;&nbsp;&nbsp;ที่&nbsp;&nbsp;&nbsp;&nbsp;${date}
+  &nbsp;&nbsp;&nbsp;&nbsp;ที่&nbsp;&nbsp;&nbsp;&nbsp;${dNum}
   &nbsp;&nbsp;&nbsp;&nbsp;เดือน&nbsp;&nbsp;&nbsp;&nbsp;${month}
   &nbsp;&nbsp;&nbsp;&nbsp;พ.ศ.&nbsp;&nbsp;&nbsp;&nbsp;${year}
   `
-
-  if(!date){
-  document.getElementById("dateText").innerText = "-"
-}else{
-  document.getElementById("dateText").innerHTML = formatThaiDate(date)
-}
 }
 
 async function loadReport(){
@@ -366,7 +366,7 @@ const element = document.getElementById("report")
 html2pdf().set({
   margin:0,
   filename:'report-'+date+'.pdf',
-  html2canvas:{ scale:2 },
+  html2canvas:{ scale:3 },
   jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
 })
 .from(element)
@@ -411,6 +411,19 @@ function getLevel(room){
 }
 
 loadReport()
+  
+html += `
+<tr class="sum-row" style="background:#fca5a5;">
+<td>รวมทั้งหมด</td>
+<td>${totalAll}</td>
+<td>${totalMale}</td>
+<td>${totalFemale}</td>
+<td>${totalPresent}</td>
+<td>${totalPresentMale}</td>
+<td>${totalPresentFemale}</td>
+<td></td><td></td><td></td>
+</tr>
+`
 </script>
 </body>
 </html>
