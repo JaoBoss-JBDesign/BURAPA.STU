@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>รายงานสถิตินักเรียน</title>
+
+<style>
+body{
+  font-family:'Prompt',sans-serif;
+  padding:30px;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:5px;
+}
+
+.date{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  border-collapse: collapse;
+  font-size:14px;
+}
+
+th, td{
+  border:1px solid #000;
+  padding:6px;
+  text-align:center;
+}
+
+th{
+  background:#f3f4f6;
+}
+
+.group{
+  background:#e5e7eb;
+  font-weight:bold;
+}
+
+.total{
+  background:#fde68a;
+  font-weight:bold;
+}
+
+.footer{
+  margin-top:30px;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+}
+
+@media print{
+  button{display:none;}
+  @page{
+    size:A4;
+    margin:15mm;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h2>สถิตินักเรียนประจำวัน</h2>
+<div class="date" id="dateText"></div>
+
+<table>
+<thead>
+<tr>
+<th rowspan="2">ชั้น</th>
+<th colspan="3">นักเรียนทั้งหมด</th>
+<th colspan="3">มาเรียนวันนี้</th>
+<th colspan="3">ป่วย</th>
+<th colspan="3">ลา</th>
+<th colspan="3">ขาด</th>
+</tr>
+
+<tr>
+<th>ช</th><th>ญ</th><th>รวม</th>
+<th>ช</th><th>ญ</th><th>รวม</th>
+<th>ช</th><th>ญ</th><th>รวม</th>
+<th>ช</th><th>ญ</th><th>รวม</th>
+<th>ช</th><th>ญ</th><th>รวม</th>
+</tr>
+</thead>
+
+<tbody id="dataBody"></tbody>
+</table>
+
+<br>
+<button onclick="window.print()">พิมพ์ PDF</button>
+
+<div class="footer">
+<div>ลงชื่อ............................ ครูเวร</div>
+<div>ลงชื่อ............................ ผู้บริหาร</div>
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+
+const params = new URLSearchParams(location.search)
+const date = params.get("date")
+
+document.getElementById("dateText").innerText = "วันที่: " + date
+
+async function loadReport(){
+
+  const res = await fetch(API + "?mode=report&date=" + date)
+  const data = await res.json()
+
+  let html=""
+
+  data.forEach(r=>{
+    html += `
+      <tr>
+        <td>${r.room}</td>
+
+        <td>${r.male}</td>
+        <td>${r.female}</td>
+        <td>${r.total}</td>
+
+        <td>${r.present_m}</td>
+        <td>${r.present_f}</td>
+        <td>${r.present}</td>
+
+        <td>${r.sick_m}</td>
+        <td>${r.sick_f}</td>
+        <td>${r.sick}</td>
+
+        <td>${r.leave_m}</td>
+        <td>${r.leave_f}</td>
+        <td>${r.leave}</td>
+
+        <td>${r.absent_m}</td>
+        <td>${r.absent_f}</td>
+        <td>${r.absent}</td>
+      </tr>
+    `
+  })
+
+  document.getElementById("dataBody").innerHTML = html
+}
+
+loadReport()
+
+</script>
+
+</body>
+</html>
