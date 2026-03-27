@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>รายงานสถิตินักเรียน</title>
+<title>แบบรายงานสถิตินักเรียน</title>
 
 <style>
 body{
@@ -65,6 +65,9 @@ th{
 
 <body>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  
 <h2>สถิตินักเรียนประจำวัน</h2>
 <div class="date" id="dateText"></div>
 
@@ -92,11 +95,13 @@ th{
 </table>
 
 <br>
-<button onclick="window.print()">พิมพ์ PDF</button>
+<button onclick="window.print()">ดาวน์โหลด PDF</button>
 
 <div class="footer">
-<div>ลงชื่อ............................ ครูเวร</div>
-<div>ลงชื่อ............................ ผู้บริหาร</div>
+<div>ลงชื่อ............................ครูเวรประจำวัน</div>
+<div>ลงชื่อ............................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+<div>ลงชื่อ............................รองผู้อำนวยการสถานศึกษา</div>
+<div>ลงชื่อ............................ผู้อำนวยการสถานศึกษา</div>
 </div>
 
 <script>
@@ -148,7 +153,49 @@ async function loadReport(){
 
 loadReport()
 
-</script>
+async function exportPDF(){
 
+  const { jsPDF } = window.jspdf
+  const doc = new jsPDF("portrait")
+
+  const res = await fetch(API + "?mode=report&date=" + date)
+  const data = await res.json()
+
+  const head = [[
+    "ชั้น",
+    "ช(รวม)","ญ(รวม)","รวม",
+    "ช(มา)","ญ(มา)","รวม",
+    "ช(ป่วย)","ญ(ป่วย)","รวม",
+    "ช(ลา)","ญ(ลา)","รวม",
+    "ช(ขาด)","ญ(ขาด)","รวม"
+  ]]
+
+  const body = data.map(r => [
+    r.room,
+    r.male, r.female, r.total,
+    r.present_m, r.present_f, r.present,
+    r.sick_m, r.sick_f, r.sick,
+    r.leave_m, r.leave_f, r.leave,
+    r.absent_m, r.absent_f, r.absent
+  ])
+
+  doc.setFontSize(16)
+  doc.text("รายงานสถิตินักเรียน", 14, 15)
+
+  doc.setFontSize(12)
+  doc.text("วันที่: " + date, 14, 22)
+
+  doc.autoTable({
+    startY: 30,
+    head: head,
+    body: body,
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [220, 38, 38] },
+  })
+
+  doc.save("report-" + date + ".pdf")
+}
+  
+</script>
 </body>
 </html>
