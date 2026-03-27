@@ -47,10 +47,11 @@ th{
 }
 
 .footer{
-  margin-top:30px;
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
+  margin-top:50px;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:40px;
+  text-align:center;
 }
 
 @media print{
@@ -67,6 +68,7 @@ th{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
 <h2>สถิตินักเรียนประจำวัน</h2>
 <div class="date" id="dateText"></div>
@@ -96,7 +98,7 @@ th{
 
 <br>
 <button onclick="exportPDF()">ดาวน์โหลด PDF</button>
-<button onclick="exportPDF()">พิมพ์เอกสารเลย</button>
+<button onclick="window.print()">พิมพ์เอกสารเลย</button>
 
 <div class="footer">
 <div>ลงชื่อ............................ครูเวรประจำวัน</div>
@@ -196,7 +198,21 @@ async function exportPDF(){
 
   doc.save("report-" + date + ".pdf")
 }
-  
+
+function exportPDF(){
+
+  const element = document.body
+
+  html2pdf()
+    .set({
+      margin: 10,
+      filename: 'report-' + date + '.pdf',
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .from(element)
+    .save()
+}
 </script>
 </body>
 </html>
