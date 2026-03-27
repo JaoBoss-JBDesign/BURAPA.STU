@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>แบบรายงานสถิตินักเรียน</title>
+
+<style>
+body{
+  font-family:'Prompt',sans-serif;
+  padding:30px;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:5px;
+}
+
+.date{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  border-collapse: collapse;
+  font-size:14px;
+}
+
+th, td{
+  border:1px solid #000;
+  padding:6px;
+  text-align:center;
+}
+
+th{
+  background:#f3f4f6;
+}
+
+.group{
+  background:#e5e7eb;
+  font-weight:bold;
+}
+
+.total{
+  background:#fde68a;
+  font-weight:bold;
+}
+
+.footer{
+  margin-top:50px;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:40px;
+  text-align:center;
+}
+
+@media print{
+  button{display:none;}
+  @page{
+    size:A4;
+    margin:15mm;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+<h2>สถิตินักเรียนประจำวัน</h2>
+<div class="date" id="dateText"></div>
+
+<table>
+<thead>
+<tr>
+<th rowspan="2">ชั้น</th>
+<th colspan="3">นักเรียนทั้งหมด</th>
+<th colspan="3">มาเรียนวันนี้</th>
+<th colspan="3">ป่วย</th>
+<th colspan="3">ลา</th>
+<th colspan="3">ขาด</th>
+</tr>
+
+<tr>
+<th>ชาย</th><th>หญิง</th><th>รวม</th>
+<th>ชาย</th><th>หญิง</th><th>รวม</th>
+<th>ชาย</th><th>หญิง</th><th>รวม</th>
+<th>ชาย</th><th>หญิง</th><th>รวม</th>
+<th>ชาย</th><th>หญิง</th><th>รวม</th>
+</tr>
+</thead>
+
+<tbody id="dataBody"></tbody>
+</table>
+
+<div id="summary"></div> 
+
+<br>
+<button onclick="exportPDF()">ดาวน์โหลด PDF</button>
+<button onclick="window.print()">พิมพ์เอกสารเลย</button>
+
+<div class="footer">
+<div>ลงชื่อ....................................ครูเวรประจำวัน</div>
+<div>ลงชื่อ............................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+<div>ลงชื่อ............................รองผู้อำนวยการสถานศึกษา</div>
+<div>ลงชื่อ.............................ผู้อำนวยการสถานศึกษา</div>
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
+
+const params = new URLSearchParams(location.search)
+const date = params.get("date")
+
+function formatThaiDate(dateStr){
+
+  const months = [
+    "", "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน",
+    "พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม",
+    "กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ]
+
+  const d = new Date(dateStr)
+
+  const day = d.getDate()
+  const month = months[d.getMonth()+1]
+  const year = d.getFullYear() + 543
+
+  return `${d.toLocaleDateString('th-TH',{weekday:'long'})} ที่ ${day} เดือน ${month} พ.ศ. ${year}`
+}
+
+document.getElementById("dateText").innerText = formatThaiDate(date)
+
+async function loadReport(){
+
+  const res = await fetch(API + "?mode=report&date=" + date)
+  const data = await res.json()
+
+  let html=""
+
+  data.forEach(r=>{
+    html += `
+      <tr>
+        <td>${r.room}</td>
+
+        <td>${r.male || ""}</td>
+        <td>${r.female || ""}</td>
+        <td>${r.total || ""}</td>
+
+        <td>${r.present_m || ""}</td>
+        <td>${r.present_f || ""}</td>
+        <td>${r.present || ""}</td>
+
+        <td></td><td></td><td>${r.sick || ""}</td>
+        <td></td><td></td><td>${r.leave || ""}</td>
+        <td></td><td></td><td>${r.absent || ""}</td>
+      </tr>
+    `
+  })
+
+  // ✅ รวมค่าทั้งหมด
+  let male=0, female=0, present_m=0, present_f=0
+
+  data.forEach(r=>{
+    male += Number(r.male) || 0
+    female += Number(r.female) || 0
+    present_m += Number(r.present_m) || 0
+    present_f += Number(r.present_f) || 0
+  })
+
+  const total = male + female
+  const presentTotal = present_m + present_f
+
+  const percentMale = male ? ((present_m/male)*100).toFixed(2) : 0
+  const percentFemale = female ? ((present_f/female)*100).toFixed(2) : 0
+  const percentAll = total ? ((presentTotal/total)*100).toFixed(2) : 0
+
+  document.getElementById("summary").innerHTML = `
+  <br>
+จำนวนนักเรียนทั้งหมด: ชาย ${male} คน หญิง ${female} คน<br>
+มาเรียนวันนี้: ชาย ${present_m} คน หญิง ${present_f} คน<br>
+ชาย มาเรียนคิดเป็น ${percentMale}%<br>
+หญิง มาเรียนคิดเป็น ${percentFemale}%<br>
+รวมมาเรียนคิดเป็น ${percentAll}%
+`
+
+document.getElementById("dataBody").innerHTML = html
+}
+  
+loadReport()
+
+let male=0, female=0, present_m=0, present_f=0
+
+data.forEach(r=>{
+  male += Number(r.male) || 0
+  female += Number(r.female) || 0
+  present_m += Number(r.present_m) || 0
+  present_f += Number(r.present_f) || 0
+})
+
+const total = male + female
+const presentTotal = present_m + present_f
+
+const percentMale = male ? ((present_m/male)*100).toFixed(2) : 0
+const percentFemale = female ? ((present_f/female)*100).toFixed(2) : 0
+const percentAll = total ? ((presentTotal/total)*100).toFixed(2) : 0
+
+document.getElementById("summary").innerHTML = `
+<br>
+จำนวนนักเรียนทั้งหมด: ชาย ${male} คน หญิง ${female} คน<br>
+มาเรียนวันนี้: ชาย ${present_m} คน หญิง ${present_f} คน<br>
+ชาย มาเรียนคิดเป็น ${percentMale}%<br>
+หญิง มาเรียนคิดเป็น ${percentFemale}%<br>
+รวมมาเรียนคิดเป็น ${percentAll}%
+`
+  
+function exportPDF(){
+
+  const element = document.body
+
+  html2pdf()
+    .set({
+      margin: 10,
+      filename: 'report-' + date + '.pdf',
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .from(element)
+    .save()
+}
+</script>
+</body>
+</html>
