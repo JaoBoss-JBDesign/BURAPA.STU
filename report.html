@@ -96,6 +96,8 @@ th{
 <tbody id="dataBody"></tbody>
 </table>
 
+<div id="summary"></div> 
+
 <br>
 <button onclick="exportPDF()">ดาวน์โหลด PDF</button>
 <button onclick="window.print()">พิมพ์เอกสารเลย</button>
@@ -114,7 +116,24 @@ const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHH
 const params = new URLSearchParams(location.search)
 const date = params.get("date")
 
-document.getElementById("dateText").innerText = "วันที่: " + date
+function formatThaiDate(dateStr){
+
+  const months = [
+    "", "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน",
+    "พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม",
+    "กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ]
+
+  const d = new Date(dateStr)
+
+  const day = d.getDate()
+  const month = months[d.getMonth()+1]
+  const year = d.getFullYear() + 543
+
+  return `วัน${d.toLocaleDateString('th-TH',{weekday:'long'})} ที่ ${day} เดือน ${month} พ.ศ. ${year}`
+}
+
+document.getElementById("dateText").innerText = formatThaiDate(date)
 
 async function loadReport(){
 
@@ -128,77 +147,72 @@ async function loadReport(){
       <tr>
         <td>${r.room}</td>
 
-        <td>${r.male}</td>
-        <td>${r.female}</td>
-        <td>${r.total}</td>
+        <td>${r.male || ""}</td>
+        <td>${r.female || ""}</td>
+        <td>${r.total || ""}</td>
 
-        <td>${r.present_m}</td>
-        <td>${r.present_f}</td>
-        <td>${r.present}</td>
+        <td>${r.present_m || ""}</td>
+        <td>${r.present_f || ""}</td>
+        <td>${r.present || ""}</td>
 
-        <td>${r.sick_m}</td>
-        <td>${r.sick_f}</td>
-        <td>${r.sick}</td>
+        <td>${r.sick_m || ""}</td>
+        <td>${r.sick_f || ""}</td>
+        <td>${r.sick || ""}</td>
 
-        <td>${r.leave_m}</td>
-        <td>${r.leave_f}</td>
-        <td>${r.leave}</td>
+        <td>${r.leave_m || ""}</td>
+        <td>${r.leave_f || ""}</td>
+        <td>${r.leave || ""}</td>
 
-        <td>${r.absent_m}</td>
-        <td>${r.absent_f}</td>
-        <td>${r.absent}</td>
+        <td>${r.absent_m || ""}</td>
+        <td>${r.absent_f || ""}</td>
+        <td>${r.absent || ""}</td>
       </tr>
     `
   })
+
+let totalAll = 0
+
+data.forEach(r=>{
+  totalAll += Number(r.total) || 0
+})
+
+html += `
+<tr class="total">
+  <td>รวม</td>
+  <td colspan="15">${totalAll}</td>
+</tr>
+`
 
   document.getElementById("dataBody").innerHTML = html
 }
 
 loadReport()
 
-async function exportPDF(){
+let male=0, female=0, present_m=0, present_f=0
 
-  const { jsPDF } = window.jspdf
-  const doc = new jsPDF("portrait")
+data.forEach(r=>{
+  male += Number(r.male) || 0
+  female += Number(r.female) || 0
+  present_m += Number(r.present_m) || 0
+  present_f += Number(r.present_f) || 0
+})
 
-  const res = await fetch(API + "?mode=report&date=" + date)
-  const data = await res.json()
+const total = male + female
+const presentTotal = present_m + present_f
 
-  const head = [[
-    "ชั้น",
-    "ช(รวม)","ญ(รวม)","รวม",
-    "ช(มา)","ญ(มา)","รวม",
-    "ช(ป่วย)","ญ(ป่วย)","รวม",
-    "ช(ลา)","ญ(ลา)","รวม",
-    "ช(ขาด)","ญ(ขาด)","รวม"
-  ]]
+const percentMale = male ? ((present_m/male)*100).toFixed(2) : 0
+const percentFemale = female ? ((present_f/female)*100).toFixed(2) : 0
+const percentAll = total ? ((presentTotal/total)*100).toFixed(2) : 0
 
-  const body = data.map(r => [
-    r.room,
-    r.male, r.female, r.total,
-    r.present_m, r.present_f, r.present,
-    r.sick_m, r.sick_f, r.sick,
-    r.leave_m, r.leave_f, r.leave,
-    r.absent_m, r.absent_f, r.absent
-  ])
-
-  doc.setFontSize(16)
-  doc.text("รายงานสถิตินักเรียน", 14, 15)
-
-  doc.setFontSize(12)
-  doc.text("วันที่: " + date, 14, 22)
-
-  doc.autoTable({
-    startY: 30,
-    head: head,
-    body: body,
-    styles: { fontSize: 8 },
-    headStyles: { fillColor: [220, 38, 38] },
-  })
-
-  doc.save("report-" + date + ".pdf")
-}
-
+document.getElementById("summary").innerHTML = `
+<br>
+จำนวนนักเรียนทั้งหมด: ช ${male} คน ญ ${female} คน<br>
+มาเรียนวันนี้: ช ${present_m} คน ญ ${present_f} คน<br>
+ช มาเรียนคิดเป็น ${percentMale}%<br>
+ญ มาเรียนคิดเป็น ${percentFemale}%<br>
+รวมมาเรียนคิดเป็น ${percentAll}%
+`
+  
 function exportPDF(){
 
   const element = document.body
