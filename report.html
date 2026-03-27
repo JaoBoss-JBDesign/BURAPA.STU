@@ -130,7 +130,7 @@ function formatThaiDate(dateStr){
   const month = months[d.getMonth()+1]
   const year = d.getFullYear() + 543
 
-  return `วัน${d.toLocaleDateString('th-TH',{weekday:'long'})} ที่ ${day} เดือน ${month} พ.ศ. ${year}`
+  return `${d.toLocaleDateString('th-TH',{weekday:'long'})} ที่ ${day} เดือน ${month} พ.ศ. ${year}`
 }
 
 document.getElementById("dateText").innerText = formatThaiDate(date)
