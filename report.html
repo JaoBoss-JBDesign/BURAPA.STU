@@ -2,27 +2,42 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>แบบรายงานสถิตินักเรียนประจำวัน</title>
+<title>รายงานสถิตินักเรียน</title>
 
 <style>
 body{
   font-family:'Prompt',sans-serif;
-  padding:30px;
+  background:#f9fafb;
+  margin:0;
+  padding:0;
 }
 
+/* 🔥 container สำคัญมาก แก้ปัญหา PDF ลอย */
+.report{
+  width:210mm;
+  min-height:297mm;
+  margin:auto;
+  padding:20mm 15mm;
+  background:white;
+}
+
+/* header */
 h2{
   text-align:center;
-  margin-bottom:5px;
+  margin-bottom:4px;
 }
 
 .date{
   text-align:center;
   margin-bottom:20px;
+  font-size:14px;
+  color:#555;
 }
 
+/* table */
 table{
   width:100%;
-  border-collapse: collapse;
+  border-collapse:collapse;
   font-size:14px;
 }
 
@@ -34,28 +49,51 @@ th, td{
 
 th{
   background:#f3f4f6;
+  font-weight:600;
 }
 
-.group{
-  background:#e5e7eb;
-  font-weight:bold;
+tbody tr:hover{
+  background:#f9fafb;
 }
 
+/* total row */
 .total{
   background:#fde68a;
   font-weight:bold;
 }
 
+/* summary */
+.summary{
+  margin-top:16px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* footer */
 .footer{
-  margin-top:50px;
+  margin-top:40px;
   display:grid;
   grid-template-columns: repeat(2, 1fr);
   gap:40px;
   text-align:center;
+  font-size:14px;
 }
 
+/* print */
 @media print{
-  button{display:none;}
+  body{
+    background:white;
+  }
+
+  .report{
+    box-shadow:none;
+    margin:0;
+  }
+
+  button{
+    display:none;
+  }
+
   @page{
     size:A4;
     margin:15mm;
@@ -66,41 +104,27 @@ th{
 
 <body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  
+<div class="report" id="report">
+
 <h2>รายงานสถิตินักเรียนประจำวัน</h2>
 <div class="date" id="dateText"></div>
 
 <table>
 <thead>
 <tr>
-<th rowspan="2">ชั้น</th>
-<th colspan="3">นักเรียนทั้งหมด</th>
-<th colspan="3">มาเรียนวันนี้</th>
-<th colspan="3">ป่วย</th>
-<th colspan="3">ลา</th>
-<th colspan="3">ขาด</th>
-</tr>
-
-<tr>
-<th>ชาย</th><th>หญิง</th><th>รวม</th>
-<th>ชาย</th><th>หญิง</th><th>รวม</th>
-<th>ชาย</th><th>หญิง</th><th>รวม</th>
-<th>ชาย</th><th>หญิง</th><th>รวม</th>
-<th>ชาย</th><th>หญิง</th><th>รวม</th>
+<th>ชั้น</th>
+<th>นักเรียนทั้งหมด</th>
+<th>มาเรียน</th>
+<th>ป่วย</th>
+<th>ลา</th>
+<th>ขาด</th>
 </tr>
 </thead>
 
 <tbody id="dataBody"></tbody>
 </table>
 
-<div id="summary"></div> 
-
-<br>
-<button onclick="exportPDF()">ดาวน์โหลด PDF</button>
-<button onclick="window.print()">พิมพ์เอกสารเลย</button>
+<div class="summary" id="summary"></div>
 
 <div class="footer">
 <div>ลงชื่อ....................................ครูเวรประจำวัน</div>
@@ -108,6 +132,16 @@ th{
 <div>ลงชื่อ............................รองผู้อำนวยการสถานศึกษา</div>
 <div>ลงชื่อ.............................ผู้อำนวยการสถานศึกษา</div>
 </div>
+
+</div>
+
+<br>
+<div style="text-align:center">
+<button onclick="exportPDF()">ดาวน์โหลด PDF</button>
+<button onclick="window.print()">พิมพ์เอกสาร</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 
@@ -117,20 +151,13 @@ const params = new URLSearchParams(location.search)
 const date = params.get("date")
 
 function formatThaiDate(dateStr){
-
-  const months = [
-    "", "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน",
-    "พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม",
-    "กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
-  ]
-
   const d = new Date(dateStr)
-
-  const day = d.getDate()
-  const month = months[d.getMonth()+1]
-  const year = d.getFullYear() + 543
-
-  return `${d.toLocaleDateString('th-TH',{weekday:'long'})} ที่ ${day} เดือน ${month} พ.ศ. ${year}`
+  return d.toLocaleDateString('th-TH',{
+    weekday:'long',
+    year:'numeric',
+    month:'long',
+    day:'numeric'
+  })
 }
 
 document.getElementById("dateText").innerText = formatThaiDate(date)
@@ -142,69 +169,60 @@ const data = await res.json()
 
 let html=""
 
-let male=0, female=0, present_m=0, present_f=0
+let totalAll = 0
+let totalPresent = 0
 
 data.forEach(r=>{
 
-male += Number(r.male) || 0
-female += Number(r.female) || 0
-present_m += Number(r.present_m) || 0
-present_f += Number(r.present_f) || 0
+const total = Number(r.total) || 0
+const present = Number(r.present) || 0
+const sick = r.sick ? Number(r.sick) : ""
+const leave = r.leave ? Number(r.leave) : ""
+const absent = r.absent ? Number(r.absent) : ""
+
+totalAll += total
+totalPresent += present
 
 html += `
 <tr>
 <td>${r.room}</td>
-
-<td>${r.male || ""}</td>
-<td>${r.female || ""}</td>
-<td>${r.total || ""}</td>
-
-<td>${r.present_m || ""}</td>
-<td>${r.present_f || ""}</td>
-<td>${r.present || ""}</td>
-
-<td></td><td></td><td>${r.sick || ""}</td>
-<td></td><td></td><td>${r.leave || ""}</td>
-<td></td><td></td><td>${r.absent || ""}</td>
+<td>${total}</td>
+<td>${present}</td>
+<td>${sick}</td>
+<td>${leave}</td>
+<td>${absent}</td>
 </tr>
 `
 })
 
-const total = male + female
-const presentTotal = present_m + present_f
-
-const percentMale = male ? ((present_m/male)*100).toFixed(2) : 0
-const percentFemale = female ? ((present_f/female)*100).toFixed(2) : 0
-const percentAll = total ? ((presentTotal/total)*100).toFixed(2) : 0
+const percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2) : 0
 
 document.getElementById("summary").innerHTML = `
-<br>
-จำนวนนักเรียนทั้งหมด: ชาย ${male} คน หญิง ${female} คน<br>
-มาเรียนวันนี้: ชาย ${present_m} คน หญิง ${present_f} คน<br>
-ชาย มาเรียนคิดเป็น ${percentMale}%<br>
-หญิง มาเรียนคิดเป็น ${percentFemale}%<br>
-รวมมาเรียนคิดเป็น ${percentAll}%
+นักเรียนทั้งหมด ${totalAll} คน<br>
+มาเรียน ${totalPresent} คน<br>
+คิดเป็น ${percent}%
 `
 
 document.getElementById("dataBody").innerHTML = html
 }
-  
+
 loadReport()
-  
+
 function exportPDF(){
 
-  const element = document.body
+const element = document.getElementById("report")
 
-  html2pdf()
-    .set({
-      margin: 10,
-      filename: 'report-' + date + '.pdf',
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    })
-    .from(element)
-    .save()
+html2pdf().set({
+  margin:0,
+  filename:'report-'+date+'.pdf',
+  html2canvas:{ scale:2 },
+  jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
+})
+.from(element)
+.save()
+
 }
+
 </script>
 </body>
 </html>
