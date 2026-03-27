@@ -825,7 +825,7 @@ font-weight:600;
 </div>
 
 <div class="card">
-<h3>พิมพ์แบบรายงานสถิติ</h3>
+<h3>Export แบบรายงานสถิติ</h3>
 
 <div class="field">
 <label>เลือกวันที่ต้องการรายงาน</label>
@@ -833,7 +833,7 @@ font-weight:600;
 </div>
 
 <button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
-พิมพ์เอกสาร PDF
+ส่งออกเอกสาร (PDF)
 </button>
 </div>
 </div>
@@ -1800,12 +1800,12 @@ function printReport(){
 const date = document.getElementById("reportDate").value
 
 if(!date){
-alert("กรุณาเลือกวันที่ก่อน")
+alert("กรุณาเลือกวันที่ต้องการทำแบบรายงาน")
 return
 }
 
 window.open(
-`report.html?date=${date}`,
+API + "?mode=report&date=" + date,
 "_blank"
 )
 }
