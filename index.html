@@ -358,6 +358,8 @@ loadTermFromAPI()
 
 async function loadTermFromAPI(){
 
+let el = document.getElementById("termDisplay")
+
 try{
 
 const res = await fetch(API + "?mode=getterm&t=" + Date.now())
@@ -365,14 +367,15 @@ const data = await res.json()
 
 if(data.term && data.year){
 
-document.getElementById("termDisplay").innerHTML =
+el.innerHTML =
 "ภาคเรียนที่ " + data.term + " ปีการศึกษา " + data.year
 
-document.getElementById("termFooter").innerHTML =
-data.term + "/" + data.year
+el.style.display = "block"
 
 localStorage.setItem("term", data.term)
 localStorage.setItem("year", data.year)
+
+return
 
 }else{
 throw new Error("no data")
@@ -380,12 +383,28 @@ throw new Error("no data")
 
 }catch(e){
 
-console.error("ระบบไม่ได้ซิงค์ข้อมูลภาคเรียน")
-loadTerm()
+console.warn("API ล้ม → ใช้ข้อมูลสำรอง")
+
+let term = localStorage.getItem("term")
+let year = localStorage.getItem("year")
+
+if(term && year){
+
+el.innerHTML =
+"ภาคเรียนที่ " + term + " ปีการศึกษา " + year
+
+el.style.display = "block"
+
+}else{
+
+el.style.display = "none"
 
 }
 
 }
+
+}
+  
 function updateClock(){
 
 let now=new Date()
