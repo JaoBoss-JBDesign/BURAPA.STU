@@ -257,8 +257,8 @@ const male = Number(r.male)||0
 const female = Number(r.female)||0
 
 const present = Number(r.present)||0
-const presentMale = Number(r.presentMale)||0
-const presentFemale = Number(r.presentFemale)||0
+const presentMale = Number(r.present_m)||0
+const presentFemale = Number(r.present_f)||0
 
 const sick = r.sick||""
 const leave = r.leave||""
@@ -338,6 +338,8 @@ levels[level].rows.sort((a,b)=>{
 })
 
 levels[level].rows.forEach(r=>{
+const roomCount = levels[level].rows.length
+  
 html += `
 <tr>
 <td>${r.room}</td>
@@ -452,10 +454,18 @@ const malePercent = totalMale ? ((totalPresentMale/totalMale)*100).toFixed(2) : 
 const femalePercent = totalFemale ? ((totalPresentFemale/totalFemale)*100).toFixed(2) : 0
 
 document.getElementById("summary").innerHTML = `
-<b>จำนวนนักเรียนทั้งหมด</b> ${totalAll} คน (ชาย ${totalMale} คน / หญิง ${totalFemale} คน)<br>
-<b>มาเรียนวันนี้</b> ${totalPresent} คน (ชาย ${totalPresentMale} คน / หญิง ${totalPresentFemale} คน)<br>
-<b>ชายมาเรียน</b> ${malePercent}% &nbsp;&nbsp; <b>หญิงมาเรียน</b> ${femalePercent}%<br>
-<b>อัตราการมาเรียนรวม</b> ${percent}%
+จำนวนนักเรียนทั้งหมด&nbsp;&nbsp;&nbsp;${totalAll}&nbsp;&nbsp;&nbsp;คน
+&nbsp;&nbsp;&nbsp;&nbsp;ชาย&nbsp;&nbsp;&nbsp;${totalMale}&nbsp;&nbsp;&nbsp;คน
+&nbsp;&nbsp;&nbsp;&nbsp;หญิง&nbsp;&nbsp;&nbsp;${totalFemale}&nbsp;&nbsp;&nbsp;คน
+<br>
+จำนวนนักเรียนมาเรียนวันนี้&nbsp;&nbsp;&nbsp;${totalPresent}&nbsp;&nbsp;&nbsp;คน
+&nbsp;&nbsp;&nbsp;&nbsp;ชาย&nbsp;&nbsp;&nbsp;${totalPresentMale}&nbsp;&nbsp;&nbsp;คน
+&nbsp;&nbsp;&nbsp;&nbsp;หญิง&nbsp;&nbsp;&nbsp;${totalPresentFemale}&nbsp;&nbsp;&nbsp;คน
+<br>
+ชาย&nbsp;&nbsp;คิดเป็นร้อยละ&nbsp;&nbsp;${malePercent}
+&nbsp;&nbsp;&nbsp;&nbsp;หญิง&nbsp;&nbsp;คิดเป็นร้อยละ&nbsp;&nbsp;${femalePercent}
+<br>
+นักเรียนมาเรียนวันนี้&nbsp;&nbsp;คิดเป็นร้อยละ&nbsp;&nbsp;${percent}
 `
 }
   
