@@ -15,7 +15,7 @@ body{
 }
 
 .report{
-  width:100%;
+  width:190mm;
   max-width:190mm;
   margin:auto;
   padding:10mm;
@@ -28,6 +28,10 @@ body{
   page-break-after: auto;
 }
 
+html, body{
+  height:auto;
+}
+  
 /* header */
 h2{
   text-align:center;
@@ -63,7 +67,9 @@ th, td{
 }
 
 td:first-child{
-  white-space:normal;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
   
 th{
@@ -215,9 +221,15 @@ tr:last-child{
 }
   
 @media print{
+  *{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
   body{
     background:white;
     -webkit-font-smoothing: antialiased;
+    zoom: 100%;
   }
   
   .report{
@@ -226,9 +238,9 @@ tr:last-child{
     padding-top:10mm;
   }
 
-  button{
-    display:none !important;
-  }
+.actions, button{
+  display:none !important;
+}
 
   @page{
     size:A4;
@@ -295,16 +307,25 @@ tr:last-child{
 </div>
 
 <div class="actions">
-  <button class="btn primary" onclick="exportPDF()">ดาวน์โหลด PDF</button>
+  <button class="btn primary" onclick="downloadPDF()">ดาวน์โหลด PDF</button>
   <button class="btn secondary" onclick="window.print()">พิมพ์เอกสาร</button>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
+function downloadPDF(){
+  const oldTitle = document.title
+  document.title = "report-" + date
+
+  window.print()
+
+  setTimeout(()=>{
+    document.title = oldTitle
+  },1000)
+}
+  
 const params = new URLSearchParams(location.search)
 const date = params.get("date") || new Date().toISOString().split("T")[0]
 
@@ -649,26 +670,6 @@ document.getElementById("summary").innerHTML = `
 <br>
 นักเรียนมาเรียนวันนี้&nbsp;&nbsp;คิดเป็นร้อยละ&nbsp;&nbsp;${percent}
 `
-}
-  
-function exportPDF(){
-
-  const element = document.getElementById("report")
-
-  html2pdf().set({
-    margin: 0,
-    filename:'report-'+date+'.pdf',
-    image:{ type:'jpeg', quality:1 },
-    html2canvas:{ 
-      scale:2,
-      useCORS:true,
-      scrollY:0
-    },
-    jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' },
-    pagebreak: { mode: ['css','legacy'] }
-  })
-  .from(element)
-  .save()
 }
 
 function getLevel(room){
