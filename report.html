@@ -44,7 +44,6 @@ table{
   border-collapse:collapse;
   font-size:13.5px;
   page-break-inside:auto;
-  page-break-after: auto;
 }
 
 th, td{
@@ -60,10 +59,7 @@ th{
 }
 
 tr{
-  break-inside: avoid;
-  page-break-inside: avoid;
-  page-break-after:auto;
-
+  page-break-inside: auto;
 }
 
 tbody{
@@ -144,7 +140,6 @@ tr:last-child{
 .level-group{
   break-inside: avoid;
   page-break-inside: avoid;
-  display: table-row-group;
 }
   
 /* footer */
@@ -654,20 +649,23 @@ document.getElementById("summary").innerHTML = `
 }
   
 function exportPDF(){
+  setTimeout(()=>{
+    html2pdf().set({...}).from(element).save()
+  }, 500)
+}
 
 const element = document.getElementById("report")
 
 html2pdf().set({
-  margin: [10,10,10,10],
+  margin: 10,
   filename:'report-'+date+'.pdf',
-  image:{ type:'jpeg', quality:1 },
+  image:{ type:'jpeg', quality:0.98 },
   html2canvas:{ 
-    scale:2,
-    useCORS:true,
-    letterRendering:true
+    scale:1.5,
+    useCORS:true
   },
   jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' },
-  pagebreak: { mode: ['css','legacy'] }
+  pagebreak: { mode: ['css'] }
 })
 .from(element)
 .save()
