@@ -44,6 +44,7 @@ table{
   border-collapse:collapse;
   font-size:13.5px;
   page-break-inside:auto;
+  table-layout: fixed;
 }
 
 th, td{
@@ -128,17 +129,11 @@ th:first-child, td:first-child{
   font-weight:bold;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  page-break-inside: avoid;
-  page-break-after: avoid;
+  page-break-inside: auto;
 }
 
 tr:last-child{
   page-break-after: avoid;
-  page-break-inside: avoid;
-}
-  
-.level-group{
-  break-inside: avoid;
   page-break-inside: avoid;
 }
   
