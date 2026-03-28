@@ -37,20 +37,18 @@ h2{
   letter-spacing:1px;
 }
 
-/* table */
 table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
   page-break-inside:auto;
-  table-layout:fixed;
 }
 
 th, td{
   border:1px solid #000;
-  padding:10px 6px;
+  padding:8px 4px;
   text-align:center;
-  word-wrap:break-word;
+  white-space:nowrap;
 }
 
 th{
@@ -67,6 +65,10 @@ thead{
   display: table-header-group;
 }  
 
+th:first-child, td:first-child{
+  width:90px;
+}
+  
 /* total row */
 .total{
   background:#fde68a;
