@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>รายงานสถิตินักเรียน</title>
+<title>แบบรายงานสถิตินักเรียน BURAPA STUDENT SYSTEM</title>
 
 <style>
 body{
@@ -10,8 +10,6 @@ body{
   background:#f9fafb;
   margin:0;
   padding:0;
-  display:flex;
-  justify-content:center;
 }
 
 .report{
@@ -21,6 +19,7 @@ body{
   padding:10mm;
   background:white;
   box-sizing:border-box;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
 /* header */
@@ -113,13 +112,25 @@ th:first-child, td:first-child{
   
 /* footer */
 .footer{
-  margin-top:40px;
+  margin-top:50px;
   display:grid;
   grid-template-columns: repeat(2, 1fr);
-  gap:40px;
+  gap:50px 60px;
   text-align:center;
   font-size:14px;
-  page-break-inside: avoid;
+}
+
+.sign{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.line{
+  width:80%;
+  border-bottom:1px solid #000;
+  height:20px;
 }
 
 .footer div{
@@ -127,7 +138,7 @@ th:first-child, td:first-child{
 }
 
 .actions{
-  margin:30px 0 50px;
+  margin:30px auto 60px;
   display:flex;
   justify-content:center;
   gap:15px;
@@ -215,10 +226,25 @@ th:first-child, td:first-child{
 <div class="summary" id="summary"></div>
 
 <div class="footer">
-  <div>ลงชื่อ...........................................ครูเวรประจำวัน</div>
-  <div>ลงชื่อ...................................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
-  <div>ลงชื่อ.................................รองผู้อำนวยการสถานศึกษา</div>
-  <div>ลงชื่อ....................................ผู้อำนวยการสถานศึกษา</div>
+  <div class="sign">
+    <div class="line"></div>
+    <div>ครูเวรประจำวัน</div>
+  </div>
+
+  <div class="sign">
+    <div class="line"></div>
+    <div>ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+  </div>
+
+  <div class="sign">
+    <div class="line"></div>
+    <div>รองผู้อำนวยการสถานศึกษา</div>
+  </div>
+
+  <div class="sign">
+    <div class="line"></div>
+    <div>ผู้อำนวยการสถานศึกษา</div>
+  </div>
 </div>
 
 </div>
@@ -358,9 +384,9 @@ totalAbsent += Number(absent)||0
 })
 
 let groupSum = {
-  "ป.": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0},
-  "ม.": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0},
-  "ปวช": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0}
+  "ป.": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0, sick:0, leave:0, absent:0},
+  "ม.": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0, sick:0, leave:0, absent:0},
+  "ปวช": {male:0,female:0,total:0,presentMale:0,presentFemale:0,present:0, sick:0, leave:0, absent:0}
 }
   
 // 🔥 เรียงลำดับ
@@ -382,6 +408,10 @@ if(groupKey && levels[level]){
   groupSum[groupKey].presentMale += levels[level].presentMale
   groupSum[groupKey].presentFemale += levels[level].presentFemale
   groupSum[groupKey].present += levels[level].present
+
+  groupSum[groupKey].sick += levels[level].sick
+groupSum[groupKey].leave += levels[level].leave
+groupSum[groupKey].absent += levels[level].absent
 }
   
 if(!levels[level]) return
@@ -460,7 +490,9 @@ if(level === "ป.6"){
   <td>${groupSum["ป."].presentMale}</td>
   <td>${groupSum["ป."].presentFemale}</td>
   <td>${groupSum["ป."].present}</td>
-  <td></td><td></td><td></td>
+  <td>${groupSum["ป."].sick}</td>
+  <td>${groupSum["ป."].leave}</td>
+  <td>${groupSum["ป."].absent}</td>
   </tr>
   `
 }
@@ -475,7 +507,9 @@ if(level === "ม.6"){
   <td>${groupSum["ม."].presentMale}</td>
   <td>${groupSum["ม."].presentFemale}</td>
   <td>${groupSum["ม."].present}</td>
-  <td></td><td></td><td></td>
+  <td>${groupSum["ม."].sick}</td>
+  <td>${groupSum["ม."].leave}</td>
+  <td>${groupSum["ม."].absent}</td>
   </tr>
   `
 }
@@ -490,7 +524,9 @@ if(level === "ปวช.3"){
   <td>${groupSum["ปวช"].presentMale}</td>
   <td>${groupSum["ปวช"].presentFemale}</td>
   <td>${groupSum["ปวช"].present}</td>
-  <td></td><td></td><td></td>
+  <td>${groupSum["ปวช"].sick}</td>
+  <td>${groupSum["ปวช"].leave}</td>
+  <td>${groupSum["ปวช"].absent}</td>
   </tr>
   `
 }
