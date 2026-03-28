@@ -12,12 +12,11 @@ body{
   padding:0;
 }
 
-/* 🔥 container สำคัญมาก แก้ปัญหา PDF ลอย */
 .report{
-  width:210mm;
-  min-height:297mm;
+  width:100%;
+  max-width:210mm;
   margin:auto;
-  padding:20mm 15mm;
+  padding:15mm;
   background:white;
 }
 
@@ -40,6 +39,7 @@ table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
+  page-break-inside:auto;
 }
 
 th, td{
@@ -55,6 +55,7 @@ th{
 
 tr{
   page-break-inside: avoid;
+  page-break-after:auto;
 }
 
 thead{
@@ -102,10 +103,6 @@ thead{
   font-weight:bold;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-}
-
-.section-break{
-  page-break-before: always;
 }
   
 /* footer */
@@ -395,10 +392,6 @@ if(level.startsWith("ป.")){
 }else if(level.startsWith("ม.") || level.startsWith("ปวช")){
   colorClass = "secondary"
 }
-
-if(level === "ม.4"){
-  html += `<tr class="section-break"></tr>`
-}
   
 html += `
 <tr class="sum-row ${colorClass}">
@@ -511,11 +504,10 @@ function exportPDF(){
 const element = document.getElementById("report")
 
 html2pdf().set({
-  margin:0,
+  margin:10,
   filename:'report-'+date+'.pdf',
-  html2canvas:{ scale:1.5 },
-  jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' },
-  pagebreak: { mode: ['css', 'legacy'] }
+  html2canvas:{ scale:2 },
+  jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
 })
 .from(element)
 .save()
