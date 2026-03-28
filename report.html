@@ -136,16 +136,20 @@ tbody tr:hover{
 <table>
 <thead>
 <tr>
-<th>ชั้น</th>
-<th>นักเรียนทั้งหมด</th>
-<th>ชาย</th>
-<th>หญิง</th>
-<th>มาเรียน</th>
-<th>ชาย</th>
-<th>หญิง</th>
-<th>ป่วย</th>
-<th>ลา</th>
-<th>ขาด</th>
+  <th rowspan="2">ชั้น</th>
+  <th colspan="3">นักเรียนทั้งหมด</th>
+  <th colspan="3">มาเรียนวันนี้</th>
+  <th rowspan="2">ป่วย</th>
+  <th rowspan="2">ลา</th>
+  <th rowspan="2">ขาด</th>
+</tr>
+<tr>
+  <th>ชาย</th>
+  <th>หญิง</th>
+  <th>รวม</th>
+  <th>ชาย</th>
+  <th>หญิง</th>
+  <th>รวม</th>
 </tr>
 </thead>
 
@@ -308,17 +312,19 @@ levels[level].rows.sort((a,b)=>{
   return (Number(numA[1]||0)) - (Number(numB[1]||0))
 })
 
-// แถวห้อง
 levels[level].rows.forEach(r=>{
 html += `
 <tr>
 <td>${r.room}</td>
-<td>${r.total}</td>
+
 <td>${r.male}</td>
 <td>${r.female}</td>
-<td>${r.present}</td>
+<td>${r.total}</td>
+
 <td>${r.presentMale}</td>
 <td>${r.presentFemale}</td>
+<td>${r.present}</td>
+
 <td>${r.sick}</td>
 <td>${r.leave}</td>
 <td>${r.absent}</td>
@@ -326,16 +332,18 @@ html += `
 `
 })
 
-// 🔥 แถวรวม
 html += `
-<tr class="sum-row ${level.startsWith('ป.') ? 'primary' : 'secondary'}">
+<tr class="sum-row total-blue">
 <td>รวม ${level}</td>
-<td>${levels[level].total}</td>
+
 <td>${levels[level].male}</td>
 <td>${levels[level].female}</td>
-<td>${levels[level].present}</td>
+<td>${levels[level].total}</td>
+
 <td>${levels[level].presentMale}</td>
 <td>${levels[level].presentFemale}</td>
+<td>${levels[level].present}</td>
+
 <td></td><td></td><td></td>
 </tr>
 `
