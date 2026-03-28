@@ -85,11 +85,12 @@ tbody tr:hover{
   
 /* summary */
 .summary{
-  margin-top:16px;
+  margin-top:30px;
   font-size:14px;
-  line-height:1.6;
-  padding-top:10px;
+  line-height:2;
+  padding-top:15px;
   border-top:2px solid #000;
+  text-align:center;
 }
 
 .sum-row{
@@ -163,10 +164,10 @@ tbody tr:hover{
 <div class="summary" id="summary"></div>
 
 <div class="footer">
-<div>ลงชื่อ....................................ครูเวรประจำวัน</div>
-<div>ลงชื่อ............................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
-<div>ลงชื่อ............................รองผู้อำนวยการสถานศึกษา</div>
-<div>ลงชื่อ.............................ผู้อำนวยการสถานศึกษา</div>
+  <div>ลงชื่อ..........................................................ครูเวรประจำวัน</div>
+  <div>ลงชื่อ..........................................................ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+  <div>ลงชื่อ..........................................................รองผู้อำนวยการสถานศึกษา</div>
+  <div>ลงชื่อ..........................................................ผู้อำนวยการสถานศึกษา</div>
 </div>
 
 </div>
@@ -235,21 +236,28 @@ let totalPresent = 0
 let totalPresentMale = 0
 let totalPresentFemale = 0
 
+let totalSick = 0
+let totalLeave = 0
+let totalAbsent = 0
+  
 data.forEach(r=>{
 
 const level = getLevel(r.room)
 
 // init level
 if(!levels[level]){
-  levels[level] = {
-    rows:[],
-    total:0,
-    male:0,
-    female:0,
-    present:0,
-    presentMale:0,
-    presentFemale:0
-  }
+levels[level] = {
+  rows:[],
+  total:0,
+  male:0,
+  female:0,
+  present:0,
+  presentMale:0,
+  presentFemale:0,
+  sick:0,
+  leave:0,
+  absent:0
+}
 }
 
 const total = Number(r.total)||0
@@ -280,7 +288,10 @@ levels[level].female += female
 levels[level].present += present
 levels[level].presentMale += presentMale
 levels[level].presentFemale += presentFemale
-
+levels[level].sick += Number(sick)||0
+levels[level].leave += Number(leave)||0
+levels[level].absent += Number(absent)||0
+  
 // sum global
 totalAll += total
 totalMale += male
@@ -290,6 +301,9 @@ totalPresent += present
 totalPresentMale += presentMale
 totalPresentFemale += presentFemale
 
+totalSick += Number(sick)||0
+totalLeave += Number(leave)||0
+totalAbsent += Number(absent)||0
 })
 
 let groupSum = {
@@ -379,7 +393,9 @@ html += `
 <td>${levels[level].presentFemale}</td>
 <td>${levels[level].present}</td>
 
-<td></td><td></td><td></td>
+<td>${levels[level].sick}</td>
+<td>${levels[level].leave}</td>
+<td>${levels[level].absent}</td>
 </tr>
 `
 
@@ -442,6 +458,9 @@ html += `
 <td>${totalPresentFemale}</td>
 <td>${totalPresent}</td>
 
+<td>${totalSick}</td>
+<td>${totalLeave}</td>
+<td>${totalAbsent}</td>
 <td></td><td></td><td></td>
 </tr>
 `
