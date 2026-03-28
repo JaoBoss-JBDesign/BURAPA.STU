@@ -214,6 +214,8 @@ try{
 
 let html=""
 
+document.getElementById("dataBody").innerHTML = `<tr><td colspan="10">กำลังสร้าง Report...</td></tr>`;
+
 // รวมระดับ
 let levels = {}
 
@@ -340,10 +342,20 @@ html += `
 
 })
 
-document.getElementById("dataBody").innerHTML = `
-<tr><td colspan="10">กำลังสร้าง Report...</td></tr>
+html += `
+<tr class="sum-row" style="background:#fca5a5;">
+<td>รวมทั้งหมด</td>
+<td>${totalAll}</td>
+<td>${totalMale}</td>
+<td>${totalFemale}</td>
+<td>${totalPresent}</td>
+<td>${totalPresentMale}</td>
+<td>${totalPresentFemale}</td>
+<td></td><td></td><td></td>
+</tr>
 `
 
+document.getElementById("dataBody").innerHTML = html;
 
 // 🔥 summary ใหม่
 const percent = totalAll ? ((totalPresent/totalAll)*100).toFixed(2) : 0
@@ -357,7 +369,6 @@ document.getElementById("summary").innerHTML = `
 <b>อัตราการมาเรียนรวม</b> ${percent}%
 `
 }
-
   
 function exportPDF(){
 
@@ -409,21 +420,8 @@ function getLevel(room){
 
   return "อื่นๆ"
 }
-
-loadReport()
   
-html += `
-<tr class="sum-row" style="background:#fca5a5;">
-<td>รวมทั้งหมด</td>
-<td>${totalAll}</td>
-<td>${totalMale}</td>
-<td>${totalFemale}</td>
-<td>${totalPresent}</td>
-<td>${totalPresentMale}</td>
-<td>${totalPresentFemale}</td>
-<td></td><td></td><td></td>
-</tr>
-`
+loadReport()
 </script>
 </body>
 </html>
