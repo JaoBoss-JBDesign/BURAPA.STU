@@ -381,49 +381,52 @@ html += `
 </tr>
 `
 
+if(level === "ป.6"){
+  html += `
+  <tr class="sum-row primary section-break">
+  <td>รวมประถมทั้งหมด</td>
+  <td>${groupSum["ป."].male}</td>
+  <td>${groupSum["ป."].female}</td>
+  <td>${groupSum["ป."].total}</td>
+  <td>${groupSum["ป."].presentMale}</td>
+  <td>${groupSum["ป."].presentFemale}</td>
+  <td>${groupSum["ป."].present}</td>
+  <td></td><td></td><td></td>
+  </tr>
+  `
+}
+
+if(level === "ม.6"){
+  html += `
+  <tr class="sum-row secondary section-break">
+  <td>รวมมัธยมทั้งหมด</td>
+  <td>${groupSum["ม."].male}</td>
+  <td>${groupSum["ม."].female}</td>
+  <td>${groupSum["ม."].total}</td>
+  <td>${groupSum["ม."].presentMale}</td>
+  <td>${groupSum["ม."].presentFemale}</td>
+  <td>${groupSum["ม."].present}</td>
+  <td></td><td></td><td></td>
+  </tr>
+  `
+}
+
+if(level === "ปวช.3"){
+  html += `
+  <tr class="sum-row secondary section-break">
+  <td>รวม ปวช ทั้งหมด</td>
+  <td>${groupSum["ปวช"].male}</td>
+  <td>${groupSum["ปวช"].female}</td>
+  <td>${groupSum["ปวช"].total}</td>
+  <td>${groupSum["ปวช"].presentMale}</td>
+  <td>${groupSum["ปวช"].presentFemale}</td>
+  <td>${groupSum["ปวช"].present}</td>
+  <td></td><td></td><td></td>
+  </tr>
+  `
+}
+  
 })
-
-// รวมประถม
-html += `
-<tr class="sum-row primary">
-<td>รวมประถมทั้งหมด</td>
-<td>${groupSum["ป."].male}</td>
-<td>${groupSum["ป."].female}</td>
-<td>${groupSum["ป."].total}</td>
-<td>${groupSum["ป."].presentMale}</td>
-<td>${groupSum["ป."].presentFemale}</td>
-<td>${groupSum["ป."].present}</td>
-<td></td><td></td><td></td>
-</tr>
-`
-
-// รวมมัธยม
-html += `
-<tr class="sum-row secondary">
-<td>รวมมัธยมทั้งหมด</td>
-<td>${groupSum["ม."].male}</td>
-<td>${groupSum["ม."].female}</td>
-<td>${groupSum["ม."].total}</td>
-<td>${groupSum["ม."].presentMale}</td>
-<td>${groupSum["ม."].presentFemale}</td>
-<td>${groupSum["ม."].present}</td>
-<td></td><td></td><td></td>
-</tr>
-`
-
-// รวม ปวช
-html += `
-<tr class="sum-row secondary">
-<td>รวม ปวช ทั้งหมด</td>
-<td>${groupSum["ปวช"].male}</td>
-<td>${groupSum["ปวช"].female}</td>
-<td>${groupSum["ปวช"].total}</td>
-<td>${groupSum["ปวช"].presentMale}</td>
-<td>${groupSum["ปวช"].presentFemale}</td>
-<td>${groupSum["ปวช"].present}</td>
-<td></td><td></td><td></td>
-</tr>
-`
   
 html += `
 <tr class="sum-row total-all">
