@@ -825,16 +825,66 @@ font-weight:600;
 </div>
 
 <div class="card">
-<h3>Export แบบรายงานสถิติ</h3>
+<h3>Export รายงานสถิติ</h3>
 
+<h4 style="text-align:center;">แก้ไขชื่อผู้ลงนาม</h4>
+
+<div class="field">
+<label>ครูเวรวันจันทร์</label>
+<input type="text" id="mon" class="select-modern">
+</div>
+
+<div class="field">
+<label>ครูเวรวันอังคาร</label>
+<input type="text" id="tue" class="select-modern">
+</div>
+
+<div class="field">
+<label>ครูเวรวันพุธ</label>
+<input type="text" id="wed" class="select-modern">
+</div>
+
+<div class="field">
+<label>ครูเวรวันพฤหัสบดี</label>
+<input type="text" id="thu" class="select-modern">
+</div>
+
+<div class="field">
+<label>ครูเวรวันศุกร์</label>
+<input type="text" id="fri" class="select-modern">
+</div>
+
+<div class="field">
+<label>ผช.ผอ.ฝ่ายบริหารทั่วไป</label>
+<input type="text" id="assistant" class="select-modern">
+</div>
+
+<div class="field">
+<label>รองผู้อำนวยการ</label>
+<input type="text" id="deputy" class="select-modern">
+</div>
+
+<div class="field">
+<label>ผู้อำนวยการ</label>
+<input type="text" id="director" class="select-modern">
+</div>
+
+<button class="btn-main" onclick="saveSignature()" style="width:100%;">
+💾 บันทึกชื่อผู้ลงนาม
+</button>
+
+<hr>
+
+<!-- 🔹 ส่วน export -->
 <div class="field">
 <label>เลือกวันที่ต้องการรายงาน</label>
 <input type="date" id="reportDate" class="select-modern">
 </div>
 
-<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
-Export
+<button class="btn-main" onclick="printReport()" style="width:100%;">
+📄 Export รายงาน
 </button>
+
 </div>
 </div>
 </main>
@@ -1329,6 +1379,7 @@ document.getElementById("classList").innerHTML=html
 generateYearOptions()
 load()
 loadTerm()
+loadSignature()
   
 let refreshTimer
 
@@ -1795,6 +1846,60 @@ select.appendChild(opt)
 }
 }
 
+async function loadSignature(){
+
+try{
+
+const res = await fetch(API + "?mode=getsigconfig")
+const data = await res.json()
+
+document.getElementById("mon").value = data.mon || ""
+document.getElementById("tue").value = data.tue || ""
+document.getElementById("wed").value = data.wed || ""
+document.getElementById("thu").value = data.thu || ""
+document.getElementById("fri").value = data.fri || ""
+
+document.getElementById("assistant").value = data.assistant || ""
+document.getElementById("deputy").value = data.deputy || ""
+document.getElementById("director").value = data.director || ""
+
+}catch(e){
+console.log("โหลดชื่อไม่สำเร็จ")
+}
+
+}
+
+async function saveSignature(){
+
+const params = new URLSearchParams({
+mode:"updatesigconfig",
+mon: document.getElementById("mon").value,
+tue: document.getElementById("tue").value,
+wed: document.getElementById("wed").value,
+thu: document.getElementById("thu").value,
+fri: document.getElementById("fri").value,
+assistant: document.getElementById("assistant").value,
+deputy: document.getElementById("deputy").value,
+director: document.getElementById("director").value
+})
+
+try{
+
+const res = await fetch(API + "?" + params.toString())
+const data = await res.json()
+
+if(data.status === "success"){
+alert("บันทึกเรียบร้อย")
+}else{
+alert("บันทึกไม่สำเร็จ")
+}
+
+}catch(e){
+alert("เกิดข้อผิดพลาด")
+}
+
+}
+  
 function printReport(){
 
 const date = document.getElementById("reportDate").value
