@@ -315,24 +315,28 @@ z-index:9999;
 
 <div class="footer">
   <div class="sign">
-    <div class="line"></div>
-    <div id="teacherName">ครูเวรประจำวัน</div>
-  </div>
+  <div class="line"></div>
+  <div id="teacherName">( - )</div>
+  <div>ครูเวรประจำวัน</div>
+</div>
 
-  <div class="sign">
-    <div class="line"></div>
-    <div id="assistantName">ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
-  </div>
+<div class="sign">
+  <div class="line"></div>
+  <div id="assistantName">( - )</div>
+  <div>ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+</div>
 
-  <div class="sign">
-    <div class="line"></div>
-    <div id="deputyName">รองผู้อำนวยการสถานศึกษา</div>
-  </div>
+<div class="sign">
+  <div class="line"></div>
+  <div id="deputyName">( - )</div>
+  <div>รองผู้อำนวยการสถานศึกษา</div>
+</div>
 
-  <div class="sign">
-    <div class="line"></div>
-    <div id="directorName">ผู้อำนวยการสถานศึกษา</div>
-  </div>
+<div class="sign">
+  <div class="line"></div>
+  <div id="directorName">( - )</div>
+  <div>ผู้อำนวยการสถานศึกษา</div>
+</div>
 </div>
 
 </div>
@@ -828,7 +832,39 @@ function getLevel(room){
 
   return "อื่นๆ"
 }
+
+async function loadSignatureToReport(){
+
+try{
+
+const res = await fetch(API + "?mode=getsigconfig")
+const data = await res.json()
+
+// 🔥 map วัน → ครูเวร
+const day = new Date(date).getDay()
+
+let teacher = ""
+
+if(day === 1) teacher = data.mon
+if(day === 2) teacher = data.tue
+if(day === 3) teacher = data.wed
+if(day === 4) teacher = data.thu
+if(day === 5) teacher = data.fri
+
+// 🔥 ใส่วงเล็บแบบราชการ
+document.getElementById("teacherName").innerText = `(${teacher || "-"})`
+document.getElementById("assistantName").innerText = `(${data.assistant || "-"})`
+document.getElementById("deputyName").innerText = `(${data.deputy || "-"})`
+document.getElementById("directorName").innerText = `(${data.director || "-"})`
+
+}catch(e){
+console.log("โหลดลายเซ็นไม่สำเร็จ")
+}
+
+}
+  
 loadReport()
+loadSignatureToReport()
 </script>
 </body>
 </html>
