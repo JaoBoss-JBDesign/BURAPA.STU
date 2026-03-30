@@ -337,7 +337,7 @@ function downloadPDF(){
 
   const opt = {
     margin: [10,12,10,10]
-    filename: 'สถิติ' + (date || 'no-date') + '.pdf',
+    filename: 'burapa_stu-' + (date || 'no-date') + '.pdf',
     image: { type: 'jpeg', quality: 1 },
     html2canvas: { scale: 2, useCORS: true, letterRendering: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
