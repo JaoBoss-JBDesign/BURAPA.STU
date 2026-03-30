@@ -1972,25 +1972,19 @@ const btn = event.target
 btn.disabled = true
 btn.innerText = "กำลังบันทึก..."
 
-const params = new URLSearchParams({
-mode:"updatesigconfig",
-mon: mon.value,
-tue: tue.value,
-wed: wed.value,
-thu: thu.value,
-fri: fri.value,
-assistant: assistant.value,
-deputy: deputy.value,
-director: director.value
-})
+const url = API + `?mode=updatesigconfig
+&mon=${encodeURIComponent(mon.value)}
+&tue=${encodeURIComponent(tue.value)}
+&wed=${encodeURIComponent(wed.value)}
+&thu=${encodeURIComponent(thu.value)}
+&fri=${encodeURIComponent(fri.value)}
+&assistant=${encodeURIComponent(assistant.value)}
+&deputy=${encodeURIComponent(deputy.value)}
+&director=${encodeURIComponent(director.value)}`
 
 try{
 
-const res = await fetch(API, {
-  method: "POST",
-  body: params
-})
-
+const res = await fetch(url)
 const data = await res.json()
 
 if(data.status === "success"){
@@ -2007,7 +2001,6 @@ alert("เกิดข้อผิดพลาด")
 
 btn.disabled = false
 btn.innerText = "บันทึกข้อมูลผู้ลงนาม"
-
 }
 
 function toggleSigForm(){
