@@ -258,19 +258,6 @@ font-size:16px;
 color:#888;
 font-weight:500;
 }
-
-.card::-webkit-scrollbar {
-  width:6px;
-}
-
-.card::-webkit-scrollbar-thumb {
-  background:#e5e7eb;
-  border-radius:10px;
-}
-
-.card::-webkit-scrollbar-track {
-  background:transparent;
-}
   
 #classList{
 flex:1;
@@ -837,34 +824,18 @@ font-weight:600;
 </button>
 </div>
 
-<div class="card" style="max-height:500px; overflow:auto; padding:16px; display:flex; flex-direction:column; gap:12px;">
-  <h3>Export แบบรายงานสถิติ</h3>
+<div class="card">
+<h3>Export แบบรายงานสถิติ</h3>
 
-  <div class="field">
-    <label>เลือกวันที่ต้องการรายงาน</label>
-    <input type="date" id="reportDate" class="select-modern" onchange="loadSignature()">
-  </div>
+<div class="field">
+<label>เลือกวันที่ต้องการรายงาน</label>
+<input type="date" id="reportDate" class="select-modern">
+</div>
 
-  <h4>ลงชื่อครูเวร / ผู้บริหาร</h4>
-  <div class="field"><label>ครูเวรวันจันทร์</label><input type="text" id="mon"></div>
-  <div class="field"><label>ครูเวรอังคาร</label><input type="text" id="tue"></div>
-  <div class="field"><label>ครูเวรวันพุธ</label><input type="text" id="wed"></div>
-  <div class="field"><label>ครูเวรวันพฤหัสบดี</label><input type="text" id="thu"></div>
-  <div class="field"><label>ครูเวรวันศุกร์</label><input type="text" id="fri"></div>
-
-  <div class="field"><label>ผู้ช่วย</label><input type="text" id="assistant"></div>
-  <div class="field"><label>รองผู้อำนวยการ</label><input type="text" id="deputy"></div>
-  <div class="field"><label>ผู้อำนวยการ</label><input type="text" id="director"></div>
-
-  <button class="btn-main" onclick="saveSignature()" style="padding:12px; margin-top:8px; width:100%;">
-    บันทึกข้อมูล
-  </button>
-
-  <hr style="margin:12px 0; border:none; border-top:1px solid #ccc;">
-
-  <button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
-    ส่งออกเอกสาร (PDF)
-  </button>
+<button class="btn-main" onclick="printReport()" style="width: 100%; padding: 14px; font-size: 16px;">
+Export
+</button>
+</div>
 </div>
 </main>
   
@@ -1842,44 +1813,6 @@ window.open(
 window.addEventListener("error", () => {
 loadingNow = false
 })
-
-async function saveSignature(){
-
-const date = document.getElementById("reportDate").value
-
-if(!date){
-alert("กรุณาเลือกวันที่")
-return
-}
-
-const params = new URLSearchParams({
-mode: "updatesignature",
-date: date,
-mon: document.getElementById("mon").value,
-tue: document.getElementById("tue").value,
-wed: document.getElementById("wed").value,
-thu: document.getElementById("thu").value,
-fri: document.getElementById("fri").value,
-assistant: document.getElementById("assistant").value,
-deputy: document.getElementById("deputy").value,
-director: document.getElementById("director").value
-})
-
-try{
-
-const res = await fetch(API + "?" + params.toString())
-const data = await res.json()
-
-if(data.status === "success"){
-alert("บันทึกผู้ลงนามเรียบร้อย")
-}else{
-alert("บันทึกไม่สำเร็จ")
-}
-
-}catch(e){
-alert("เกิดข้อผิดพลาด")
-}
-}
 </script>
 </body>
 </html>
