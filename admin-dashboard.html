@@ -855,6 +855,17 @@ font-weight:600;
 แก้ไขชื่อผู้ลงนาม
 </button>
 
+<div style="margin-top:10px;">
+<div class="field">
+<label>เลือกวันที่ต้องการรายงาน</label>
+<input type="date" id="reportDate" class="select-modern">
+</div>
+
+<button class="btn-main" onclick="printReport()" style="width:100%;">
+📄 Export รายงาน
+</button>
+</div>
+  
 <div id="sigForm" style="display:none;">
 <div class="field">
 <label>ครูเวรวันจันทร์</label>
@@ -901,15 +912,6 @@ font-weight:600;
 </button>
 
 <hr>
-
-<div class="field">
-<label>เลือกวันที่ต้องการรายงาน</label>
-<input type="date" id="reportDate" class="select-modern">
-</div>
-
-<button class="btn-main" onclick="printReport()" style="width:100%;">
-📄 Export รายงาน
-</button>
 
 </div>
 </div>
