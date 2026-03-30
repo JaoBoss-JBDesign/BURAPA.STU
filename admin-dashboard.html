@@ -599,6 +599,9 @@ margin-left:4px;
   overflow-y:auto;
   flex:1;
   padding-right:6px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
 }
 
 .card button{
@@ -864,7 +867,7 @@ font-weight:600;
 </button>
 </div>
 
-<div class="card card-center">
+<div class="card">
 <div class="card-header" style="justify-content:center; font-weight:700;">
 Export แบบรายงานสถิติ
 </div>
@@ -1969,12 +1972,20 @@ btn.innerText = "บันทึกข้อมูลผู้ลงนาม"
 function toggleSigForm(){
 
 const form = document.getElementById("sigForm")
+const container = form.closest(".card-scroll")
 
 if(form.style.display === "none"){
-form.style.display = "block"
-form.scrollIntoView({behavior:"smooth"})
+  form.style.display = "block"
+
+  setTimeout(()=>{
+    container.scrollTo({
+      top: form.offsetTop - 10,
+      behavior: "smooth"
+    })
+  },100)
+
 }else{
-form.style.display = "none"
+  form.style.display = "none"
 }
 
 }
