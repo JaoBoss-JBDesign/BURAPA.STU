@@ -15,10 +15,10 @@ body{
 }
 
 .report{
-  width:100%;
+  width:210mm;
   max-width:100%;
-  margin:auto;
-  padding:0;
+  margin:20px auto;
+  padding:10mm;
   background:white;
   box-sizing:border-box;
   box-shadow:none !important;
@@ -40,6 +40,10 @@ h2{
   color:#555;
 }
 
+.section{
+  page-break-inside:auto;
+}
+  
 table{
   width:99%;
   border-collapse:collapse;
@@ -55,7 +59,7 @@ td, th{
   text-align:center;
   word-break:break-word;
   white-space:normal;
-  page-break-inside: avoid !important;
+  page-break-inside: auto;
 }
 
 td:first-child{
@@ -70,10 +74,6 @@ th{
 tr{
   page-break-inside: avoid !important;
   page-break-after:auto;
-}
-
-tbody{
-  page-break-inside: auto;
 }
   
 .summary, .footer{
@@ -126,7 +126,7 @@ th:first-child, td:first-child{
   text-align:center;
   letter-spacing:0.5px;
   font-family:'Sarabun',sans-serif;
-  page-break-before: auto;
+  page-break-before:always;
   break-inside: avoid;
 }
   
@@ -266,6 +266,7 @@ z-index:9999;
 <h2>รายงานสถิตินักเรียนประจำวัน</h2>
 <div class="date" id="dateText"></div>
 
+<div class="section">
 <table>
 <thead>
 <tr>
@@ -288,7 +289,8 @@ z-index:9999;
 
 <tbody id="dataBody"></tbody>
 </table>
-
+</div>
+  
 <div class="summary" id="summary"></div>
 
 <div class="footer">
@@ -341,7 +343,7 @@ function downloadPDF(){
     image: { type: 'jpeg', quality: 1 },
     html2canvas: { scale: 2, useCORS: true, letterRendering: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['css', 'legacy'] }
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy']  }
   }
 
   setTimeout(()=>{
