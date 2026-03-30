@@ -449,23 +449,37 @@ function formatFileDate(dateStr){
 async function loadSignature(){
 
 try{
-  const res = await fetch(API + "?mode=signature&date=" + date)
-  const data = await res.json()
 
-  document.getElementById("teacherName").innerHTML =
-    `(${data.teacher})<br>ครูเวรประจำวัน`
+const res = await fetch(API + "?mode=signature&date=" + date)
+const data = await res.json()
 
-  document.getElementById("assistantName").innerHTML =
-    `(${data.assistant})<br>ผช.ผอ.ฝ่ายบริหารทั่วไป`
+// 🔥 หาวัน
+const d = new Date(date)
+const day = d.getDay()
 
-  document.getElementById("deputyName").innerHTML =
-    `(${data.deputy})<br>รองผู้อำนวยการสถานศึกษา`
+let teacher = "-"
 
-  document.getElementById("directorName").innerHTML =
-    `(${data.director})<br>ผู้อำนวยการสถานศึกษา`
+if(day === 1) teacher = data.mon
+if(day === 2) teacher = data.tue
+if(day === 3) teacher = data.wed
+if(day === 4) teacher = data.thu
+if(day === 5) teacher = data.fri
+
+// 🔥 ใส่ค่า
+document.getElementById("teacherName").innerHTML =
+`(${teacher || "-"})<br>ครูเวรประจำวัน`
+
+document.getElementById("assistantName").innerHTML =
+`(${data.assistant || "-"})<br>ผช.ผอ.ฝ่ายบริหารทั่วไป`
+
+document.getElementById("deputyName").innerHTML =
+`(${data.deputy || "-"})<br>รองผู้อำนวยการสถานศึกษา`
+
+document.getElementById("directorName").innerHTML =
+`(${data.director || "-"})<br>ผู้อำนวยการสถานศึกษา`
 
 }catch(e){
-  console.log("โหลดลายเซ็นไม่ได้")
+console.log("โหลดลายเซ็นไม่ได้")
 }
 
 }
@@ -852,8 +866,8 @@ function getLevel(room){
 
   return "อื่นๆ"
 }
-loadSignature()
 loadReport()
+loadSignature()
 </script>
 </body>
 </html>
