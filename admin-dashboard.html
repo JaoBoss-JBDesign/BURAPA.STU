@@ -849,97 +849,72 @@ font-weight:600;
 </div>
 
 <div class="card">
-<h3>Export แบบรายงานสถิติ</h3>
+<div class="card-header">Export แบบรายงานสถิติ</div>
 
-  <div class="card-scroll">
+<div class="card-scroll">
+
+  <div class="field">
+    <label>เลือกวันที่ต้องการรายงาน</label>
+    <input type="date" id="reportDate" class="select-modern">
+  </div>
+
+  <button class="btn-main" onclick="printReport()" style="width:100%; padding:12px;">
+    Export รายงาน
+  </button>
+
+  <button class="btn-edit" onclick="toggleSigForm()" style="width:100%;">
+  แก้ไขผู้ลงนาม
+  </button>
+
+  <div id="sigForm" style="display:none; margin-top:10px;">
 
     <div class="field">
-      <label>เลือกวันที่ต้องการรายงาน</label>
-      <input type="date" id="reportDate" class="select-modern">
+      <label>ครูเวรวันจันทร์</label>
+      <input type="text" id="mon" class="select-modern">
     </div>
 
-    <button class="btn-main" onclick="printReport()" style="width:100%; padding:12px;">
-    Export รายงาน
-    </button>
-
-    <hr style="margin:12px 0;">
-<div id="sigPreview" style="
-background:#f8fafc;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:10px;
-font-size:13px;
-line-height:1.6;
-">
-
-<b>ผู้ลงนาม:</b><br>
-จันทร์: <span id="p_mon">-</span><br>
-อังคาร: <span id="p_tue">-</span><br>
-พุธ: <span id="p_wed">-</span><br>
-พฤหัส: <span id="p_thu">-</span><br>
-ศุกร์: <span id="p_fri">-</span><br>
-
-<hr style="margin:6px 0;">
-
-ผช.: <span id="p_assistant">-</span><br>
-รอง: <span id="p_deputy">-</span><br>
-ผอ.: <span id="p_director">-</span>
-
-</div>
-    
-    <button class="btn-sub" onclick="toggleSigForm()">
-      แก้ไขชื่อผู้ลงนาม
-    </button>
-
-    <div id="sigForm" style="display:none; margin-top:10px;">
-      
-      <div class="field">
-        <label>ครูเวรวันจันทร์</label>
-        <input type="text" id="mon" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ครูเวรวันอังคาร</label>
-        <input type="text" id="tue" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ครูเวรวันพุธ</label>
-        <input type="text" id="wed" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ครูเวรวันพฤหัสบดี</label>
-        <input type="text" id="thu" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ครูเวรวันศุกร์</label>
-        <input type="text" id="fri" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ผช.ผอ.ฝ่ายบริหารทั่วไป</label>
-        <input type="text" id="assistant" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>รองผู้อำนวยการ</label>
-        <input type="text" id="deputy" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <div class="field">
-        <label>ผู้อำนวยการ</label>
-        <input type="text" id="director" class="select-modern" oninput="updatePreview()">
-      </div>
-
-      <button class="btn-main" onclick="saveSignature()" style="width:100%;">
-        บันทึกชื่อผู้ลงนาม
-      </button>
-
+    <div class="field">
+      <label>ครูเวรวันอังคาร</label>
+      <input type="text" id="tue" class="select-modern">
     </div>
+
+    <div class="field">
+      <label>ครูเวรวันพุธ</label>
+      <input type="text" id="wed" class="select-modern">
+    </div>
+
+    <div class="field">
+      <label>ครูเวรวันพฤหัสบดี</label>
+      <input type="text" id="thu" class="select-modern">
+    </div>
+
+    <div class="field">
+      <label>ครูเวรวันศุกร์</label>
+      <input type="text" id="fri" class="select-modern">
+    </div>
+
+    <div class="field">
+      <label>ผช.ผอ.ฝ่ายบริหารทั่วไป</label>
+      <input type="text" id="assistant" class="select-modern">
+    </div>
+
+    <div class="field">
+      <label>รองผู้อำนวยการ</label>
+      <input type="text" id="deputy" class="select-modern">
+    </div>
+
+    <div class="field">
+      <label>ผู้อำนวยการ</label>
+      <input type="text" id="director" class="select-modern">
+    </div>
+
+    <button class="btn-main" onclick="saveSignature()" style="width:100%;">
+      บันทึกข้อมูลผู้ลงนาม
+    </button>
 
   </div>
+
+</div>
 </div>
 </main>
   
@@ -1923,8 +1898,6 @@ document.getElementById("assistant").value = data.assistant || ""
 document.getElementById("deputy").value = data.deputy || ""
 document.getElementById("director").value = data.director || ""
 
-updatePreview() // 👈 สำคัญ
-
 }catch(e){
 console.log("โหลดชื่อไม่สำเร็จ")
 }
@@ -1968,26 +1941,13 @@ alert("เกิดข้อผิดพลาด")
 
 }
 
-function updatePreview(){
-
-p_mon.innerText = mon.value || "-"
-p_tue.innerText = tue.value || "-"
-p_wed.innerText = wed.value || "-"
-p_thu.innerText = thu.value || "-"
-p_fri.innerText = fri.value || "-"
-
-p_assistant.innerText = assistant.value || "-"
-p_deputy.innerText = deputy.value || "-"
-p_director.innerText = director.value || "-"
-
-}
-
 function toggleSigForm(){
 
 const form = document.getElementById("sigForm")
 
 if(form.style.display === "none"){
 form.style.display = "block"
+form.scrollIntoView({behavior:"smooth"})
 }else{
 form.style.display = "none"
 }
@@ -2027,8 +1987,6 @@ window.addEventListener("DOMContentLoaded", () => {
 })
   
 document.getElementById("reportDate").valueAsDate = new Date()
-
-updatePreview()
   
 </script>
 </body>
