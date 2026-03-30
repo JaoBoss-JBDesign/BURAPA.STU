@@ -251,7 +251,8 @@ tr:last-child{
 </head>
 
 <body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 <div class="report" id="report">
 
 <h2>รายงานสถิตินักเรียนประจำวัน</h2>
@@ -316,14 +317,18 @@ tr:last-child{
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
 function downloadPDF(){
-  const oldTitle = document.title
-  document.title = "report-" + date
 
-  window.print()
+  const element = document.getElementById("report")
 
-  setTimeout(()=>{
-    document.title = oldTitle
-  },1000)
+  const opt = {
+    margin:       10,
+    filename:     'report-' + date + '.pdf',
+    image:        { type: 'jpeg', quality: 1 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }
+
+  html2pdf().set(opt).from(element).save()
 }
   
 const params = new URLSearchParams(location.search)
