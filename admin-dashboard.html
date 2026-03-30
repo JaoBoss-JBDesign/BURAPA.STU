@@ -231,6 +231,7 @@ box-shadow:0 14px 30px rgba(0,0,0,.12);
 .card h3{
 text-align:center;
 margin-bottom:12px;
+flex-shrink:0;
 }
   
 .chartBox{
@@ -577,6 +578,29 @@ color:#991b1b;
 display:inline;
 margin-left:4px;
 }
+
+.card-scroll{
+  overflow-y:auto;
+  flex:1;
+  padding-right:6px;
+}
+
+.card button{
+  flex-shrink:0;
+}
+  
+.card-scroll::-webkit-scrollbar{
+  width:6px;
+}
+
+.card-scroll::-webkit-scrollbar-thumb{
+  background:#e5e7eb;
+  border-radius:10px;
+}
+
+#sigForm{
+  transition: all .3s ease;
+}
   
 @media (max-width:768px){
 
@@ -826,9 +850,12 @@ font-weight:600;
 
 <div class="card">
 <h3>Export รายงานสถิติ</h3>
+<div class="card-scroll">
+<button class="btn-sub" onclick="toggleSigForm()">
+แก้ไขชื่อผู้ลงนาม
+</button>
 
-<h4 style="text-align:center;">แก้ไขชื่อผู้ลงนาม</h4>
-
+<div id="sigForm" style="display:none;">
 <div class="field">
 <label>ครูเวรวันจันทร์</label>
 <input type="text" id="mon" class="select-modern">
@@ -870,12 +897,11 @@ font-weight:600;
 </div>
 
 <button class="btn-main" onclick="saveSignature()" style="width:100%;">
-💾 บันทึกชื่อผู้ลงนาม
+บันทึกชื่อผู้ลงนาม
 </button>
 
 <hr>
 
-<!-- 🔹 ส่วน export -->
 <div class="field">
 <label>เลือกวันที่ต้องการรายงาน</label>
 <input type="date" id="reportDate" class="select-modern">
@@ -1375,11 +1401,6 @@ ${r.submitted
 document.getElementById("classList").innerHTML=html
 
 }
-
-generateYearOptions()
-load()
-loadTerm()
-loadSignature()
   
 let refreshTimer
 
@@ -1409,8 +1430,12 @@ room = decodeURIComponent(room)
 
 if(!confirm("ต้องการลบ "+room+" ใช่หรือไม่?")) return
 
-const res = await fetch(API + "?mode=deleteRoom&room=" + encodeURIComponent(room))
+try{
+
+const res = await fetch(API + "?mode=deleteRoom&room=" + room + "&token=" + token)
+
 if(!res.ok) throw new Error("network")
+
 const data = await res.json()
 
 if(data.status === "success"){
@@ -1418,6 +1443,10 @@ alert("ลบห้องเรียบร้อยแล้ว กรุณา
 load()
 }else{
 alert("ทำการลบห้องไม่สำเร็จ ลองใหม่อีกครั้ง")
+}
+
+}catch(e){
+alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง")
 }
 
 }
@@ -1527,7 +1556,7 @@ day+"ที่ "+date+" "+month+" พ.ศ."+year+" เวลา "+h+":"+m+":"+s+
 
 }
 
-setInterval(updateClock,1000)
+let clockTimer = setInterval(updateClock,1000)
 updateClock()
 
 function formatThaiDate(dateText){
@@ -1850,7 +1879,7 @@ async function loadSignature(){
 
 try{
 
-const res = await fetch(API + "?mode=getsigconfig")
+const res = await fetch(API + "?mode=getsigconfig&t=" + Date.now())
 const data = await res.json()
 
 document.getElementById("mon").value = data.mon || ""
@@ -1885,11 +1914,16 @@ director: document.getElementById("director").value
 
 try{
 
-const res = await fetch(API + "?" + params.toString())
+const res = await fetch(API, {
+  method: "POST",
+  body: params
+})
+
 const data = await res.json()
 
 if(data.status === "success"){
 alert("บันทึกเรียบร้อย")
+loadSignature()
 }else{
 alert("บันทึกไม่สำเร็จ")
 }
@@ -1918,6 +1952,11 @@ window.open(
 window.addEventListener("error", () => {
 loadingNow = false
 })
+
+function toggleSigForm(){
+  const el = document.getElementById("sigForm")
+  el.style.display = (el.style.display === "none") ? "block" : "none"
+}
 </script>
 </body>
 </html>
