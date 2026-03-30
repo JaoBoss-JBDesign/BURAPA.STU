@@ -18,7 +18,7 @@ body{
   width:210mm;
   max-width:100%;
   margin:20px auto;
-  padding:10mm;
+  padding:10mm 10mm 15mm 10mm;
   background:white;
   box-sizing:border-box;
   box-shadow:none !important;
@@ -62,6 +62,10 @@ td, th{
   page-break-inside: auto;
 }
 
+table, tr, td, th {
+  page-break-inside: avoid !important;
+}
+  
 td:first-child{
   white-space:normal;
 }
@@ -126,7 +130,7 @@ th:first-child, td:first-child{
   text-align:center;
   letter-spacing:0.5px;
   font-family:'Sarabun',sans-serif;
-  page-break-before:always;
+  page-break-before:auto;
   break-inside: avoid;
 }
   
@@ -139,14 +143,14 @@ th:first-child, td:first-child{
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   page-break-inside: auto;
+  break-inside: avoid;
 }
 
 tr:last-child{
   page-break-after: avoid;
   page-break-inside: avoid;
 }
-  
-/* footer */
+
 .footer{
   margin-top:50px;
   display:grid;
@@ -154,6 +158,8 @@ tr:last-child{
   gap:50px 60px;
   text-align:center;
   font-size:14px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .sign{
@@ -222,6 +228,10 @@ tr:last-child{
     -webkit-font-smoothing: antialiased;
     zoom: 100%;
   }
+
+  html, body{
+  width:210mm;
+}
   
   .report{
     box-shadow:none;
@@ -336,12 +346,17 @@ async function downloadPDF(){
     return
   }
 
+document.getElementById("loading").style.display = "none"
+  
   const element = document.getElementById("report")
 
+element.style.width = "210mm"
+  
   const canvas = await html2canvas(element, {
     scale: 3,
     useCORS: true,
-    letterRendering: true
+    letterRendering: true,
+    backgroundColor: "#ffffff"
   })
 
   const imgData = canvas.toDataURL("image/png")
@@ -349,7 +364,7 @@ async function downloadPDF(){
   const { jsPDF } = window.jspdf
   const pdf = new jsPDF("p", "mm", "a4")
 
-  const margin = 5
+  const margin = 8
   const imgWidth = 210 - (margin * 2)
   const pageHeight = 297
   const imgHeight = canvas.height * imgWidth / canvas.width
