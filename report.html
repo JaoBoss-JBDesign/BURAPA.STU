@@ -259,7 +259,8 @@ z-index:9999;
 กำลังสร้างแบบรายงาน...
 </div>
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   
 <div class="report" id="report">
 
@@ -328,27 +329,76 @@ let isLoaded = false
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
-function downloadPDF(){
+async function downloadPDF(){
 
   if(!isLoaded){
-    alert("รอโหลดข้อมูลก่อนนะ")
+    alert("โปรดรอสักครู่...")
     return
   }
 
-  const element = document.getElementById("report")
+  const { jsPDF } = window.jspdf
+  const doc = new jsPDF("p", "mm", "a4")
 
-  const opt = {
-    margin: [10,12,10,10],
-    filename: 'burapa_stu-' + (date || 'no-date') + '.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy']  }
-  }
+  doc.setFont("helvetica")
+  doc.setFontSize(16)
+  doc.text("รายงานสถิตินักเรียนประจำวัน", 105, 15, { align: "center" })
 
-  setTimeout(()=>{
-    html2pdf().set(opt).from(element).save()
-  }, 800)
+  doc.setFontSize(12)
+  doc.text(document.getElementById("dateText").innerText, 105, 22, { align: "center" })
+
+  // 🔥 ดึงข้อมูลจากตาราง HTML
+  const rows = []
+  document.querySelectorAll("#dataBody tr").forEach(tr=>{
+    const cols = []
+    tr.querySelectorAll("td").forEach(td=>{
+      cols.push(td.innerText)
+    })
+    if(cols.length) rows.push(cols)
+  })
+
+  // 🔥 header table
+  const head = [[
+    "ชั้น","ชาย","หญิง","รวม","ชาย","หญิง","รวม","ป่วย","ลา","ขาด"
+  ]]
+
+  // 🔥 สร้าง table
+  doc.autoTable({
+    startY: 30,
+    margin: { left: 10, right: 10 },
+    tableWidth: "auto",
+    head: head,
+    body: rows,
+    styles: {
+      fontSize: 8,
+      cellPadding: 2,
+      halign: "center",
+      overflow: "linebreak"
+    },
+    columnStyles: {
+    0: { cellWidth: 30 }
+    },
+    headStyles: {
+      fillColor: [220,220,220]
+    },
+    theme: "grid",
+    didDrawPage: function (data) {
+      // footer page number
+      let str = "หน้า " + doc.internal.getNumberOfPages()
+      doc.setFontSize(10)
+      doc.text(str, 200, 290, { align: "right" })
+    }
+  })
+
+  // 🔥 summary
+  let finalY = doc.lastAutoTable.finalY + 10
+
+  const summaryText = document.getElementById("summary").innerText
+
+  doc.setFontSize(11)
+  doc.text(summaryText, 105, finalY, { align: "center" })
+
+  const fileDate = formatFileDate(date)
+  doc.save(`burapa-stu-${fileDate}.pdf`)
 }
   
 const params = new URLSearchParams(location.search)
@@ -358,6 +408,16 @@ if(!date){
   document.getElementById("dateText").innerText = "-"
 }else{
   document.getElementById("dateText").innerHTML = formatThaiDate(date)
+}
+
+function formatFileDate(dateStr){
+  const d = new Date(dateStr)
+
+  const day = d.getDate().toString().padStart(2,"0")
+  const month = (d.getMonth()+1).toString().padStart(2,"0")
+  const year = d.getFullYear() + 543
+
+  return `${day}-${month}-${year}`
 }
   
 function formatThaiDate(dateStr){
