@@ -316,22 +316,22 @@ z-index:9999;
 <div class="footer">
   <div class="sign">
     <div class="line"></div>
-    <div>ครูเวรประจำวัน</div>
+    <div id="teacherName">ครูเวรประจำวัน</div>
   </div>
 
   <div class="sign">
     <div class="line"></div>
-    <div>ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
+    <div id="assistantName">ผช.ผอ.ฝ่ายบริหารทั่วไป</div>
   </div>
 
   <div class="sign">
     <div class="line"></div>
-    <div>รองผู้อำนวยการสถานศึกษา</div>
+    <div id="deputyName">รองผู้อำนวยการสถานศึกษา</div>
   </div>
 
   <div class="sign">
     <div class="line"></div>
-    <div>ผู้อำนวยการสถานศึกษา</div>
+    <div id="directorName">ผู้อำนวยการสถานศึกษา</div>
   </div>
 </div>
 
@@ -348,79 +348,87 @@ let isLoaded = false
   
 const API="https://script.google.com/macros/s/AKfycbzwmS_Aip0yJ-vQgQhGZ7c58MkeHHMH2zpy5lC_3SLLDDAaPMD-wrUdGkp5QXLhgomp9g/exec"
 
+const params = new URLSearchParams(location.search)
+const date = params.get("date") || new Date().toISOString().split("T")[0]
+  
 async function downloadPDF(){
-
+  
   if(!isLoaded){
     alert("โปรดรอสักครู่...")
     return
   }
 
-document.getElementById("loading").style.display = "flex"
-document.getElementById("loading").innerText = "กำลังสร้าง PDF..."
-  
-const element = document.getElementById("report")
+  const loadingEl = document.getElementById("loading")
 
-await document.fonts.ready
-await new Promise(r => setTimeout(r, 200))
-element.style.width = "210mm"
-  
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    letterRendering: true,
-    backgroundColor: "#ffffff"
-  })
+  try{
+    loadingEl.style.display = "flex"
+    loadingEl.innerHTML = "กำลังสร้าง PDF...<br><small>โปรดรอสักครู่</small>"
 
-  const imgData = canvas.toDataURL("image/png")
+    const element = document.getElementById("report")
 
-  const { jsPDF } = window.jspdf
-  const pdf = new jsPDF("p", "mm", "a4")
+    await document.fonts.ready
+    await new Promise(r => setTimeout(r, 200))
+    element.style.width = "210mm"
 
-  const margin = 12
-  const imgWidth = 210 - (margin * 2)
-  const pageHeight = 297
-  const imgHeight = canvas.height * imgWidth / canvas.width
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      letterRendering: true,
+      backgroundColor: "#ffffff"
+    })
 
-const pageHeightPx = canvas.height * (pageHeight / imgHeight)
+    const { jsPDF } = window.jspdf
+    const pdf = new jsPDF("p", "mm", "a4")
 
-let renderedHeight = 0
+    const margin = 12
+    const imgWidth = 210 - (margin * 2)
+    const pageHeight = 297
+    const imgHeight = canvas.height * imgWidth / canvas.width
 
-while (renderedHeight < canvas.height) {
+    const pageHeightPx = canvas.height * (pageHeight / imgHeight)
 
-  const pageCanvas = document.createElement("canvas")
-  const pageCtx = pageCanvas.getContext("2d")
+    let renderedHeight = 0
 
-  pageCanvas.width = canvas.width
-  const safeOffset = 10
+    while (renderedHeight < canvas.height) {
 
-pageCanvas.height = pageHeightPx - safeOffset
+      const pageCanvas = document.createElement("canvas")
+      const pageCtx = pageCanvas.getContext("2d")
 
-  pageCtx.fillStyle = "#ffffff"
-  pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
+      pageCanvas.width = canvas.width
+      const safePadding = 10
+      pageCanvas.height = pageHeightPx - safePadding
 
-pageCtx.drawImage(
-  canvas,
-  0, renderedHeight,
-  canvas.width, pageHeightPx,
-  0, 0,
-  canvas.width, pageHeightPx
-)
+      pageCtx.fillStyle = "#ffffff"
+      pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
 
-  const imgDataPage = pageCanvas.toDataURL("image/png")
+      pageCtx.drawImage(
+        canvas,
+        0, renderedHeight,
+        canvas.width, pageHeightPx,
+        0, 0,
+        canvas.width, pageHeightPx
+      )
 
-  if (renderedHeight > 0) pdf.addPage()
+      const imgDataPage = pageCanvas.toDataURL("image/png")
 
-pdf.addImage(imgDataPage, "PNG", margin, margin, imgWidth, pageHeight - (margin * 2) - 2)
+      if (renderedHeight > 0) pdf.addPage()
 
-  renderedHeight += pageCanvas.height
+      pdf.addImage(imgDataPage, "PNG", margin, margin, imgWidth, pageHeight - (margin * 2) - 2)
+
+      renderedHeight += pageCanvas.height
+    }
+
+    const fileDate = formatFileDate(date)
+    pdf.save(`burapa-stu-${fileDate}.pdf`)
+
+  }catch(e){
+    alert("สร้าง PDF ไม่สำเร็จ")
+    console.error(e)
+
+  } finally {
+    loadingEl.style.display = "none"
+  }
 }
-
-  const fileDate = formatFileDate(date)
-  pdf.save(`burapa-stu-${fileDate}.pdf`)
-}
-  
-const params = new URLSearchParams(location.search)
-const date = params.get("date") || new Date().toISOString().split("T")[0]
 
 if(!date){
   document.getElementById("dateText").innerText = "-"
@@ -436,6 +444,30 @@ function formatFileDate(dateStr){
   const year = d.getFullYear() + 543
 
   return `${day}-${month}-${year}`
+}
+
+async function loadSignature(){
+
+try{
+  const res = await fetch(API + "?mode=signature&date=" + date)
+  const data = await res.json()
+
+  document.getElementById("teacherName").innerHTML =
+    `(${data.teacher})<br>ครูเวรประจำวัน`
+
+  document.getElementById("assistantName").innerHTML =
+    `(${data.assistant})<br>ผช.ผอ.ฝ่ายบริหารทั่วไป`
+
+  document.getElementById("deputyName").innerHTML =
+    `(${data.deputy})<br>รองผู้อำนวยการสถานศึกษา`
+
+  document.getElementById("directorName").innerHTML =
+    `(${data.director})<br>ผู้อำนวยการสถานศึกษา`
+
+}catch(e){
+  console.log("โหลดลายเซ็นไม่ได้")
+}
+
 }
   
 function formatThaiDate(dateStr){
@@ -548,7 +580,7 @@ const total = Number(r.total)||0
 const male = Number(r.male)||0
 const female = Number(r.female)||0
 
-const present = isFallback ? 0 : Number(r.present)||0
+const present = isFallback ? "" : Number(r.present)||0
 const presentMale = isFallback ? 0 : Number(r.present_m)||0
 const presentFemale = isFallback ? 0 : Number(r.present_f)||0
 
@@ -820,7 +852,7 @@ function getLevel(room){
 
   return "อื่นๆ"
 }
-  
+loadSignature()
 loadReport()
 </script>
 </body>
