@@ -67,6 +67,15 @@ td, th{
   white-space:normal;
   page-break-inside: auto;
 }
+
+table, thead, tbody, tr, td, th{
+  break-inside: avoid !important;
+}
+
+tr, td, th {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
   
 td:first-child{
   white-space:normal;
@@ -80,6 +89,7 @@ th{
 tr{
   page-break-inside: avoid !important;
   page-break-after:auto;
+  break-inside: avoid !important;
 }
   
 .summary, .footer{
@@ -350,10 +360,12 @@ document.getElementById("loading").innerText = "กำลังสร้าง P
   
 const element = document.getElementById("report")
 
+await document.fonts.ready
+await new Promise(r => setTimeout(r, 200))
 element.style.width = "210mm"
   
   const canvas = await html2canvas(element, {
-    scale: 3,
+    scale: 2,
     useCORS: true,
     letterRendering: true,
     backgroundColor: "#ffffff"
@@ -364,29 +376,48 @@ element.style.width = "210mm"
   const { jsPDF } = window.jspdf
   const pdf = new jsPDF("p", "mm", "a4")
 
-  const margin = 8
+  const margin = 12
   const imgWidth = 210 - (margin * 2)
   const pageHeight = 297
   const imgHeight = canvas.height * imgWidth / canvas.width
 
-  let heightLeft = imgHeight
-  let position = margin
+const pageHeightPx = canvas.height * (pageHeight / imgHeight)
 
-  pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight)
-  heightLeft -= pageHeight
+let renderedHeight = 0
 
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight + margin
-    pdf.addPage()
-    pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight)
-    heightLeft -= pageHeight
-  }
+while (renderedHeight < canvas.height) {
+
+  const pageCanvas = document.createElement("canvas")
+  const pageCtx = pageCanvas.getContext("2d")
+
+  pageCanvas.width = canvas.width
+  const safeOffset = 10
+
+pageCanvas.height = pageHeightPx - safeOffset
+
+  pageCtx.fillStyle = "#ffffff"
+  pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
+
+pageCtx.drawImage(
+  canvas,
+  0, renderedHeight,
+  canvas.width, pageHeightPx,
+  0, 0,
+  canvas.width, pageHeightPx
+)
+
+  const imgDataPage = pageCanvas.toDataURL("image/png")
+
+  if (renderedHeight > 0) pdf.addPage()
+
+pdf.addImage(imgDataPage, "PNG", margin, margin, imgWidth, pageHeight - (margin * 2) - 2)
+
+  renderedHeight += pageCanvas.height
+}
 
   const fileDate = formatFileDate(date)
   pdf.save(`burapa-stu-${fileDate}.pdf`)
 }
-
-document.getElementById("loading").style.display = "none"
   
 const params = new URLSearchParams(location.search)
 const date = params.get("date") || new Date().toISOString().split("T")[0]
