@@ -503,6 +503,40 @@ color:#555;
 font-weight:500;
 }
 
+.export-section{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.export-group{
+  background:#f8fafc;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.export-group-title{
+  font-size:13px;
+  font-weight:600;
+  color:#374151;
+}
+
+.export-actions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.export-actions button{
+  width:100%;
+  padding:12px;
+  font-size:13px;
+}
+  
 input[type="date"].select-modern {
   width: 100% !important;
   display: block;
@@ -872,22 +906,27 @@ font-weight:600;
 Export แบบรายงานสถิติ
 </div>
 
-<div class="card-scroll">
+<div class="card-scroll export-section">
 
-  <div class="field">
-    <label>เลือกวันที่ต้องการรายงาน</label>
+  <div class="export-group">
+    <div class="export-group-title">เลือกวันที่ต้องการรายงาน</div>
+
     <input type="date" id="reportDate" class="select-modern">
   </div>
 
-  <button class="btn-main" onclick="printReport()" style="width:100%; padding:12px;">
-    Export รายงาน
-  </button>
+  <div class="export-group export-actions">
+    <button class="btn-main" onclick="printReport()">
+      Export รายงาน
+    </button>
 
-  <button class="btn-sub" onclick="toggleSigForm()" style="width:100%; margin-top:8px;">
-  แก้ไขรายชื่อผู้ลงนาม
-</button>
+    <button class="btn-sub" onclick="toggleSigForm()">
+    แก้ไขผู้ลงนาม
+    </button>
+  </div>
 
-  <div id="sigForm" style="display:none; margin-top:10px;">
+  <div id="sigForm" class="export-group" style="display:none;">
+
+    <div class="export-group-title">ตั้งค่าชื่อผู้ลงนาม</div>
 
     <div class="field">
       <label>ครูเวรวันจันทร์</label>
@@ -929,11 +968,13 @@ Export แบบรายงานสถิติ
       <input type="text" id="director" class="select-modern">
     </div>
 
-    <button class="btn-main" onclick="saveSignature()" style="width:100%;">
-      บันทึกข้อมูลผู้ลงนาม
+    <button class="btn-main" onclick="saveSignature()">
+    บันทึกข้อมูลผู้ลงนาม
     </button>
 
   </div>
+
+</div>
 
 </div>
 </div>
