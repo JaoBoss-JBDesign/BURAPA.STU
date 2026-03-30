@@ -202,6 +202,12 @@ justify-content: center;
 align-items: center;
 text-align: center;
 }
+
+.card-center .card-scroll{
+justify-content:center;
+display:flex;
+flex-direction:column;
+}
   
 .card-header{
 display:flex;
@@ -364,7 +370,17 @@ transform:translateY(-1px);
 box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
-.btn-edit{background:#fbbf24; color:#78350f;}
+.btn-edit{
+background:#fbbf24;
+color:#78350f;
+font-weight:600;
+box-shadow:0 4px 10px rgba(251,191,36,.3);
+}
+
+.btn-edit:hover{
+background:#f59e0b;
+box-shadow:0 6px 14px rgba(245,158,11,.4);
+}
   
 .btn-main{
 background:linear-gradient(135deg,#e63946,#ff6b6b);
@@ -848,8 +864,10 @@ font-weight:600;
 </button>
 </div>
 
-<div class="card">
-<div class="card-header">Export แบบรายงานสถิติ</div>
+<div class="card card-center">
+<div class="card-header" style="justify-content:center; font-weight:700;">
+Export แบบรายงานสถิติ
+</div>
 
 <div class="card-scroll">
 
@@ -862,9 +880,9 @@ font-weight:600;
     Export รายงาน
   </button>
 
-  <button class="btn-edit" onclick="toggleSigForm()" style="width:100%;">
+  <button class="btn-edit" onclick="toggleSigForm()" style="width:100%; margin-top:8px;">
   แก้ไขผู้ลงนาม
-  </button>
+</button>
 
   <div id="sigForm" style="display:none; margin-top:10px;">
 
@@ -1906,16 +1924,20 @@ console.log("โหลดชื่อไม่สำเร็จ")
   
 async function saveSignature(){
 
+const btn = event.target
+btn.disabled = true
+btn.innerText = "กำลังบันทึก..."
+
 const params = new URLSearchParams({
 mode:"updatesigconfig",
-mon: document.getElementById("mon").value,
-tue: document.getElementById("tue").value,
-wed: document.getElementById("wed").value,
-thu: document.getElementById("thu").value,
-fri: document.getElementById("fri").value,
-assistant: document.getElementById("assistant").value,
-deputy: document.getElementById("deputy").value,
-director: document.getElementById("director").value
+mon: mon.value,
+tue: tue.value,
+wed: wed.value,
+thu: thu.value,
+fri: fri.value,
+assistant: assistant.value,
+deputy: deputy.value,
+director: director.value
 })
 
 try{
@@ -1938,6 +1960,9 @@ alert("บันทึกไม่สำเร็จ")
 }catch(e){
 alert("เกิดข้อผิดพลาด")
 }
+
+btn.disabled = false
+btn.innerText = "บันทึกข้อมูลผู้ลงนาม"
 
 }
 
