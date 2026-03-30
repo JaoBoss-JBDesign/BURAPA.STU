@@ -964,6 +964,9 @@ const data = await res.json()
 const term = data.term
 const year = data.year
 
+// ✅ เพิ่มตรงนี้
+generateYearOptions()
+
 const termEl = document.getElementById("termDisplay")
 
 if(term && year){
@@ -1957,6 +1960,8 @@ function toggleSigForm(){
   const el = document.getElementById("sigForm")
   el.style.display = (el.style.display === "none") ? "block" : "none"
 }
+generateYearOptions()
+loadTerm()
 </script>
 </body>
 </html>
